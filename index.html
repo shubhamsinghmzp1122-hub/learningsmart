@@ -1,987 +1,123 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Pari ❤️ Jiya Learning App</title>
-    
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#FF6B6B">
-    <link rel="apple-touch-icon" href="icon-512.png">
-    
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&display=swap');
-
-        :root {
-            --primary: #FF6B6B;
-            --secondary: #4ECDC4;
-            --accent1: #FFE66D;
-            --accent2: #845EC2;
-            --success: #a8e6cf;
-            --danger: #ff8b94;
-            --bg: #F7F9F9;
-            --text: #2C3E50;
-            --color-tables: #ff9ff3;
-            --color-names: #54a0ff;
-            --color-roman: #00d2d3;
-            --color-gold: #f1c40f;
-            --color-months: #ff7f50;
-            --color-days: #2ed573;
-            --color-dict: #1e90ff;
-            --color-trans: #ff6b81;
-            --color-shapes: #9b59b6;
-            --color-google: #4285F4;
-            --color-ddg: #de5833;
-        }
-
-        * {
-            box-sizing: border-box;
-            font-family: 'Comic Neue', 'Comic Sans MS', cursive, sans-serif;
-            margin: 0;
-            padding: 0;
-            user-select: none; 
-            touch-action: manipulation; 
-        }
-
-        body {
-            background-color: var(--bg);
-            color: var(--text);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 0; 
-            overflow-x: hidden;
-        }
-
-        #app {
-            background: white;
-            width: 100%;
-            max-width: 500px; 
-            margin: auto;
-            height: 100dvh; 
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            padding: 10px; 
-        }
-
-        @media (min-width: 501px) {
-            #app {
-                height: 95vh;
-                border-radius: clamp(15px, 4vw, 30px);
-                box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-                border: clamp(4px, 1vw, 8px) solid var(--accent1);
-            }
-        }
-
-        .screen {
-            display: none;
-            padding: clamp(10px, 3vw, 20px);
-            flex-direction: column;
-            align-items: center;
-            height: 100%;
-            overflow-y: auto;
-            overflow-x: hidden;
-            width: 100%; 
-        }
-
-        .screen.active {
-            display: flex;
-            animation: fadeIn 0.4s ease-in-out;
-        }
-
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-        @keyframes bounce { 0%, 20%, 50%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-15px); } 60% { transform: translateY(-7px); } }
-        .bounce { animation: bounce 0.6s; }
-        @keyframes shake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-10px); } 40%, 80% { transform: translateX(10px); } }
-        .shake { animation: shake 0.4s; }
-        @keyframes pulse { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.7); } 70% { transform: scale(1.1); box-shadow: 0 0 0 20px rgba(255, 107, 107, 0); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 107, 107, 0); } }
-
-        h1, h2, h3 { text-align: center; color: var(--primary); margin-bottom: clamp(10px, 3vw, 20px); text-shadow: 2px 2px 0px var(--accent1); width: 100%; }
-        h1 { font-size: clamp(1.8rem, 6vw, 2.5rem); }
-        h2 { font-size: clamp(1.5rem, 5vw, 2rem); color: var(--accent2); }
-        h3 { font-size: clamp(1.3rem, 4vw, 1.8rem); }
-
-        .btn {
-            background: var(--secondary); color: white; border: none;
-            padding: 15px 20px;
-            font-size: clamp(16px, 4vw, 1.2rem); 
-            border-radius: 25px; cursor: pointer;
-            margin: clamp(5px, 1vw, 10px) 0; 
-            box-shadow: 0 6px 0 rgba(0,0,0,0.2);
-            transition: transform 0.1s, box-shadow 0.1s, background-color 0.3s;
-            display: flex; align-items: center; justify-content: center; gap: 10px;
-            width: 100%; 
-            max-width: 100%; 
-            min-height: 50px; text-align: center;
-        }
-
-        .btn:active { transform: translateY(6px); box-shadow: 0 0 0 rgba(0,0,0,0.2); }
-        .btn:disabled { opacity: 0.7; cursor: not-allowed; transform: translateY(6px); box-shadow: 0 0 0 rgba(0,0,0,0.2); }
-        .btn.primary { background: var(--primary); }
-        .btn.accent { background: var(--accent2); }
-        .btn.yellow { background: var(--accent1); color: var(--text); }
-        
-        .home-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: clamp(10px, 2.5vw, 15px); width: 100%; margin-bottom: 15px; }
-        .home-grid .btn { margin: 0; width: 100%; font-size: clamp(14px, 3.5vw, 1.1rem); padding: 12px 10px; min-height: 60px; }
-
-        .top-bar { width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; position: sticky; top: 0; background: white; padding: 10px 0; z-index: 10; }
-        .back-btn { background: var(--danger); border-radius: 50%; width: clamp(40px, 10vw, 50px); height: clamp(40px, 10vw, 50px); font-size: clamp(1.2rem, 4vw, 1.5rem); padding: 0; margin: 0; min-height: unset; flex-shrink: 0; }
-
-        .number-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(clamp(40px, 10vw, 50px), 1fr)); gap: clamp(5px, 1.5vw, 10px); width: 100%; margin-bottom: 20px; }
-        .number-cell { background: var(--accent1); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: clamp(1.1rem, 4vw, 1.3rem); font-weight: bold; aspect-ratio: 1; box-shadow: 0 4px 0 rgba(0,0,0,0.1); color: var(--text); cursor: pointer; transition: transform 0.1s; }
-        .number-cell:active { transform: scale(0.9); }
-
-        .list-container { width: 100%; display: flex; flex-direction: column; gap: clamp(10px, 2vw, 15px); padding-bottom: 20px; }
-        .list-item { background: #f1f2f6; font-size: clamp(1.1rem, 4vw, 1.4rem); padding: clamp(12px, 3vw, 20px); border-radius: 15px; display: flex; justify-content: space-between; align-items: center; border: 3px solid var(--secondary); font-weight: bold; flex-wrap: wrap; gap: 10px; width: 100%; }
-        .list-item.center { justify-content: center; font-size: clamp(1.3rem, 5vw, 1.6rem); text-align: center; }
-
-        .dict-toolbar { display: flex; flex-direction: column; gap: 10px; width: 100%; margin-bottom: 15px; }
-        .dict-search { font-size: 16px; padding: 15px; border-radius: 15px; border: 3px solid var(--color-dict); width: 100%; text-align: center; font-weight: bold; user-select: auto;}
-        .add-word-panel { display: none; background: #e1f5fe; padding: 15px; border-radius: 15px; border: 3px dashed var(--color-dict); width: 100%; flex-direction: column; gap: 10px; margin-bottom: 15px; }
-        .add-word-panel.active { display: flex; animation: fadeIn 0.3s; }
-        .dict-list-wrap { width: 100%; display: flex; flex-direction: column; gap: 10px; flex: 1; }
-        .dict-word-card { background: white; border: 3px solid #dcdde1; border-radius: 15px; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 0 #dcdde1; flex-wrap: wrap; gap: 10px; width: 100%;}
-        .dict-word-text { display: flex; flex-direction: column; flex: 1; }
-        .dict-en { font-size: clamp(1.3rem, 5vw, 1.6rem); color: var(--primary); font-weight: bold; text-transform: capitalize; }
-        .dict-hi { font-size: clamp(1.1rem, 4vw, 1.3rem); color: var(--text); }
-        .dict-actions { display: flex; gap: 8px; flex-shrink: 0;}
-        .btn-icon { font-size: clamp(1.2rem, 4vw, 1.5rem); padding: 10px; border-radius: 50%; border: none; cursor: pointer; box-shadow: 0 4px 0 rgba(0,0,0,0.15); transition: transform 0.1s; display:flex; align-items:center; justify-content:center; width: 45px; height: 45px; }
-        .btn-icon:active { transform: translateY(4px); box-shadow: 0 0 0 rgba(0,0,0,0.15); }
-        .btn-speak { background: var(--accent2); color: white; }
-        .btn-del { background: var(--danger); color: white; }
-
-        .shape-display-box { background: white; width: 100%; padding: clamp(20px, 5vw, 40px) 10px; border-radius: 20px; border: 4px dashed var(--color-shapes); display: flex; flex-direction: column; align-items: center; gap: 20px; margin-bottom: 20px; }
-        .css-shape { margin: 10px auto; transition: transform 0.3s; }
-        .css-circle { width: clamp(100px, 30vw, 150px); height: clamp(100px, 30vw, 150px); background: var(--danger); border-radius: 50%; }
-        .css-square { width: clamp(100px, 30vw, 150px); height: clamp(100px, 30vw, 150px); background: var(--secondary); }
-        .css-line { width: 100%; max-width: 200px; height: 20px; background: var(--text); border-radius: 10px; }
-        .css-triangle { width: 0; height: 0; border-left: clamp(50px, 15vw, 80px) solid transparent; border-right: clamp(50px, 15vw, 80px) solid transparent; border-bottom: clamp(100px, 30vw, 150px) solid var(--primary); }
-        .css-pentagon { width: clamp(100px, 30vw, 150px); height: clamp(100px, 30vw, 150px); background: var(--accent2); clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%); }
-        .css-hexagon { width: clamp(100px, 30vw, 150px); height: clamp(100px, 30vw, 150px); background: #f39c12; clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%); }
-        .css-octagon { width: clamp(100px, 30vw, 150px); height: clamp(100px, 30vw, 150px); background: #e74c3c; clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%); }
-        .css-oval { width: clamp(120px, 35vw, 180px); height: clamp(80px, 20vw, 110px); background: #8e44ad; border-radius: 50%; }
-        .css-rectangle { width: clamp(150px, 45vw, 200px); height: clamp(80px, 25vw, 110px); background: #27ae60; }
-        .css-star { width: clamp(100px, 30vw, 150px); height: clamp(100px, 30vw, 150px); background: var(--color-gold); clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); }
-
-        .learn-content { font-size: clamp(1.2rem, 4vw, 1.5rem); text-align: center; line-height: 1.8; width: 100%; }
-        .learn-row { background: #fff3e0; margin: 10px 0; padding: clamp(10px, 3vw, 15px); border-radius: 15px; border: 3px dashed var(--secondary); cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap:wrap; text-align:left; width: 100%;}
-        
-        .progress-bar { width: 100%; height: 20px; background: #e0e0e0; border-radius: 10px; margin-bottom: 20px; overflow: hidden; flex-shrink: 0; }
-        .progress-fill { height: 100%; background: var(--success); width: 0%; transition: width 0.3s ease; }
-        .question-box { font-size: clamp(1.8rem, 7vw, 2.5rem); font-weight: bold; color: var(--text); margin: 20px 0; text-align: center; background: #e1f5fe; padding: clamp(15px, 5vw, 25px); border-radius: 20px; width: 100%; transition: transform 0.2s; word-wrap: break-word;}
-        .options-grid { display: grid; gap: clamp(10px, 3vw, 15px); width: 100%; grid-template-columns: repeat(2, 1fr); }
-        .option-btn { font-size: clamp(1.3rem, 5vw, 1.6rem); padding: 15px; border-radius: 20px; margin: 0; max-width: 100%; width: 100%; }
-
-        .save-score-box { background: #fdf5e6; padding: clamp(15px, 4vw, 20px); border-radius: 15px; width: 100%; margin-top: 20px; text-align: center; border: 3px dashed var(--color-gold); }
-        .name-input { font-size: 16px; padding: 15px; border-radius: 10px; border: 2px solid var(--secondary); width: 100%; margin-bottom: 10px; text-align: center; user-select: auto; }
-
-        .leaderboard-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        .leaderboard-table th, .leaderboard-table td { padding: clamp(8px, 2vw, 12px) 5px; text-align: left; border-bottom: 2px solid #eee; font-size: clamp(1rem, 3.5vw, 1.2rem); }
-        .calc-display { width: 100%; background: #2C3E50; color: var(--accent1); font-size: clamp(2rem, 8vw, 2.5rem); text-align: right; padding: 20px; border-radius: 15px; margin-bottom: 20px; min-height: 80px; word-wrap: break-word; flex-shrink: 0;}
-        .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(5px, 2vw, 10px); width: 100%; flex: 1;}
-        .calc-btn { font-size: clamp(1.5rem, 6vw, 1.8rem); padding: 10px 5px; margin: 0; width: 100%; height: 100%; border-radius: 15px; }
-
-        .search-type-tabs { display: flex; gap: 5px; width: 100%; margin-top: 10px; flex-wrap: wrap; }
-        .type-btn { flex: 1; margin: 0; font-size: clamp(0.9rem, 3vw, 1.1rem); padding: 10px; min-height: 40px; border-radius: 15px; width: auto;}
-
-        .pwa-modal-overlay {
-            display: none; 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.8); 
-            z-index: 3000;
-            backdrop-filter: blur(5px);
-            align-items: center; justify-content: center;
-        }
-        .pwa-confirm-box {
-            background: #fff;
-            color: var(--text);
-            padding: 25px;
-            border-radius: 20px;
-            width: 320px;
-            max-width: 85vw;
-            text-align: center;
-            border: 4px dashed var(--accent1);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
-            animation: bounce 0.5s ease-out;
-        }
-
-        @media (max-width: 360px) {
-            .home-grid { grid-template-columns: 1fr; }
-            .options-grid { grid-template-columns: 1fr; }
-        }
-    </style>
-</head>
-<body>
-
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"><title>Pari ❤️ Jiya Learning App</title><link rel="manifest" href="manifest.json"><meta name="theme-color" content="#FF6B6B"><link rel="apple-touch-icon" href="icon-512.png"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><style>@import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&display=swap');:root{--primary:#FF6B6B;--secondary:#4ECDC4;--accent1:#FFE66D;--accent2:#845EC2;--success:#a8e6cf;--danger:#ff8b94;--bg:#F7F9F9;--text:#2C3E50;--color-tables:#ff9ff3;--color-names:#54a0ff;--color-roman:#00d2d3;--color-gold:#f1c40f;--color-months:#ff7f50;--color-days:#2ed573;--color-dict:#1e90ff;--color-trans:#ff6b81;--color-shapes:#9b59b6;--color-google:#4285F4;--color-ddg:#de5833}*{box-sizing:border-box;font-family:'Comic Neue',cursive,sans-serif;margin:0;padding:0;user-select:none;touch-action:manipulation}body{background-color:var(--bg);color:var(--text);display:flex;justify-content:center;align-items:center;min-height:100vh;padding:0;overflow-x:hidden}#app{background:white;width:100%;max-width:500px;margin:auto;height:100dvh;overflow:hidden;display:flex;flex-direction:column;padding:10px}@media(min-width:501px){#app{height:95vh;border-radius:clamp(15px,4vw,30px);box-shadow:0 10px 30px rgba(0,0,0,0.1);border:clamp(4px,1vw,8px) solid var(--accent1)}}.screen{display:none;padding:clamp(10px,3vw,20px);flex-direction:column;align-items:center;height:100%;overflow-y:auto;overflow-x:hidden;width:100%}.screen.active{display:flex;animation:fadeIn .4s ease-in-out}@keyframes fadeIn{from{opacity:0;transform:scale(0.95)}to{opacity:1;transform:scale(1)}}@keyframes bounce{0%,20%,50%,80%,100%{transform:translateY(0)}40%{transform:translateY(-15px)}60%{transform:translateY(-7px)}}.bounce{animation:bounce .6s}@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-10px)}40%,80%{transform:translateX(10px)}}.shake{animation:shake .4s}@keyframes pulse{0%{transform:scale(1);box-shadow:0 0 0 0 rgba(255,107,107,.7)}70%{transform:scale(1.1);box-shadow:0 0 0 20px rgba(255,107,107,0)}100%{transform:scale(1);box-shadow:0 0 0 0 rgba(255,107,107,0)}}h1,h2,h3{text-align:center;color:var(--primary);margin-bottom:clamp(10px,3vw,20px);text-shadow:2px 2px 0 var(--accent1);width:100%}h1{font-size:clamp(1.8rem,6vw,2.5rem)}h2{font-size:clamp(1.5rem,5vw,2rem);color:var(--accent2)}h3{font-size:clamp(1.3rem,4vw,1.8rem)}.btn{background:var(--secondary);color:white;border:none;padding:15px 20px;font-size:clamp(16px,4vw,1.2rem);border-radius:25px;cursor:pointer;margin:clamp(5px,1vw,10px) 0;box-shadow:0 6px 0 rgba(0,0,0,.2);transition:transform .1s,box-shadow .1s,background-color .3s;display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:50px;text-align:center}.btn:active,.btn:disabled{transform:translateY(6px);box-shadow:0 0 0 rgba(0,0,0,.2)}.btn:disabled{opacity:.7;cursor:not-allowed}.btn.primary{background:var(--primary)}.btn.accent{background:var(--accent2)}.btn.yellow{background:var(--accent1);color:var(--text)}.home-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:clamp(10px,2.5vw,15px);width:100%;margin-bottom:15px}.home-grid .btn{margin:0;width:100%;font-size:clamp(14px,3.5vw,1.1rem);padding:12px 10px;min-height:60px}.top-bar{width:100%;display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;position:sticky;top:0;background:white;padding:10px 0;z-index:10}.back-btn{background:var(--danger);border-radius:50%;width:clamp(40px,10vw,50px);height:clamp(40px,10vw,50px);font-size:clamp(1.2rem,4vw,1.5rem);padding:0;margin:0;min-height:unset;flex-shrink:0}.number-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(clamp(40px,10vw,50px),1fr));gap:clamp(5px,1.5vw,10px);width:100%;margin-bottom:20px}.number-cell{background:var(--accent1);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:clamp(1.1rem,4vw,1.3rem);font-weight:bold;aspect-ratio:1;box-shadow:0 4px 0 rgba(0,0,0,.1);color:var(--text);cursor:pointer;transition:transform .1s}.number-cell:active{transform:scale(0.9)}.list-container{width:100%;display:flex;flex-direction:column;gap:clamp(10px,2vw,15px);padding-bottom:20px}.list-item{background:#f1f2f6;font-size:clamp(1.1rem,4vw,1.4rem);padding:clamp(12px,3vw,20px);border-radius:15px;display:flex;justify-content:space-between;align-items:center;border:3px solid var(--secondary);font-weight:bold;flex-wrap:wrap;gap:10px;width:100%}.list-item.center{justify-content:center;font-size:clamp(1.3rem,5vw,1.6rem);text-align:center}.dict-toolbar{display:flex;flex-direction:column;gap:10px;width:100%;margin-bottom:15px}.dict-search{font-size:16px;padding:15px;border-radius:15px;border:3px solid var(--color-dict);width:100%;text-align:center;font-weight:bold;user-select:auto}.add-word-panel{display:none;background:#e1f5fe;padding:15px;border-radius:15px;border:3px dashed var(--color-dict);width:100%;flex-direction:column;gap:10px;margin-bottom:15px}.add-word-panel.active{display:flex;animation:fadeIn .3s}.dict-list-wrap{width:100%;display:flex;flex-direction:column;gap:10px;flex:1}.dict-word-card{background:white;border:3px solid #dcdde1;border-radius:15px;padding:12px 15px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 4px 0 #dcdde1;flex-wrap:wrap;gap:10px;width:100%}.dict-word-text{display:flex;flex-direction:column;flex:1}.dict-en{font-size:clamp(1.3rem,5vw,1.6rem);color:var(--primary);font-weight:bold;text-transform:capitalize}.dict-hi{font-size:clamp(1.1rem,4vw,1.3rem);color:var(--text)}.dict-actions{display:flex;gap:8px;flex-shrink:0}.btn-icon{font-size:clamp(1.2rem,4vw,1.5rem);padding:10px;border-radius:50%;border:none;cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,.15);transition:transform .1s;display:flex;align-items:center;justify-content:center;width:45px;height:45px}.btn-icon:active{transform:translateY(4px);box-shadow:0 0 0 rgba(0,0,0,.15)}.btn-speak{background:var(--accent2);color:white}.btn-del{background:var(--danger);color:white}.shape-display-box{background:white;width:100%;padding:clamp(20px,5vw,40px) 10px;border-radius:20px;border:4px dashed var(--color-shapes);display:flex;flex-direction:column;align-items:center;gap:20px;margin-bottom:20px}.css-shape{margin:10px auto;transition:transform .3s}.css-circle{width:clamp(100px,30vw,150px);height:clamp(100px,30vw,150px);background:var(--danger);border-radius:50%}.css-square{width:clamp(100px,30vw,150px);height:clamp(100px,30vw,150px);background:var(--secondary)}.css-line{width:100%;max-width:200px;height:20px;background:var(--text);border-radius:10px}.css-triangle{width:0;height:0;border-left:clamp(50px,15vw,80px) solid transparent;border-right:clamp(50px,15vw,80px) solid transparent;border-bottom:clamp(100px,30vw,150px) solid var(--primary)}.css-pentagon{width:clamp(100px,30vw,150px);height:clamp(100px,30vw,150px);background:var(--accent2);clip-path:polygon(50% 0%,100% 38%,82% 100%,18% 100%,0% 38%)}.css-hexagon{width:clamp(100px,30vw,150px);height:clamp(100px,30vw,150px);background:#f39c12;clip-path:polygon(25% 0%,75% 0%,100% 50%,75% 100%,25% 100%,0% 50%)}.css-octagon{width:clamp(100px,30vw,150px);height:clamp(100px,30vw,150px);background:#e74c3c;clip-path:polygon(30% 0%,70% 0%,100% 30%,100% 70%,70% 100%,30% 100%,0% 70%,0% 30%)}.css-oval{width:clamp(120px,35vw,180px);height:clamp(80px,20vw,110px);background:#8e44ad;border-radius:50%}.css-rectangle{width:clamp(150px,45vw,200px);height:clamp(80px,25vw,110px);background:#27ae60}.css-star{width:clamp(100px,30vw,150px);height:clamp(100px,30vw,150px);background:var(--color-gold);clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)}.learn-content{font-size:clamp(1.2rem,4vw,1.5rem);text-align:center;line-height:1.8;width:100%}.learn-row{background:#fff3e0;margin:10px 0;padding:clamp(10px,3vw,15px);border-radius:15px;border:3px dashed var(--secondary);cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;text-align:left;width:100%}.progress-bar{width:100%;height:20px;background:#e0e0e0;border-radius:10px;margin-bottom:20px;overflow:hidden;flex-shrink:0}.progress-fill{height:100%;background:var(--success);width:0%;transition:width .3s ease}.question-box{font-size:clamp(1.8rem,7vw,2.5rem);font-weight:bold;color:var(--text);margin:20px 0;text-align:center;background:#e1f5fe;padding:clamp(15px,5vw,25px);border-radius:20px;width:100%;transition:transform .2s;word-wrap:break-word}.options-grid{display:grid;gap:clamp(10px,3vw,15px);width:100%;grid-template-columns:repeat(2,1fr)}.option-btn{font-size:clamp(1.3rem,5vw,1.6rem);padding:15px;border-radius:20px;margin:0;width:100%}.save-score-box{background:#fdf5e6;padding:clamp(15px,4vw,20px);border-radius:15px;width:100%;margin-top:20px;text-align:center;border:3px dashed var(--color-gold)}.name-input{font-size:16px;padding:15px;border-radius:10px;border:2px solid var(--secondary);width:100%;margin-bottom:10px;text-align:center;user-select:auto}.leaderboard-table{width:100%;border-collapse:collapse;margin-top:10px}.leaderboard-table th,.leaderboard-table td{padding:clamp(8px,2vw,12px) 5px;text-align:left;border-bottom:2px solid #eee;font-size:clamp(1rem,3.5vw,1.2rem)}.calc-display{width:100%;background:#2C3E50;color:var(--accent1);font-size:clamp(2rem,8vw,2.5rem);text-align:right;padding:20px;border-radius:15px;margin-bottom:20px;min-height:80px;word-wrap:break-word;flex-shrink:0}.calc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(5px,2vw,10px);width:100%;flex:1}.calc-btn{font-size:clamp(1.5rem,6vw,1.8rem);padding:10px 5px;margin:0;width:100%;height:100%;border-radius:15px}.search-type-tabs{display:flex;gap:5px;width:100%;margin-top:10px;flex-wrap:wrap}.type-btn{flex:1;margin:0;font-size:clamp(0.9rem,3vw,1.1rem);padding:10px;min-height:40px;border-radius:15px;width:auto}.pwa-modal-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.8);z-index:3000;backdrop-filter:blur(5px);align-items:center;justify-content:center}.pwa-confirm-box{background:#fff;color:var(--text);padding:25px;border-radius:20px;width:320px;max-width:85vw;text-align:center;border:4px dashed var(--accent1);box-shadow:0 15px 30px rgba(0,0,0,.3);animation:bounce .5s ease-out}@media(max-width:360px){.home-grid,.options-grid{grid-template-columns:1fr}}</style></head><body>
 <div id="app">
-
     <div id="home" class="screen active">
-        <h1>🎉 Pari ❤️ Jiya Learning App 📚</h1>
-        <p style="font-size: clamp(1rem, 3.5vw, 1.2rem); margin-bottom: 15px; color: gray;">Let's learn and play!</p>
-        
-        <button id="downloadAppBtn" class="btn" style="background: linear-gradient(90deg, #FF6B6B, #4ECDC4); border: 2px solid #fff; box-shadow: 0 0 15px rgba(255, 107, 107, 0.5); display: none; font-weight: bold; margin-bottom: 15px; animation: bounce 2s infinite;">
-            📲 INSTALL LEARNING APP
-        </button>
-
-        <button class="btn" style="background: var(--accent2); color: white; width: 100%; margin-bottom: 15px; animation: pulse 2s infinite; font-size: clamp(1.2rem, 5vw, 1.4rem); font-weight: bold; border: 2px solid #fff;" onclick="openAIHelper()">
-            🤖 Ask AI Voice Helper 🎙️
-        </button>
-
+        <h1>🎉 Pari ❤️ Jiya App 📚</h1><p style="font-size:clamp(1rem,3.5vw,1.2rem);margin-bottom:15px;color:gray;">Let's learn and play!</p>
+        <button id="downloadAppBtn" class="btn" style="background:linear-gradient(90deg,#FF6B6B,#4ECDC4);border:2px solid #fff;box-shadow:0 0 15px rgba(255,107,107,0.5);display:none;font-weight:bold;margin-bottom:15px;animation:bounce 2s infinite;">📲 INSTALL APP</button>
+        <button class="btn" style="background:var(--accent2);color:white;width:100%;margin-bottom:15px;animation:pulse 2s infinite;font-size:clamp(1.2rem,5vw,1.4rem);font-weight:bold;border:2px solid #fff;" onclick="openAIHelper()">🤖 Ask AI Voice Helper 🎙️</button>
         <div class="home-grid">
-            <button class="btn accent" onclick="openLearn('numbers')">🔢 Numbers</button>
-            <button class="btn" style="background:var(--color-tables)" onclick="openTables()">📊 Tables</button>
-            
-            <button class="btn primary" onclick="openLearn('add')">➕ Add</button>
-            <button class="btn yellow" onclick="openLearn('sub')">➖ Sub</button>
-            
-            <button class="btn secondary" onclick="openLearn('mul')">✖️ Multiply</button>
-            <button class="btn secondary" style="background:#00b8d4" onclick="openLearn('div')">➗ Divide</button>
-            
-            <button class="btn" style="background:var(--color-shapes); color:white; grid-column: 1 / -1;" onclick="openShapesScreen()">🔺 Shapes (आकृतियाँ)</button>
-
-            <button class="btn" style="background:var(--color-months); color:white;" onclick="openMonths()">📅 Months</button>
-            <button class="btn" style="background:var(--color-days); color:white;" onclick="openDays()">📆 Days</button>
-
-            <button class="btn" style="background:var(--color-names); color:white;" onclick="openNumberNames()">🔤 Names</button>
-            <button class="btn" style="background:var(--color-roman); color:white;" onclick="openRomanNumbers()">🏛️ Roman</button>
-            
-            <button class="btn" style="background:var(--color-dict); color:white; grid-column: 1 / -1;" onclick="openDictionaryBook()">📚 Dictionary Book</button>
-            <button class="btn" style="background:var(--color-trans); color:white; grid-column: 1 / -1;" onclick="openTranslator()">🌐 Translator (En ↔ Hi)</button>
+            <button class="btn accent" onclick="openLearn('numbers')">🔢 Numbers</button><button class="btn" style="background:var(--color-tables)" onclick="openTables()">📊 Tables</button>
+            <button class="btn primary" onclick="openLearn('add')">➕ Add</button><button class="btn yellow" onclick="openLearn('sub')">➖ Sub</button>
+            <button class="btn secondary" onclick="openLearn('mul')">✖️ Multiply</button><button class="btn secondary" style="background:#00b8d4" onclick="openLearn('div')">➗ Divide</button>
+            <button class="btn" style="background:var(--color-shapes);color:white;grid-column:1/-1;" onclick="openShapesScreen()">🔺 Shapes</button>
+            <button class="btn" style="background:var(--color-months);color:white;" onclick="openMonths()">📅 Months</button><button class="btn" style="background:var(--color-days);color:white;" onclick="openDays()">📆 Days</button>
+            <button class="btn" style="background:var(--color-names);color:white;" onclick="openNumberNames()">🔤 Names</button><button class="btn" style="background:var(--color-roman);color:white;" onclick="openRomanNumbers()">🏛️ Roman</button>
+            <button class="btn" style="background:var(--color-dict);color:white;grid-column:1/-1;" onclick="openDictionaryBook()">📚 Dictionary</button>
+            <button class="btn" style="background:var(--color-trans);color:white;grid-column:1/-1;" onclick="openTranslator()">🌐 Translator</button>
         </div>
-        
-        <button class="btn" style="background:var(--color-ddg); color:white;" onclick="openSafeSearch()">🔍 Safe Web Search</button>
-
-        <button class="btn primary" onclick="startQuiz()">📝 Start 30 Questions Quiz</button>
-        <button class="btn" style="background:#ff9f43;" onclick="startGameMode()">🎮 Play Game Mode</button>
-        
-        <div style="display:flex; width:100%; gap:10px;">
-            <button class="btn accent" style="flex:1;" onclick="openCalculator()">🧮 Calc</button>
-            <button class="btn" style="background:var(--color-gold); flex:1; color:white;" onclick="openLeaderboard()">🏆 Leaders</button>
-        </div>
+        <button class="btn" style="background:var(--color-ddg);color:white;" onclick="openSafeSearch()">🔍 Safe Search</button>
+        <button class="btn primary" onclick="startQuiz()">📝 Start Quiz</button><button class="btn" style="background:#ff9f43;" onclick="startGameMode()">🎮 Play Game</button>
+        <div style="display:flex;width:100%;gap:10px;"><button class="btn accent" style="flex:1;" onclick="openCalculator()">🧮 Calc</button><button class="btn" style="background:var(--color-gold);flex:1;color:white;" onclick="openLeaderboard()">🏆 Leaders</button></div>
     </div>
-
-    <div id="ai-helper-screen" class="screen">
-        <div class="top-bar">
-            <button class="btn back-btn" onclick="goHome()">🔙</button>
-            <h2 style="margin:0; color:var(--accent2);">AI Assistant 🤖</h2>
-            <div style="width: 40px;"></div>
-        </div>
-        
-        <div class="save-score-box" style="border-color:var(--accent2); flex:1; display:flex; flex-direction:column; align-items:center;">
-            <p style="font-size: 1.2rem; color: var(--text); margin-bottom: 20px; font-weight: bold;">Tap Mic & Ask me anything!</p>
-            
-            <button id="mic-btn" class="btn-icon bounce" style="width:100px; height:100px; font-size:3.5rem; background:var(--accent1); box-shadow: 0 10px 20px rgba(0,0,0,0.2); transition: 0.3s;" onclick="toggleMic()">🎙️</button>
-            <p id="mic-status" style="margin-top:15px; font-weight:bold; color:var(--text); font-size: 1.1rem;">Ready to listen...</p>
-            
-            <div id="chat-container" style="width:100%; margin-top:30px; text-align:left; flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:15px; padding: 5px;">
-                <div id="user-chat" style="display:none; background:#e1f5fe; padding:15px; border-radius:20px 20px 20px 0; border:2px solid #81d4fa; align-self:flex-start; max-width:90%;">
-                    <b style="color:#0288d1; font-size:1rem;">Pari/Jiya:</b><br> <span id="user-text-span" style="font-size:1.2rem; color:#01579b;"></span>
-                </div>
-                <div id="ai-chat" style="display:none; background:#f3e5f5; padding:15px; border-radius:20px 20px 0 20px; border:2px solid #ce93d8; align-self:flex-end; max-width:90%;">
-                    <b style="color:#8e24aa; font-size:1rem;">AI Robot:</b><br> <span id="ai-text-span" style="font-size:1.2rem; color:#4a148c;"></span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="installModal" class="pwa-modal-overlay"><div class="pwa-confirm-box"><h2 style="color: var(--primary); margin-bottom: 10px;">Install App! 📱</h2><p style="font-size: 1.1rem; color: var(--text); line-height: 1.5; margin-bottom: 20px;">To install this learning app ad-free:<br><br>1. Click the <b>3-dots menu (⋮)</b> in Chrome (top-right).<br>2. Select <b>"Add to Home screen"</b> or <b>"Install app"</b>.<br>3. Enjoy learning safely! 🎈</p><button onclick="document.getElementById('installModal').style.display='none';" class="btn primary" style="margin: 0;">Okay!</button></div></div>
-    
-    <div id="safe-search-screen" class="screen"><div class="top-bar"><button class="btn back-btn" onclick="goHome()">🔙</button><h2 style="margin:0; color:var(--color-ddg);">Safe Search 🔍</h2><div style="width: 40px;"></div></div><div class="save-score-box" style="border-color:var(--color-ddg);"><h3 style="color:var(--text); margin-bottom: 5px;">What do you want to learn?</h3><p style="font-size: clamp(0.9rem, 3.5vw, 1.1rem); color: var(--color-ddg); margin-bottom: 15px; font-weight: bold;">DuckDuckGo does not track your searches 🔒</p><input type="text" id="safe-search-input" class="name-input" placeholder="Type here (e.g. apple)..." style="border-color:var(--color-ddg);" onkeyup="checkEnterSearch(event)"><div class="search-type-tabs"><button class="btn type-btn primary" id="tab-normal" onclick="setSearchType('normal', this)">🔍 Normal</button><button class="btn type-btn secondary" id="tab-image" onclick="setSearchType('image', this)">🖼️ Image</button><button class="btn type-btn secondary" id="tab-meaning" onclick="setSearchType('meaning', this)">📖 Meaning</button></div><div style="display: flex; flex-direction: column; gap: 10px; margin-top: 20px; width: 100%;"><button class="btn" style="background:var(--color-ddg); color:white; margin:0;" onclick="performWebSearch('ddg')">🦆 Search with DuckDuckGo</button><button class="btn" style="background:var(--color-google); color:white; margin:0;" onclick="performWebSearch('google')">🌐 Search with Google</button></div></div><button class="btn yellow" style="margin-top: 20px;" onclick="goHome()">🏠 Back to Home</button></div>
-    <div id="shapes-screen" class="screen"><div class="top-bar"><button class="btn back-btn" onclick="goHome()">🔙</button><h2 style="margin:0; color:var(--color-shapes);">Shapes 🔺</h2><div style="width: 40px;"></div></div><div class="shape-display-box" id="shape-display-box"></div><div style="display:flex; justify-content:space-between; width: 100%; gap: 10px;"><button class="btn primary" style="flex:1;" onclick="changeShape(-1)">⬅️ Prev</button><button class="btn primary" style="flex:1;" onclick="changeShape(1)">Next ➡️</button></div></div>
-    <div id="translator-screen" class="screen"><div class="top-bar"><button class="btn back-btn" onclick="goHome()">🔙</button><h2 style="margin:0; color:var(--color-trans);">Translator 🌐</h2><div style="width: 40px;"></div></div><div class="save-score-box" style="border-color:var(--color-trans);"><div style="display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:15px; font-size:clamp(1.1rem, 4vw, 1.4rem); font-weight:bold; color:var(--text); width: 100%;"><span id="lang-from" style="flex:1; text-align:right;">English</span><button class="btn-icon" onclick="swapTranslator()" style="background:var(--accent1); font-size:1.5rem; flex-shrink:0;">🔄</button><span id="lang-to" style="flex:1; text-align:left;">Hindi</span></div><input type="text" id="trans-input" class="name-input" placeholder="English Word..." style="border-color:var(--color-trans);" onkeyup="checkEnterTrans(event)"><button class="btn primary" style="background:var(--color-trans); margin:0;" onclick="translateWord()">🔍 Translate</button></div><div id="trans-result" style="margin-top:20px; width:100%; text-align:center;"></div></div>
-    <div id="dict-book-screen" class="screen"><div class="top-bar"><button class="btn back-btn" onclick="goHome()">🔙</button><h2 style="margin:0; color:var(--color-dict);">Dictionary 📚</h2><div style="width: 40px;"></div></div><div class="dict-toolbar"><input type="text" id="dict-search-input" class="dict-search" placeholder="🔍 Search a word..." onkeyup="filterDictBook()"><button class="btn yellow" style="margin:0; color:var(--text);" onclick="toggleAddWordPanel()">➕ Add New Word</button></div><div id="add-word-panel" class="add-word-panel"><h3 style="margin:0; font-size:1.5rem; color:var(--color-dict);">Add Your Word!</h3><input type="text" id="add-en" class="dict-search" placeholder="English Word (e.g. Tree)"><input type="text" id="add-hi" class="dict-search" placeholder="Hindi Meaning (e.g. पेड़)"><button class="btn primary" style="margin:0;" onclick="saveNewDictWord()">💾 Save Word</button><div id="add-word-msg" style="text-align:center; font-size:1.2rem; font-weight:bold;"></div></div><div id="dict-list-container" class="dict-list-wrap"></div></div>
-    <div id="months-screen" class="screen"><div class="top-bar"><button class="btn back-btn" onclick="goHome()">🔙</button><h2 style="margin:0; color:var(--color-months);">Months 📅</h2><div style="width: 40px;"></div></div><div id="months-content" class="list-container"></div></div>
-    <div id="days-screen" class="screen"><div class="top-bar"><button class="btn back-btn" onclick="goHome()">🔙</button><h2 style="margin:0; color:var(--color-days);">Days 📆</h2><div style="width: 40px;"></div></div><div id="days-content" class="list-container"></div></div>
-    <div id="learn" class="screen"><div class="top-bar"><button class="btn back-btn" onclick="goHome()">🔙</button><h2 id="learn-title" style="margin:0;">Learn</h2><div style="width: 40px;"></div></div><div id="learn-content-area" class="learn-content"></div></div>
-    <div id="tables-screen" class="screen"><div class="top-bar"><button class="btn back-btn" onclick="goHome()">🔙</button><h2 style="margin:0; color:var(--color-tables);">Tables 📊</h2><div style="width: 40px;"></div></div><div style="display:flex; justify-content:space-between; align-items:center; width: 100%; margin-bottom: 20px; background: #fdf5e6; padding: 10px; border-radius: 15px; gap: 5px;"><button class="btn primary" style="width: auto; margin:0;" onclick="changeTable(-1)">⬅️</button><h3 id="current-table-title" style="margin:0; font-size: clamp(1.3rem, 5vw, 1.8rem); color: var(--text);">Table of 1</h3><button class="btn primary" style="width: auto; margin:0;" onclick="changeTable(1)">➡️</button></div><button class="btn accent" style="margin-bottom: 20px;" onclick="readTableAloud()">🔊 Read Full Table</button><div id="tables-content" class="list-container"></div></div>
-    <div id="names-screen" class="screen"><div class="top-bar"><button class="btn back-btn" onclick="goHome()">🔙</button><h2 style="margin:0; color:var(--color-names);">Number Names 🔤</h2><div style="width: 40px;"></div></div><div id="names-content" class="list-container"></div></div>
-    <div id="roman-screen" class="screen"><div class="top-bar"><button class="btn back-btn" onclick="goHome()">🔙</button><h2 style="margin:0; color:var(--color-roman);">Roman Numbers 🏛️</h2><div style="width: 40px;"></div></div><div id="roman-content" class="list-container"></div></div>
-    <div id="quiz" class="screen"><div class="top-bar"><button class="btn back-btn" onclick="goHome()">🔙</button><h2 style="margin:0;">Quiz Time! 🧠</h2><div style="width: 60px; font-size: clamp(1rem, 4vw, 1.2rem); text-align:center;" id="question-counter">1/30</div></div><div class="progress-bar"><div class="progress-fill" id="quiz-progress"></div></div><div class="question-box" id="quiz-question">2 + 2 = ?</div><button class="btn yellow" style="font-size:clamp(1rem, 4vw, 1.2rem); padding: 10px; width:auto; margin: -10px auto 20px auto;" onclick="repeatQuestionVoice()">🔊 Listen Again</button><div class="options-grid" id="quiz-options"></div></div>
-    <div id="results" class="screen"><h1>🏆 Quiz Finished! 🎉</h1><div class="result-stat" style="color: var(--success); font-size: clamp(1.2rem, 5vw, 1.5rem); font-weight: bold;">✅ Correct: <span id="res-correct">0</span></div><div class="result-stat" style="color: var(--danger); font-size: clamp(1.2rem, 5vw, 1.5rem); font-weight: bold; margin-bottom: 10px;">❌ Wrong: <span id="res-wrong">0</span></div><div class="save-score-box" id="save-score-box"><h3>Save your Score!</h3><input type="text" id="player-name" class="name-input" placeholder="Enter your name" maxlength="15"><button class="btn accent" onclick="saveQuizScore()">💾 Save to Leaderboard</button></div><h3 style="margin-top: 20px; font-size:clamp(1.2rem, 4vw, 1.5rem);" id="mistakes-title">Let's review mistakes 📘:</h3><div class="mistakes-list" id="mistakes-list" style="width: 100%; text-align: left;"></div><button class="btn primary" style="margin-top: 20px;" onclick="startQuiz()">🔄 Start New Quiz</button><button class="btn yellow" onclick="goHome()">🏠 Go Home</button></div>
-    <div id="game-mode" class="screen"><div class="top-bar"><button class="btn back-btn" onclick="goHome()">🔙</button><h2 style="margin:0;">Game Mode 🎮</h2><div style="width: 40px;"></div></div><div class="game-stats" style="display: flex; justify-content: space-between; width: 100%; font-size: clamp(1.2rem, 5vw, 1.5rem); margin-bottom: 15px; font-weight: bold;"><div class="lives" id="game-lives">❤️❤️❤️</div><div class="score">⭐ <span id="game-score">0</span></div></div><div class="question-box" id="game-question">2 + 2 = ?</div><button class="btn yellow" style="font-size:clamp(1rem, 4vw, 1.2rem); padding: 10px; width:auto; margin: -10px auto 20px auto;" onclick="repeatQuestionVoice()">🔊 Listen Again</button><div class="options-grid" id="game-options"></div></div>
-    <div id="game-over" class="screen"><h1>Game Over! 🕹️</h1><h2 style="font-size: clamp(3rem, 10vw, 5rem); margin: 20px 0;">⭐ <span id="final-game-score">0</span></h2><p style="font-size: clamp(1.2rem, 4vw, 1.5rem); margin-bottom: 20px;">Great trying! Keep practicing.</p><button class="btn primary" onclick="startGameMode()">🔄 Play Again</button><button class="btn yellow" onclick="goHome()">🏠 Go Home</button></div>
-    <div id="leaderboard" class="screen"><div class="top-bar"><button class="btn back-btn" onclick="goHome()">🔙</button><h2 style="margin:0;">Leaderboard 🏆</h2><div style="width: 40px;"></div></div><div style="width:100%; overflow-x:auto;"><table class="leaderboard-table" id="leaderboard-table"><thead><tr><th>Rank</th><th>Name</th><th>Score</th><th>Date</th></tr></thead><tbody id="leaderboard-body"></tbody></table></div><button class="btn danger" style="background: var(--danger); margin-top: 30px;" onclick="clearLeaderboard()">🗑️ Clear Board</button></div>
-    <div id="calculator" class="screen"><div class="top-bar"><button class="btn back-btn" onclick="goHome()">🔙</button><h2 style="margin:0;">Calculator 🧮</h2><div style="width: 40px;"></div></div><div class="calc-display" id="calc-display">0</div><div class="calc-grid"><button class="btn calc-btn secondary" onclick="calcInput('7')">7</button><button class="btn calc-btn secondary" onclick="calcInput('8')">8</button><button class="btn calc-btn secondary" onclick="calcInput('9')">9</button><button class="btn calc-btn yellow" onclick="calcInput('/')">÷</button><button class="btn calc-btn secondary" onclick="calcInput('4')">4</button><button class="btn calc-btn secondary" onclick="calcInput('5')">5</button><button class="btn calc-btn secondary" onclick="calcInput('6')">6</button><button class="btn calc-btn yellow" onclick="calcInput('*')">×</button><button class="btn calc-btn secondary" onclick="calcInput('1')">1</button><button class="btn calc-btn secondary" onclick="calcInput('2')">2</button><button class="btn calc-btn secondary" onclick="calcInput('3')">3</button><button class="btn calc-btn yellow" onclick="calcInput('-')">−</button><button class="btn calc-btn primary" onclick="calcClear()">C</button><button class="btn calc-btn secondary" onclick="calcInput('0')">0</button><button class="btn calc-btn accent" onclick="calcCalculate()">=</button><button class="btn calc-btn yellow" onclick="calcInput('+')">+</button></div></div>
-
+    <div id="ai-helper-screen" class="screen"><div class="top-bar"><button class="btn back-btn" onclick="goHome()">🔙</button><h2 style="margin:0;color:var(--accent2);">AI Assistant 🤖</h2><div style="width:40px;"></div></div><div class="save-score-box" style="border-color:var(--accent2);flex:1;display:flex;flex-direction:column;align-items:center;"><p style="font-size:1.2rem;color:var(--text);margin-bottom:20px;font-weight:bold;">Tap Mic & Ask me anything!</p><button id="mic-btn" class="btn-icon bounce" style="width:100px;height:100px;font-size:3.5rem;background:var(--accent1);box-shadow:0 10px 20px rgba(0,0,0,0.2);transition:0.3s;" onclick="toggleMic()">🎙️</button><p id="mic-status" style="margin-top:15px;font-weight:bold;color:var(--text);font-size:1.1rem;">Ready to listen...</p><div id="chat-container" style="width:100%;margin-top:30px;text-align:left;flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:15px;padding:5px;"><div id="user-chat" style="display:none;background:#e1f5fe;padding:15px;border-radius:20px 20px 20px 0;border:2px solid #81d4fa;align-self:flex-start;max-width:90%;"><b style="color:#0288d1;font-size:1rem;">Pari/Jiya:</b><br><span id="user-text-span" style="font-size:1.2rem;color:#01579b;"></span></div><div id="ai-chat" style="display:none;background:#f3e5f5;padding:15px;border-radius:20px 20px 0 20px;border:2px solid #ce93d8;align-self:flex-end;max-width:90%;"><b style="color:#8e24aa;font-size:1rem;">AI Robot:</b><br><span id="ai-text-span" style="font-size:1.2rem;color:#4a148c;"></span></div></div></div></div>
+    <div id="installModal" class="pwa-modal-overlay"><div class="pwa-confirm-box"><h2 style="color:var(--primary);margin-bottom:10px;">Install App! 📱</h2><p style="font-size:1.1rem;color:var(--text);line-height:1.5;margin-bottom:20px;">To install ad-free:<br><br>1. Click <b>3-dots (⋮)</b> in Chrome.<br>2. Select <b>"Add to Home screen"</b>.<br>3. Enjoy learning safely! 🎈</p><button onclick="document.getElementById('installModal').style.display='none';" class="btn primary" style="margin:0;">Okay!</button></div></div>
+    <div id="safe-search-screen" class="screen"><div class="top-bar"><button class="btn back-btn" onclick="goHome()">🔙</button><h2 style="margin:0;color:var(--color-ddg);">Safe Search 🔍</h2><div style="width:40px;"></div></div><div class="save-score-box" style="border-color:var(--color-ddg);"><h3 style="color:var(--text);margin-bottom:5px;">What to learn?</h3><p style="font-size:clamp(0.9rem,3.5vw,1.1rem);color:var(--color-ddg);margin-bottom:15px;font-weight:bold;">Safe & No Tracking 🔒</p><input type="text" id="safe-search-input" class="name-input" placeholder="Type here..." style="border-color:var(--color-ddg);" onkeyup="checkEnterSearch(event)"><div class="search-type-tabs"><button class="btn type-btn primary" id="tab-normal" onclick="setSearchType('normal',this)">🔍 Normal</button><button class="btn type-btn secondary" id="tab-image" onclick="setSearchType('image',this)">🖼️ Image</button><button class="btn type-btn secondary" id="tab-meaning" onclick="setSearchType('meaning',this)">📖 Meaning</button></div><div style="display:flex;flex-direction:column;gap:10px;margin-top:20px;width:100%;"><button class="btn" style="background:var(--color-ddg);color:white;margin:0;" onclick="performWebSearch('ddg')">🦆 DuckDuckGo</button><button class="btn" style="background:var(--color-google);color:white;margin:0;" onclick="performWebSearch('google')">🌐 Google</button></div></div></div>
+    <div id="shapes-screen" class="screen"><div class="top-bar"><button class="btn back-btn" onclick="goHome()">🔙</button><h2 style="margin:0;color:var(--color-shapes);">Shapes 🔺</h2><div style="width:40px;"></div></div><div class="shape-display-box" id="shape-display-box"></div><div style="display:flex;justify-content:space-between;width:100%;gap:10px;"><button class="btn primary" style="flex:1;" onclick="changeShape(-1)">⬅️ Prev</button><button class="btn primary" style="flex:1;" onclick="changeShape(1)">Next ➡️</button></div></div>
+    <div id="translator-screen" class="screen"><div class="top-bar"><button class="btn back-btn" onclick="goHome()">🔙</button><h2 style="margin:0;color:var(--color-trans);">Translator 🌐</h2><div style="width:40px;"></div></div><div class="save-score-box" style="border-color:var(--color-trans);"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:15px;font-size:clamp(1.1rem,4vw,1.4rem);font-weight:bold;color:var(--text);width:100%;"><span id="lang-from" style="flex:1;text-align:right;">English</span><button class="btn-icon" onclick="swapTranslator()" style="background:var(--accent1);font-size:1.5rem;flex-shrink:0;">🔄</button><span id="lang-to" style="flex:1;text-align:left;">Hindi</span></div><input type="text" id="trans-input" class="name-input" placeholder="Word..." style="border-color:var(--color-trans);" onkeyup="checkEnterTrans(event)"><button class="btn primary" style="background:var(--color-trans);margin:0;" onclick="translateWord()">🔍 Translate</button></div><div id="trans-result" style="margin-top:20px;width:100%;text-align:center;"></div></div>
+    <div id="dict-book-screen" class="screen"><div class="top-bar"><button class="btn back-btn" onclick="goHome()">🔙</button><h2 style="margin:0;color:var(--color-dict);">Dictionary 📚</h2><div style="width:40px;"></div></div><div class="dict-toolbar"><input type="text" id="dict-search-input" class="dict-search" placeholder="🔍 Search..." onkeyup="filterDictBook()"><button class="btn yellow" style="margin:0;color:var(--text);" onclick="toggleAddWordPanel()">➕ Add Word</button></div><div id="add-word-panel" class="add-word-panel"><h3 style="margin:0;font-size:1.5rem;color:var(--color-dict);">Add Word!</h3><input type="text" id="add-en" class="dict-search" placeholder="English (e.g. Tree)"><input type="text" id="add-hi" class="dict-search" placeholder="Hindi (e.g. पेड़)"><button class="btn primary" style="margin:0;" onclick="saveNewDictWord()">💾 Save</button><div id="add-word-msg" style="text-align:center;font-weight:bold;"></div></div><div id="dict-list-container" class="dict-list-wrap"></div></div>
+    <div id="months-screen" class="screen"><div class="top-bar"><button class="btn back-btn" onclick="goHome()">🔙</button><h2 style="margin:0;color:var(--color-months);">Months 📅</h2><div style="width:40px;"></div></div><div id="months-content" class="list-container"></div></div><div id="days-screen" class="screen"><div class="top-bar"><button class="btn back-btn" onclick="goHome()">🔙</button><h2 style="margin:0;color:var(--color-days);">Days 📆</h2><div style="width:40px;"></div></div><div id="days-content" class="list-container"></div></div>
+    <div id="learn" class="screen"><div class="top-bar"><button class="btn back-btn" onclick="goHome()">🔙</button><h2 id="learn-title" style="margin:0;">Learn</h2><div style="width:40px;"></div></div><div id="learn-content-area" class="learn-content"></div></div>
+    <div id="tables-screen" class="screen"><div class="top-bar"><button class="btn back-btn" onclick="goHome()">🔙</button><h2 style="margin:0;color:var(--color-tables);">Tables 📊</h2><div style="width:40px;"></div></div><div style="display:flex;justify-content:space-between;align-items:center;width:100%;margin-bottom:20px;background:#fdf5e6;padding:10px;border-radius:15px;gap:5px;"><button class="btn primary" style="width:auto;margin:0;" onclick="changeTable(-1)">⬅️</button><h3 id="current-table-title" style="margin:0;font-size:clamp(1.3rem,5vw,1.8rem);color:var(--text);">Table of 1</h3><button class="btn primary" style="width:auto;margin:0;" onclick="changeTable(1)">➡️</button></div><button class="btn accent" style="margin-bottom:20px;" onclick="readTableAloud()">🔊 Read Full</button><div id="tables-content" class="list-container"></div></div>
+    <div id="names-screen" class="screen"><div class="top-bar"><button class="btn back-btn" onclick="goHome()">🔙</button><h2 style="margin:0;color:var(--color-names);">Names 🔤</h2><div style="width:40px;"></div></div><div id="names-content" class="list-container"></div></div><div id="roman-screen" class="screen"><div class="top-bar"><button class="btn back-btn" onclick="goHome()">🔙</button><h2 style="margin:0;color:var(--color-roman);">Roman 🏛️</h2><div style="width:40px;"></div></div><div id="roman-content" class="list-container"></div></div>
+    <div id="quiz" class="screen"><div class="top-bar"><button class="btn back-btn" onclick="goHome()">🔙</button><h2 style="margin:0;">Quiz! 🧠</h2><div style="width:60px;font-size:clamp(1rem,4vw,1.2rem);text-align:center;" id="question-counter">1/30</div></div><div class="progress-bar"><div class="progress-fill" id="quiz-progress"></div></div><div class="question-box" id="quiz-question">2+2=?</div><button class="btn yellow" style="font-size:clamp(1rem,4vw,1.2rem);padding:10px;width:auto;margin:-10px auto 20px;" onclick="repeatQuestionVoice()">🔊 Listen Again</button><div class="options-grid" id="quiz-options"></div></div>
+    <div id="results" class="screen"><h1>🏆 Finished! 🎉</h1><div class="result-stat" style="color:var(--success);font-size:clamp(1.2rem,5vw,1.5rem);font-weight:bold;">✅ Correct: <span id="res-correct">0</span></div><div class="result-stat" style="color:var(--danger);font-size:clamp(1.2rem,5vw,1.5rem);font-weight:bold;margin-bottom:10px;">❌ Wrong: <span id="res-wrong">0</span></div><div class="save-score-box" id="save-score-box"><h3>Save Score!</h3><input type="text" id="player-name" class="name-input" placeholder="Your name" maxlength="15"><button class="btn accent" onclick="saveQuizScore()">💾 Save</button></div><h3 style="margin-top:20px;font-size:clamp(1.2rem,4vw,1.5rem);" id="mistakes-title">Mistakes 📘:</h3><div class="mistakes-list" id="mistakes-list" style="width:100%;text-align:left;"></div><button class="btn primary" style="margin-top:20px;" onclick="startQuiz()">🔄 Restart</button><button class="btn yellow" onclick="goHome()">🏠 Home</button></div>
+    <div id="game-mode" class="screen"><div class="top-bar"><button class="btn back-btn" onclick="goHome()">🔙</button><h2 style="margin:0;">Game 🎮</h2><div style="width:40px;"></div></div><div class="game-stats" style="display:flex;justify-content:space-between;width:100%;font-size:clamp(1.2rem,5vw,1.5rem);margin-bottom:15px;font-weight:bold;"><div class="lives" id="game-lives">❤️❤️❤️</div><div class="score">⭐ <span id="game-score">0</span></div></div><div class="question-box" id="game-question">2+2=?</div><button class="btn yellow" style="font-size:clamp(1rem,4vw,1.2rem);padding:10px;width:auto;margin:-10px auto 20px;" onclick="repeatQuestionVoice()">🔊 Listen</button><div class="options-grid" id="game-options"></div></div>
+    <div id="game-over" class="screen"><h1>Game Over! 🕹️</h1><h2 style="font-size:clamp(3rem,10vw,5rem);margin:20px 0;">⭐ <span id="final-game-score">0</span></h2><button class="btn primary" onclick="startGameMode()">🔄 Play Again</button><button class="btn yellow" onclick="goHome()">🏠 Home</button></div>
+    <div id="leaderboard" class="screen"><div class="top-bar"><button class="btn back-btn" onclick="goHome()">🔙</button><h2 style="margin:0;">Leaders 🏆</h2><div style="width:40px;"></div></div><div style="width:100%;overflow-x:auto;"><table class="leaderboard-table" id="leaderboard-table"><thead><tr><th>Rnk</th><th>Name</th><th>Score</th><th>Date</th></tr></thead><tbody id="leaderboard-body"></tbody></table></div><button class="btn danger" style="background:var(--danger);margin-top:30px;" onclick="clearLeaderboard()">🗑️ Clear</button></div>
+    <div id="calculator" class="screen"><div class="top-bar"><button class="btn back-btn" onclick="goHome()">🔙</button><h2 style="margin:0;">Calc 🧮</h2><div style="width:40px;"></div></div><div class="calc-display" id="calc-display">0</div><div class="calc-grid"><button class="btn calc-btn secondary" onclick="calcInput('7')">7</button><button class="btn calc-btn secondary" onclick="calcInput('8')">8</button><button class="btn calc-btn secondary" onclick="calcInput('9')">9</button><button class="btn calc-btn yellow" onclick="calcInput('/')">÷</button><button class="btn calc-btn secondary" onclick="calcInput('4')">4</button><button class="btn calc-btn secondary" onclick="calcInput('5')">5</button><button class="btn calc-btn secondary" onclick="calcInput('6')">6</button><button class="btn calc-btn yellow" onclick="calcInput('*')">×</button><button class="btn calc-btn secondary" onclick="calcInput('1')">1</button><button class="btn calc-btn secondary" onclick="calcInput('2')">2</button><button class="btn calc-btn secondary" onclick="calcInput('3')">3</button><button class="btn calc-btn yellow" onclick="calcInput('-')">−</button><button class="btn calc-btn primary" onclick="calcClear()">C</button><button class="btn calc-btn secondary" onclick="calcInput('0')">0</button><button class="btn calc-btn accent" onclick="calcCalculate()">=</button><button class="btn calc-btn yellow" onclick="calcInput('+')">+</button></div></div>
 </div>
 
 <script>
-    // --- Audio System & SpeechSynthesis (Kids Rate: 0.7) ---
-    const AudioContext = window.AudioContext || window.webkitAudioContext;
-    let audioCtx;
-
-    function playSound(isCorrect) {
-        if (!audioCtx) audioCtx = new AudioContext();
-        if (audioCtx.state === 'suspended') audioCtx.resume();
-        const osc = audioCtx.createOscillator();
-        const gainNode = audioCtx.createGain();
-        osc.connect(gainNode); gainNode.connect(audioCtx.destination);
-        
-        if (isCorrect) {
-            osc.type = 'sine'; osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); 
-            osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1); 
-            osc.frequency.exponentialRampToValueAtTime(1046.50, audioCtx.currentTime + 0.2); 
-            gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime); gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
-            osc.start(); osc.stop(audioCtx.currentTime + 0.3);
-        } else {
-            osc.type = 'sawtooth'; osc.frequency.setValueAtTime(200, audioCtx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.3);
-            gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime); gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
-            osc.start(); osc.stop(audioCtx.currentTime + 0.3);
-        }
-    }
-
-    function stopVoice() { if('speechSynthesis' in window) window.speechSynthesis.cancel(); }
-
-    function speakText(text) {
-        if (!('speechSynthesis' in window)) return;
-        stopVoice();
-        const msg = new SpeechSynthesisUtterance(text);
-        msg.rate = 0.8; // Set slightly faster than 0.7 so AI doesn't sound too slow
-        msg.pitch = 1.2; // Cute kids pitch
-        msg.lang = 'hi-IN'; // Works for both Hindi and English mixed naturally
-        window.speechSynthesis.speak(msg);
-    }
-
-    function speakBilingual(enText, hiText) {
-        if (!('speechSynthesis' in window)) return;
-        stopVoice();
-        const msgEn = new SpeechSynthesisUtterance(enText);
-        msgEn.lang = 'en-US'; msgEn.rate = 0.7;
-        
-        const msgHi = new SpeechSynthesisUtterance(hiText);
-        msgHi.lang = 'hi-IN'; msgHi.rate = 0.7;
-        
-        window.speechSynthesis.speak(msgEn);
-        window.speechSynthesis.speak(msgHi);
-    }
-
-    let lastSpokenText = "";
-    function repeatQuestionVoice() { if(lastSpokenText) speakText(lastSpokenText); }
-
-    function showScreen(screenId) {
-        stopVoice();
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        document.getElementById(screenId).classList.add('active');
-    }
-    function goHome() { showScreen('home'); }
-
-    // ⭐ NAYA: AI Assistant (JARVIS) Code ⭐
-    const GEMINI_API_KEY = "AIzaSyCor3y7MXZHUdbgllhsyhvxSiVUE1l4kwg"; 
-    let isListening = false;
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    let recognition;
-
-    if (SpeechRecognition) {
-        recognition = new SpeechRecognition();
-        recognition.lang = 'hi-IN'; // Understands both English and Hindi very well
-        recognition.interimResults = false;
-        
-        recognition.onresult = async (event) => {
-            const transcript = event.results[0][0].transcript;
-            isListening = false;
-            resetMicUI();
-            
-            document.getElementById('user-chat').style.display = 'block';
-            document.getElementById('user-text-span').innerText = transcript;
-            
-            document.getElementById('ai-chat').style.display = 'block';
-            document.getElementById('ai-text-span').innerText = "Thinking... 🤔";
-            
-            // Scroll to bottom
-            const chatContainer = document.getElementById('chat-container');
-            chatContainer.scrollTop = chatContainer.scrollHeight;
-
-            await askGemini(transcript);
-        };
-
-        recognition.onerror = (event) => {
-            isListening = false;
-            resetMicUI();
-            document.getElementById('mic-status').innerText = "Oops! Didn't hear you clearly. 😕";
-        };
-
-        recognition.onend = () => {
-            if(isListening) {
-                isListening = false;
-                resetMicUI();
-            }
-        };
-    }
-
-    function openAIHelper() {
-        document.getElementById('user-chat').style.display = 'none';
-        document.getElementById('ai-chat').style.display = 'none';
-        resetMicUI();
-        showScreen('ai-helper-screen');
-    }
-
-    function toggleMic() {
-        if (!recognition) {
-            alert("Sorry! Mic is not supported on this browser. Try Chrome! 🎙️❌");
-            return;
-        }
-
-        if (isListening) {
-            recognition.stop();
-            return;
-        }
-
-        try {
-            recognition.start();
-            isListening = true;
-            document.getElementById('mic-status').innerText = "Listening... Speak now! 👂";
-            const micBtn = document.getElementById('mic-btn');
-            micBtn.style.transform = "scale(1.2)";
-            micBtn.style.background = "var(--danger)";
-            micBtn.style.color = "white";
-            micBtn.style.boxShadow = "0 0 20px rgba(255,139,148, 0.8)";
-            stopVoice(); // Stop AI if it was already speaking
-        } catch (e) {
-            console.log(e);
-        }
-    }
-
-    function resetMicUI() {
-        const micBtn = document.getElementById('mic-btn');
-        micBtn.style.transform = "scale(1)";
-        micBtn.style.background = "var(--accent1)";
-        micBtn.style.color = "var(--text)";
-        micBtn.style.boxShadow = "0 10px 20px rgba(0,0,0,0.2)";
-        document.getElementById('mic-status').innerText = "Tap Mic to speak";
-    }
-
-    async function askGemini(question) {
-        // System Prompt to make AI act like a sweet teacher for kids
-        const prompt = `You are a sweet, funny, and highly intelligent AI teacher for two kids named Pari and Jiya. Give a very short, simple, and safe answer in just 1 or 2 lines. Do not use * or ** formatting symbols. If the kid asks in Hindi, reply in sweet Hindi. If in English, reply in easy English. The kid asked: "${question}"`;
-        
-        try {
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    contents: [{ parts: [{ text: prompt }] }]
-                })
-            });
-            
-            const data = await response.json();
-            if (data.candidates && data.candidates[0].content.parts[0].text) {
-                let ans = data.candidates[0].content.parts[0].text;
-                ans = ans.replace(/\*/g, ''); // Remove markdown bold symbols so speech is clean
-                
-                document.getElementById('ai-text-span').innerText = ans;
-                
-                // Scroll down
-                const chatContainer = document.getElementById('chat-container');
-                chatContainer.scrollTop = chatContainer.scrollHeight;
-
-                speakText(ans); // Read the answer out loud!
-            } else {
-                throw new Error("No answer from Brain");
-            }
-        } catch (error) {
-            document.getElementById('ai-text-span').innerText = "Oh no! My brain is sleeping right now. Try again later! 😴";
-            speakText("Oh no! My brain is sleeping right now. Try again later!");
-        }
-    }
-
-
-    // --- NEW SEARCH TYPE LOGIC ---
-    let currentSearchType = 'normal';
-
-    function openSafeSearch() {
-        document.getElementById('safe-search-input').value = '';
-        setSearchType('normal', document.getElementById('tab-normal')); // Default to normal
-        showScreen('safe-search-screen');
-    }
-
-    function setSearchType(type, btnElement) {
-        currentSearchType = type;
-        
-        // Remove 'primary' class from all tabs, add 'secondary'
-        document.querySelectorAll('.type-btn').forEach(btn => {
-            btn.classList.remove('primary');
-            btn.classList.add('secondary');
-        });
-        
-        // Highlight clicked tab with 'primary'
-        btnElement.classList.remove('secondary');
-        btnElement.classList.add('primary');
-    }
-
-    function checkEnterSearch(e) {
-        // Default to DuckDuckGo when pressing enter
-        if(e.key === 'Enter') performWebSearch('ddg');
-    }
-
-    function performWebSearch(engine) {
-        const query = document.getElementById('safe-search-input').value.trim();
-        
-        if(query) {
-            const encodedQuery = encodeURIComponent(query);
-            let searchUrl = '';
-
-            if (engine === 'ddg') {
-                if (currentSearchType === 'normal') {
-                    searchUrl = 'https://duckduckgo.com/?q=' + encodedQuery;
-                } else if (currentSearchType === 'image') {
-                    searchUrl = 'https://duckduckgo.com/?q=' + encodedQuery + '&iax=images&ia=images';
-                } else if (currentSearchType === 'meaning') {
-                    searchUrl = 'https://duckduckgo.com/?q=' + encodedQuery + '+meaning';
-                }
-            } else if (engine === 'google') {
-                if (currentSearchType === 'normal') {
-                    searchUrl = 'https://www.google.com/search?q=' + encodedQuery;
-                } else if (currentSearchType === 'image') {
-                    searchUrl = 'https://www.google.com/search?tbm=isch&q=' + encodedQuery;
-                } else if (currentSearchType === 'meaning') {
-                    searchUrl = 'https://www.google.com/search?q=' + encodedQuery + '+meaning';
-                }
-            }
-
-            // Open strictly in a new tab/window
-            window.open(searchUrl, '_blank');
-        } else {
-            speakText("Please type something to search");
-        }
-    }
-
-    // --- 10+ SHAPES LEARNING SYSTEM ---
-    const shapesData = [
-        { id: 'triangle', en: 'Triangle', hi: 'त्रिभुज', css: 'css-triangle', emoji: '🔺' },
-        { id: 'square', en: 'Square', hi: 'वर्ग', css: 'css-square', emoji: '⬛' },
-        { id: 'circle', en: 'Circle', hi: 'वृत्त', css: 'css-circle', emoji: '⚪' },
-        { id: 'line', en: 'Line', hi: 'रेखा', css: 'css-line', emoji: '➖' },
-        { id: 'pentagon', en: 'Pentagon', hi: 'पंचभुज', css: 'css-pentagon', emoji: '⬟' },
-        { id: 'hexagon', en: 'Hexagon', hi: 'षट्भुज', css: 'css-hexagon', emoji: '⬡' },
-        { id: 'octagon', en: 'Octagon', hi: 'अष्टभुज', css: 'css-octagon', emoji: '🛑' },
-        { id: 'oval', en: 'Oval', hi: 'अंडाकार', css: 'css-oval', emoji: '🥚' },
-        { id: 'rectangle', en: 'Rectangle', hi: 'आयत', css: 'css-rectangle', emoji: '▭' },
-        { id: 'star', en: 'Star', hi: 'तारा', css: 'css-star', emoji: '⭐' }
-    ];
-    let currentShapeIdx = 0;
-
-    function openShapesScreen() {
-        currentShapeIdx = 0; renderCurrentShape(); showScreen('shapes-screen');
-    }
-
-    function changeShape(dir) {
-        stopVoice(); currentShapeIdx += dir;
-        if (currentShapeIdx < 0) currentShapeIdx = shapesData.length - 1;
-        if (currentShapeIdx >= shapesData.length) currentShapeIdx = 0;
-        renderCurrentShape();
-    }
-
-    function renderCurrentShape() {
-        const shape = shapesData[currentShapeIdx];
-        const box = document.getElementById('shape-display-box');
-        box.innerHTML = `
-            <div class="css-shape ${shape.css}"></div>
-            <div style="font-size:clamp(1.8rem, 8vw, 2.5rem); font-weight:bold; color:var(--primary); text-align:center;">${shape.en} ${shape.emoji}</div>
-            <div style="font-size:clamp(1.4rem, 6vw, 1.8rem); color:var(--text); text-align:center;">${shape.hi}</div>
-            <button class="btn accent" style="font-size:clamp(1.2rem, 5vw, 1.5rem); margin-top:10px;" onclick="speakBilingual('${shape.en} means', '${shape.hi}')">🔊 Speak</button>
-        `;
-    }
-
-    // --- 1000+ COMPRESSED MASSIVE DICTIONARY (Smart & Lazy Loaded) ---
-    const baseDictionary = {
-        "apple":"सेब","banana":"केला","mango":"आम","orange":"संतरा","grape":"अंगूर","papaya":"पपीता","guava":"अमरूद","pineapple":"अनानास","watermelon":"तरबूज","pomegranate":"अनार",
-        "dog":"कुत्ता","cat":"बिल्ली","cow":"गाय","horse":"घोड़ा","elephant":"हाथी","tiger":"बाघ","lion":"शेर","monkey":"बंदर","bear":"भालू","rabbit":"खरगोश","deer":"हिरण","goat":"बकरी","sheep":"भेड़","snake":"साँप","bird":"पक्षी","parrot":"तोता","peacock":"मोर","pigeon":"कबूतर","crow":"कौआ","eagle":"चील","owl":"उल्लू","sparrow":"गौरैया","swan":"हंस",
-        "red":"लाल","blue":"नीला","green":"हरा","yellow":"पीला","black":"काला","white":"सफेद","pink":"गुलाबी","purple":"बैंगनी","brown":"भूरा","grey":"धूसर","silver":"चांदी","gold":"सोना",
-        "head":"सिर","hair":"बाल","eye":"आँख","ear":"कान","nose":"नाक","mouth":"मुँह","lip":"होंठ","tooth":"दांत","tongue":"जीभ","face":"चेहरा","neck":"गर्दन","shoulder":"कंधा","arm":"बांह","hand":"हाथ","finger":"उंगली","thumb":"अंगूठा","chest":"छाती","stomach":"पेट","back":"पीठ","leg":"पैर","knee":"घुटना","foot":"पैर","toe":"पैर की अंगुली","skin":"त्वचा","bone":"हड्डी","blood":"रक्त",
-        "school":"स्कूल","class":"कक्षा","teacher":"शिक्षक","student":"छात्र","book":"किताब","pen":"कलम","pencil":"पेंसिल","eraser":"रबर","notebook":"कॉपी","bag":"थैला","desk":"डेस्क","bench":"बेंच","chair":"कुर्सी","board":"बोर्ड","chalk":"चाक","map":"नक्शा","paper":"कागज़","bell":"घंटी",
-        "go":"जाना","come":"आना","eat":"खाना","drink":"पीना","sleep":"सोना","run":"दौड़ना","walk":"चलना","jump":"कूदना","sit":"बैठना","stand":"खड़े होना","read":"पढ़ना","write":"लिखना","play":"खेलना","laugh":"हंसना","cry":"रोना","smile":"मुस्कान","see":"देखना","look":"देखना","hear":"सुनना","listen":"सुनना","say":"कहना","speak":"बोलना","tell":"बताना","ask":"पूछना","give":"देना","take":"लेना","bring":"लाना","buy":"खरीदना","sell":"बेचना","catch":"पकड़ना","throw":"फेंकना","open":"खुला","close":"बंद करना","push":"धकेलना","pull":"खींचना","wash":"धोना","clean":"साफ","help":"मदद","work":"काम","learn":"सीखना","teach":"सिखाना",
-        "sun":"सूरज","moon":"चाँद","star":"तारा","sky":"आसमान","cloud":"बादल","rain":"बारिश","wind":"हवा","water":"पानी","fire":"आग","earth":"पृथ्वी","world":"दुनिया","day":"दिन","night":"रात","morning":"सुबह","evening":"शाम","time":"समय","today":"आज","tomorrow":"कल","yesterday":"कल (बीता)","house":"घर","room":"कमरा","door":"दरवाज़ा","window":"खिड़की","roof":"छत","wall":"दीवार","floor":"फ़र्श","bed":"बिस्तर","table":"मेज़","food":"भोजन","milk":"दूध","tea":"चाय","rice":"चावल","vegetable":"सब्जी","boy":"लड़का","girl":"लड़की","man":"आदमी","woman":"औरत","mother":"माँ","father":"पिता","brother":"भाई","sister":"बहन","friend":"दोस्त","baby":"बच्चा","name":"नाम","age":"उम्र","city":"शहर","village":"गाँव","road":"सड़क","way":"रास्ता","car":"गाड़ी","bus":"बस","train":"रेलगाड़ी","plane":"विमान","boat":"नाव","ship":"जहाज़",
-        "a":"एक","ability":"क्षमता","able":"सक्षम","about":"के बारे में","above":"ऊपर","accept":"स्वीकार करना","according":"के अनुसार","account":"खाता","across":"पार","act":"कार्य","action":"कार्रवाई","activity":"गतिविधि","actually":"वास्तव में","add":"जोड़ना","address":"पता","administration":"प्रशासन","admit":"स्वीकार करना","adult":"वयस्क","affect":"प्रभावित करना","after":"बाद में","again":"फिर से","against":"के खिलाफ","agency":"एजेंसी","agent":"दलाल","ago":"पूर्व","agree":"सहमत होना","agreement":"समझौता","ahead":"आगे","air":"हवा","all":"सब","allow":"अनुमति देना","almost":"लगभग","alone":"अकेला","along":"साथ में","already":"पहले से","also":"भी","although":"हालांकि","always":"हमेशा","among":"के बीच","amount":"मात्रा","analysis":"विश्लेषण","and":"और","animal":"जानवर","another":"एक और","answer":"उत्तर","any":"कोई","anyone":"कोई भी","anything":"कुछ भी","appear":"प्रकट होना","apply":"लागू करना","approach":"दृष्टिकोण","area":"क्षेत्र","argue":"बहस करना","around":"चारों ओर","arrive":"पहुंचना","art":"कला","article":"लेख","artist":"कलाकार","as":"जैसा","assume":"मान लेना","at":"पर","attack":"आक्रमण","attention":"ध्यान","attorney":"वकील","audience":"दर्शक","author":"लेखक","authority":"अधिकार","available":"उपलब्ध","avoid":"बचना","away":"दूर","bad":"बुरा","bank":"बैंक","bar":"बार","base":"आधार","be":"होना","beat":"पीटना","beautiful":"सुंदर","because":"क्योंकि","become":"बनना","before":"पहले","begin":"शुरू","behavior":"व्यवहार","behind":"पीछे","believe":"विश्वास करना","benefit":"लाभ","best":"सबसे अच्छा","better":"बेहतर","between":"के बीच","beyond":"परे","big":"बड़ा","bill":"बिल","billion":"अरब","bit":"थोड़ा","board":"बोर्ड","body":"शरीर","born":"पैदा हुआ","both":"दोनों","box":"डिब्बा","break":"तोड़ना","budget":"बजट","build":"बनाना","building":"इमारत","business":"व्यापार","but":"लेकिन","by":"द्वारा","call":"बुलाना","camera":"कैमरा","campaign":"अभियान","can":"सकना","cancer":"कैंसर","candidate":"उम्मीदवार","capital":"राजधानी","card":"कार्ड","care":"देखभाल","career":"करियर","carry":"ले जाना","case":"मामला","cause":"कारण","cell":"कोशिका","center":"केंद्र","central":"केंद्रीय","century":"सदी","certain":"निश्चित","certainly":"निश्चित रूप से","challenge":"चुनौती","chance":"मौका","change":"बदलना","character":"चरित्र","charge":"प्रभार","check":"जांचना","choice":"विकल्प","choose":"चुनना","church":"गिरजाघर","citizen":"नागरिक","civil":"नागरिक (विशेषण)","claim":"दावा","clear":"स्पष्ट","clearly":"स्पष्ट रूप से","coach":"प्रशिक्षक","cold":"ठंडा","collection":"संग्रह","college":"कॉलेज","color":"रंग","commercial":"व्यावसायिक","common":"सामान्य","community":"समुदाय","company":"कंपनी","compare":"तुलना करना","computer":"कंप्यूटर","concern":"चिंता","condition":"स्थिति","conference":"सम्मेलन","consider":"विचार करना","consumer":"उपभोक्ता","contain":"शामिल करना","continue":"जारी रखना","control":"नियंत्रण","cost":"कीमत","could":"सकता था","country":"देश","couple":"जोड़ा","course":"पाठ्यक्रम","court":"अदालत","cover":"कवर","create":"बनाना","crime":"अपराध","cultural":"सांस्कृतिक","culture":"संस्कृति","cup":"प्याला","current":"वर्तमान","customer":"ग्राहक","cut":"काटना","dark":"अंधेरा","data":"डेटा","daughter":"बेटी","dead":"मृत","deal":"सौदा","death":"मृत्यु","debate":"बहस","decade":"दशक","decide":"निर्णय करना","decision":"निर्णय","deep":"गहरा","defense":"रक्षा","degree":"डिग्री","democratic":"लोकतांत्रिक","describe":"वर्णन करना","design":"डिजाइन","despite":"के बावजूद","detail":"विवरण","determine":"निर्धारित करना","develop":"विकसित करना","development":"विकास","die":"मरना","difference":"अंतर","different":"अलग","difficult":"कठिन","dinner":"रात का खाना","direction":"दिशा","director":"निदेशक","discover":"खोज करना","discuss":"चर्चा करना","disease":"बीमारी","do":"करना","doctor":"चिकित्सक","down":"नीचे","draw":"चित्र बनाना","dream":"सपना","drive":"चलाना","drop":"गिराना","drug":"दवा","during":"के दौरान","each":"प्रत्येक","early":"जल्दी","east":"पूर्व","easy":"आसान","economic":"आर्थिक","economy":"अर्थव्यवस्था","edge":"किनारा","education":"शिक्षा","effect":"प्रभाव","effort":"प्रयास","eight":"आठ","either":"या तो","election":"चुनाव","else":"अन्यथा","employee":"कर्मचारी","end":"अंत","energy":"ऊर्जा","enjoy":"आनंद लेना","enough":"पर्याप्त","enter":"दर्ज करना","entire":"संपूर्ण","environment":"पर्यावरण","environmental":"पर्यावरणीय","especially":"विशेष रूप से","establish":"स्थापित करना","even":"यहाँ तक ​​की","event":"घटना","ever":"कभी","every":"हर","everybody":"हर कोई","everyone":"हर कोई","everything":"सब कुछ","evidence":"सबूत","exactly":"बिल्कुल","example":"उदाहरण","executive":"कार्यकारी","exist":"मौजूद","expect":"अपेक्षा करना","experience":"अनुभव","expert":"विशेषज्ञ","explain":"समझाना","fact":"तथ्य","factor":"कारक","fail":"विफल","fall":"गिरना","family":"परिवार","far":"दूर","fast":"तेज़","father":"पिता","fear":"डर","federal":"संघीय","feel":"महसूस करना","feeling":"भावना","few":"कुछ","field":"खेत","fight":"लड़ना","figure":"आंकड़ा","fill":"भरना","film":"फिल्म","final":"अंतिम","finally":"आखिरकार","financial":"वित्तीय","find":"खोजना","fine":"ठीक","finish":"खत्म करना","fire":"आग","firm":"दृढ़","first":"प्रथम","fish":"मछली","five":"पाँच","floor":"मंज़िल","fly":"उड़ना","focus":"ध्यान केंद्रित करना","follow":"पालन करना","for":"के लिए","force":"बल","foreign":"विदेशी","forget":"भूलना","form":"प्रपत्र","former":"पूर्व","forward":"आगे","four":"चार","free":"मुफ्त","from":"से","front":"सामने","full":"पूरा","fund":"निधि","future":"भविष्य","game":"खेल","garden":"बगीचा","gas":"गैस","general":"सामान्य","generation":"पीढ़ी","get":"पाना","glass":"कांच/गिलास","goal":"लक्ष्य","good":"अच्छा","government":"सरकार","great":"महान","ground":"ज़मीन","group":"समूह","grow":"बढ़ना","growth":"विकास","guess":"अनुमान","gun":"बंदूक","guy":"लड़का/व्यक्ति","half":"आधा","hang":"लटकाना","happen":"होना","happy":"खुश","hard":"कठिन","have":"पास होना","he":"वह","health":"स्वास्थ्य","heart":"दिल","heat":"गर्मी","heavy":"भारी","her":"उसकी","here":"यहाँ","herself":"वह स्वयं","high":"ऊँचा","him":"उसे","himself":"वह स्वयं","his":"उसका","history":"इतिहास","hit":"मारना","hold":"पकड़ना","home":"घर","hope":"आशा","hospital":"अस्पताल","hot":"गर्म","hotel":"होटल","hour":"घंटा","how":"कैसे","however":"तथापि","huge":"विशाल","human":"मानव","hundred":"सौ","husband":"पति","I":"मैं","idea":"विचार","identify":"पहचानना","if":"यदि","image":"छवि","imagine":"कल्पना करना","impact":"प्रभाव","important":"महत्वपूर्ण","improve":"सुधारना","in":"में","include":"शामिल करना","including":"सहित","increase":"बढ़ाना","indeed":"वास्तव में","indicate":"संकेत देना","individual":"व्यक्तिगत","industry":"उद्योग","information":"जानकारी","inside":"अंदर","instead":"बजाय","institution":"संस्थान","interest":"दिलचस्पी","interesting":"दिलचस्प","international":"अंतरराष्ट्रीय","interview":"साक्षात्कार","into":"के अंदर","investment":"निवेश","involve":"शामिल करना","issue":"मुद्दा","it":"यह","item":"वस्तु","its":"इसका","itself":"यह स्वयं","job":"नौकरी","join":"जुड़ना","just":"बस/अभी","keep":"रखना","key":"चाबी","kid":"बच्चा","kill":"मारना","kind":"दयालु/प्रकार","kitchen":"रसोईघर","know":"जानना","knowledge":"ज्ञान","land":"भूमि","language":"भाषा","large":"बड़ा","last":"अंतिम","late":"देर","later":"बाद में","laugh":"हंसना","law":"कानून","lawyer":"वकील","lay":"लेटना","lead":"नेतृत्व","leader":"नेता","leadership":"नेतृत्व","least":"कम से कम","leave":"छोड़ना","left":"बाएं","legal":"कानूनी","less":"कम","let":"अनुमति देना","letter":"पत्र","level":"स्तर","lie":"झूठ","life":"जीवन","light":"रोशनी/हल्का","like":"पसंद","likely":"संभवतः","line":"रेखा","list":"सूची","little":"थोड़ा","live":"रहना","local":"स्थानीय","long":"लंबा","lose":"खोना","loss":"नुकसान","lot":"बहुत","love":"प्यार","low":"नीचा","machine":"मशीन","magazine":"पत्रिका","main":"मुख्य","maintain":"बनाए रखना","major":"प्रमुख","majority":"बहुमत","make":"बनाना","manage":"प्रबंधित करना","management":"प्रबंधन","manager":"प्रबंधक","many":"कई","market":"बाज़ार","marriage":"विवाह","material":"सामग्री","matter":"मामला","may":"शायद","maybe":"शायद","me":"मुझे","mean":"मतलब","measure":"उपाय","media":"मीडिया","medical":"चिकित्सीय","meet":"मिलना","meeting":"बैठक","member":"सदस्य","memory":"स्मृति","mention":"उल्लेख","message":"संदेश","method":"तरीका","middle":"मध्य","might":"शायद","military":"सैन्य","million":"दस लाख","mind":"दिमाग","minute":"मिनट","miss":"चूकना","mission":"मिशन","model":"आदर्श","modern":"आधुनिक","moment":"पल","money":"पैसा","month":"महीना","more":"अधिक","most":"सबसे","move":"हिलना","movement":"आंदोलन","movie":"चलचित्र","Mr":"श्री","Mrs":"श्रीमती","much":"बहुत","music":"संगीत","must":"ज़रूर","my":"मेरा","myself":"मैं स्वयं","nation":"राष्ट्र","national":"राष्ट्रीय","natural":"प्राकृतिक","nature":"प्रकृति","near":"पास","nearly":"लगभग","necessary":"ज़रूरी","need":"ज़रूरत","network":"नेटवर्क","never":"कभी नहीं","new":"नया","news":"समाचार","newspaper":"अखबार","next":"अगला","nice":"अच्छा","no":"नहीं","none":"कोई नहीं","nor":"न ही","north":"उत्तर","not":"नहीं","note":"ध्यान दें","nothing":"कुछ नहीं","notice":"सूचना","now":"अब","number":"संख्या","occur":"घटित होना","of":"का","off":"बंद","offer":"प्रस्ताव","office":"कार्यालय","officer":"अधिकारी","official":"अधिकारी","often":"अक्सर","oh":"ओह","oil":"तेल","ok":"ठीक","old":"पुराना","on":"पर","once":"एक बार","one":"एक","only":"केवल","onto":"पर","open":"खुला","operation":"ऑपरेशन","opportunity":"अवसर","option":"विकल्प","or":"या","order":"आदेश","organization":"संगठन","other":"अन्य","others":"अन्य लोग","our":"हमारा","out":"बाहर","outside":"बाहर","over":"ऊपर से","own":"अपना","owner":"मालिक","page":"पृष्ठ","pain":"दर्द","painting":"चित्रकारी","parent":"माता-पिता","part":"हिस्सा","participant":"प्रतिभागी","particular":"विशेष","particularly":"विशेष रूप से","partner":"भागीदार","party":"पार्टी","pass":"गुज़रना","past":"अतीत","patient":"मरीज","pattern":"पैटर्न","pay":"भुगतान","peace":"शांति","people":"लोग","per":"प्रति","perform":"प्रदर्शन करना","performance":"प्रदर्शन","perhaps":"शायद","period":"अवधि","person":"व्यक्ति","personal":"व्यक्तिगत","phone":"फोन","physical":"श शारीरिक","pick":"चुनना","picture":"चित्र","piece":"टुकड़ा","place":"जगह","plan":"योजना","plant":"पौधा","play":"खेलना","player":"खिलाड़ी","PM":"अपराह्न","point":"बिंदु","police":"पुलिस","policy":"नीति","political":"राजनीतिक","politics":"राजनीति","poor":"गरीब","popular":"लोकप्रिय","population":"आबादी","position":"स्थिति","positive":"सकारात्मक","possible":"संभव","power":"शक्ति","practice":"अभ्यास","prepare":"तैयार करना","present":"वर्तमान","president":"अध्यक्ष","pressure":"दबाव","price":"कीमत","private":"निजी","probably":"शायद","problem":"समस्या","process":"प्रक्रिया","produce":"उत्पादन करना","product":"उत्पाद","production":"उत्पादन","professional":"पेशेवर","professor":"प्रोफेसर","program":"कार्यक्रम","project":"परियोजना","property":"संपत्ति","protect":"रक्षा करना","prove":"साबित करना","provide":"प्रदान करना","public":"सार्वजनिक","pull":"खींचना","purpose":"उद्देश्य","put":"रखना","quality":"गुणवत्ता","question":"सवाल","quickly":"जल्दी से","quite":"काफी","race":"दौड़","radio":"रेडियो","raise":"उठाना","range":"सीमा","rate":"दर","rather":"बल्कि","reach":"पहुंचना","ready":"तैयार","real":"असली","reality":"वास्तविकता","realize":"एहसास होना","really":"सचमुच","reason":"कारण","receive":"प्राप्त करना","recent":"हाल ही में","recently":"हाल ही में","recognize":"पहचानना","record":"रिकॉर्ड","reduce":"कम करना","reflect":"प्रतिबिंबित करना","region":"क्षेत्र","relate":"संबंधित होना","relationship":"रिश्ता","religious":"धार्मिक","remain":"बने रहना","remember":"याद रखना","remove":"हटाना","report":"रिपोर्ट","represent":"प्रतिनिधित्व करना","Republican":"रिपब्लिकन","require":"आवश्यकता होना","research":"अनुसंधान","resource":"संसाधन","respond":"जवाब देना","response":"प्रतिक्रिया","responsibility":"ज़िम्मेदारी","rest":"आराम","result":"परिणाम","return":"वापसी","reveal":"प्रकट करना","rich":"अमीर","right":"सही/दाएं","rise":"उठना","risk":"जोखिम","road":"सड़क","rock":"पत्थर","role":"भूमिका","rule":"नियम","safe":"सुरक्षित","same":"समान","save":"बचाना","say":"कहना","scene":"दृश्य","science":"विज्ञान","scientist":"वैज्ञानिक","score":"स्कोर","sea":"समुद्र","season":"मौसम","seat":"सीट","second":"दूसरा","section":"अनुभाग","security":"सुरक्षा","seek":"मांगना","seem":"प्रतीत होना","send":"भेजना","senior":"वरिष्ठ","sense":"समझ","series":"श्रृंखला","serious":"गंभीर","serve":"सेवा करना","service":"सेवा","set":"सेट","seven":"सात","several":"कई","sex":"लिंग","sexual":"यौन","shake":"हिलाना","share":"साझा करना","she":"वह (स्त्री.)","shoot":"गोली मारना","short":"छोटा","shot":"शॉट","should":"चाहिए","shoulder":"कंधा","show":"दिखाना","side":"तरफ","sign":"संकेत","significant":"महत्वपूर्ण","similar":"समान","simple":"सरल","simply":"बस","since":"चूंकि","sing":"गाना","single":"अकेला","sit":"बैठना","site":"साइट","situation":"स्थिति","six":"छह","size":"आकार","skill":"कौशल","small":"छोटा","so":"इसलिए","social":"सामाजिक","society":"समाज","soldier":"सैनिक","some":"कुछ","somebody":"कोई","someone":"कोई","something":"कुछ","sometimes":"कभी कभी","son":"बेटा","song":"गीत","soon":"जल्द ही","sort":"प्रकार","sound":"आवाज़","source":"स्रोत","south":"दक्षिण","southern":"दक्षिणी","space":"अंतरिक्ष","speak":"बोलना","special":"विशेष","specific":"विशिष्ट","speech":"भाषण","spend":"खर्च करना","sport":"खेल","spring":"वसंत","staff":"कर्मचारी","stage":"मंच","stand":"खड़े होना","standard":"मानक","star":"तारा","start":"शुरू","state":"राज्य","statement":"बयान","station":"स्टेशन","stay":"ठहरना","step":"कदम","still":"अभी भी","stock":"स्टॉक","stop":"रुकना","store":"दुकान","story":"कहानी","strategy":"रणनीति","street":"सड़क","strong":"मज़बूत","structure":"संरचना","student":"छात्र","study":"अध्ययन","stuff":"सामग्री","style":"शैली","subject":"विषय","success":"सफलता","successful":"सफल","such":"ऐसा","suddenly":"अचानक","suffer":"भुगतना","suggest":"सुझाव देना","summer":"गर्मी","support":"समर्थन","sure":"ज़रूर","surface":"सतह","system":"प्रणाली","table":"मेज़","take":"लेना","talk":"बात करना","task":"कार्य","tax":"कर","teach":"सिखाना","teacher":"शिक्षक","team":"टीम","technology":"प्रौद्योगिकी","television":"टेलीविज़न","tell":"बताना","ten":"दस","tend":"प्रवृत्ति होना","term":"अवधि","test":"परीक्षा","than":"से","thank":"धन्यवाद","that":"वह","the":"वह/यह","their":"उनका","them":"उन्हें","themselves":"वे स्वयं","then":"तब","theory":"सिद्धांत","there":"वहाँ","these":"ये","they":"वे","thing":"चीज़","think":"सोचना","third":"तीसरा","this":"यह","those":"वे","though":"हालांकि","thought":"विचार","thousand":"हज़ार","threat":"खतरा","three":"तीन","through":"के माध्यम से","throughout":"भर में","throw":"फेंकना","thus":"इस प्रकार","time":"समय","to":"को","today":"आज","together":"साथ में","tonight":"आज रात","too":"भी","top":"शीर्ष","total":"कुल","tough":"कठिन","toward":"की ओर","town":"कस्बा","trade":"व्यापार","traditional":"पारंपरिक","training":"प्रशिक्षण","travel":"यात्रा","treat":"इलाज करना","treatment":"इलाज","tree":"पेड़","trial":"परीक्षण","trip":"यात्रा","trouble":"परेशानी","true":"सच","truth":"सच्चाई","try":"कोशिश","turn":"मोड़","TV":"टीवी","two":"दो","type":"प्रकार","under":"नीचे","understand":"समझना","unit":"इकाई","until":"जब तक","up":"ऊपर","upon":"के ऊपर","us":"हमें","use":"उपयोग","usually":"आमतौर पर","value":"मूल्य","various":"विभिन्न","very":"बहुत","victim":"शिकार","view":"दृश्य","violence":"हिंसा","visit":"भेंट","voice":"आवाज़","vote":"वोट","wait":"प्रतीक्षा","walk":"चलना","wall":"दीवार","want":"चाहना","war":"युद्ध","watch":"घड़ी/देखना","water":"पानी","way":"रास्ता","we":"हम","weapon":"हथियार","wear":"पहनना","week":"सप्ताह","weight":"वजन","well":"कुआं/अच्छा","west":"पश्चिम","western":"पश्चिमी","what":"क्या","whatever":"जो कुछ भी","when":"कब","where":"कहाँ","whether":"चाहे","which":"कौन सा","while":"जबकि","white":"सफेद","who":"कौन","whole":"पूरा","whom":"किसको","whose":"किसका","why":"क्यों","wide":"चौड़ा","wife":"पत्नी","will":"होगा","win":"जीतना","wind":"हवा","window":"खिड़की","wish":"इच्छा","with":"के साथ","within":"के भीतर","without":"के बिना","woman":"औरत","wonder":"आश्चर्य","word":"शब्द","work":"काम","worker":"कार्यकर्ता","world":"दुनिया","worry":"चिंता","would":"होगा","write":"लिखना","writer":"लेखक","wrong":"गलत","yard":"आंगन","yeah":"हाँ","year":"वर्ष","yes":"हाँ","yet":"अभी तक","you":"तुम","young":"युवा","your":"तुम्हारा","yourself":"तुम स्वयं"
-    };
-
-    let customDictionary = JSON.parse(localStorage.getItem('pariCustomDict') || '{}');
-
-    let transMode = 'en2hi';
-    function openTranslator() {
-        document.getElementById('trans-input').value = '';
-        document.getElementById('trans-result').innerHTML = '';
-        showScreen('translator-screen');
-    }
-    function swapTranslator() {
-        transMode = transMode === 'en2hi' ? 'hi2en' : 'en2hi';
-        document.getElementById('lang-from').innerText = transMode === 'en2hi' ? 'English' : 'Hindi';
-        document.getElementById('lang-to').innerText = transMode === 'en2hi' ? 'Hindi' : 'English';
-        document.getElementById('trans-input').value = '';
-        document.getElementById('trans-result').innerHTML = '';
-        document.getElementById('trans-input').placeholder = transMode === 'en2hi' ? 'English Word...' : 'हिंदी शब्द...';
-        speakText(transMode === 'en2hi' ? 'English to Hindi' : 'Hindi to English');
-    }
-    function checkEnterTrans(e) { if(e.key === 'Enter') translateWord(); }
-    function translateWord() {
-        const input = document.getElementById('trans-input').value.trim().toLowerCase();
-        const res = document.getElementById('trans-result');
-        if(!input) return;
-        const mergedDict = { ...baseDictionary, ...customDictionary };
-        let meaning = null, orig = input;
-        
-        if (transMode === 'en2hi') { meaning = mergedDict[input]; } 
-        else { for(let key in mergedDict) { if (mergedDict[key] === input) { meaning = key; break; } } }
-
-        if(meaning) {
-            const en = transMode === 'en2hi' ? orig : meaning, hi = transMode === 'en2hi' ? meaning : orig;
-            const displayOrig = orig.charAt(0).toUpperCase() + orig.slice(1);
-            res.innerHTML = `
-                <div class="list-item center" style="flex-direction:column; gap:10px; border-color:var(--color-trans);">
-                    <div style="font-size:clamp(1.8rem, 6vw, 2.5rem); color:var(--text);">${displayOrig}</div>
-                    <div style="font-size:clamp(1.5rem, 5vw, 2rem); color:var(--primary);">${meaning}</div>
-                    <button class="btn accent" style="margin-top:15px; background:var(--color-trans);" onclick="speakBilingual('${en}', '${hi}')">🔊 Speak Translation</button>
-                </div>`;
-            speakBilingual(en, hi);
-        } else {
-            res.innerHTML = `<div style="font-size: 1.8rem; color: var(--danger); font-weight:bold;">Word not found ❌</div>`;
-            speakText("Word not found.");
-        }
-    }
-
-    // --- DICTIONARY BOOK (Smart Pagination & Lazy Loading) ---
-    let dictRenderLimit = 50;
-    let currentFilterText = '';
-
-    function openDictionaryBook() {
-        document.getElementById('dict-search-input').value = '';
-        document.getElementById('add-word-panel').classList.remove('active');
-        document.getElementById('add-word-msg').innerText = '';
-        renderDictBook('', true); 
-        showScreen('dict-book-screen');
-    }
-
-    function renderDictBook(filterText = '', resetLimit = true) {
-        if (resetLimit) {
-            dictRenderLimit = 50;
-            currentFilterText = filterText.toLowerCase().trim();
-        }
-        
-        const listContainer = document.getElementById('dict-list-container');
-        const mergedDict = { ...baseDictionary, ...customDictionary };
-        const keys = Object.keys(mergedDict).sort();
-        
-        let matchedKeys = [];
-        keys.forEach(enWord => {
-            if (enWord.includes(currentFilterText) || mergedDict[enWord].includes(currentFilterText)) {
-                matchedKeys.push(enWord);
-            }
-        });
-
-        let htmlBuffer = '';
-        const keysToRender = matchedKeys.slice(0, dictRenderLimit);
-
-        keysToRender.forEach(enWord => {
-            const hiWord = mergedDict[enWord]; 
-            const isCustom = customDictionary.hasOwnProperty(enWord);
-            let actionsHtml = `<button class="btn-icon btn-speak" onclick="speakBilingual('${enWord}', '${hiWord}')">🔊</button>`;
-            if (isCustom) actionsHtml += `<button class="btn-icon btn-del" onclick="deleteCustomWord('${enWord}')">🗑️</button>`;
-            htmlBuffer += `<div class="dict-word-card"><div class="dict-word-text"><span class="dict-en">${enWord}</span><span class="dict-hi">${hiWord}</span></div><div class="dict-actions">${actionsHtml}</div></div>`;
-        });
-
-        let topText = `<div style="text-align:center; color:gray; font-size:clamp(1rem, 3vw, 1.2rem); margin-bottom:10px;">Showing ${keysToRender.length} of ${matchedKeys.length} words</div>`;
-
-        if (matchedKeys.length === 0) {
-            htmlBuffer = `<div style="text-align:center; font-size:1.5rem; color:var(--danger); padding:20px; font-weight:bold;">No words found. 😕<br>Try adding it!</div>`;
-        } else if (matchedKeys.length > dictRenderLimit) {
-            htmlBuffer += `<button class="btn yellow" style="margin: 15px auto;" onclick="loadMoreDictWords()">Load More Words ⬇️</button>`;
-        }
-        
-        listContainer.innerHTML = topText + htmlBuffer;
-    }
-
-    function loadMoreDictWords() {
-        dictRenderLimit += 50;
-        renderDictBook(currentFilterText, false);
-    }
-
-    function filterDictBook() { 
-        renderDictBook(document.getElementById('dict-search-input').value, true); 
-    }
-
-    function toggleAddWordPanel() { document.getElementById('add-word-panel').classList.toggle('active'); document.getElementById('add-word-msg').innerText = ''; }
-    
-    function saveNewDictWord() {
-        const enInput = document.getElementById('add-en').value.trim().toLowerCase(), hiInput = document.getElementById('add-hi').value.trim(), msgEl = document.getElementById('add-word-msg');
-        if (!enInput || !hiInput) { msgEl.innerText = "Please fill both fields! ❌"; msgEl.style.color = "var(--danger)"; return; }
-        if (baseDictionary[enInput] || customDictionary[enInput]) { msgEl.innerText = "Word already added! ⚠️"; msgEl.style.color = "#e67e22"; return; }
-        customDictionary[enInput] = hiInput; localStorage.setItem('pariCustomDict', JSON.stringify(customDictionary));
-        msgEl.innerText = "Saved Successfully ✅"; msgEl.style.color = "var(--success)";
-        document.getElementById('add-en').value = ''; document.getElementById('add-hi').value = '';
-        filterDictBook();
-    }
-
-    function deleteCustomWord(enWord) {
-        if(confirm(`Are you sure you want to delete "${enWord}"?`)) { delete customDictionary[enWord]; localStorage.setItem('pariCustomDict', JSON.stringify(customDictionary)); filterDictBook(); }
-    }
-
-    // --- MONTHS & DAYS ---
-    const monthsData = [{en:"January", hi:"जनवरी"}, {en:"February", hi:"फरवरी"}, {en:"March", hi:"मार्च"}, {en:"April", hi:"अप्रैल"}, {en:"May", hi:"मई"}, {en:"June", hi:"जून"}, {en:"July", hi:"जुलाई"}, {en:"August", hi:"अगस्त"}, {en:"September", hi:"सितंबर"}, {en:"October", hi:"अक्टूबर"}, {en:"November", hi:"नवंबर"}, {en:"December", hi:"दिसंबर"}];
-    function openMonths() {
-        const c = document.getElementById('months-content'); c.innerHTML = '';
-        monthsData.forEach(m => { c.innerHTML += `<div class="list-item"><div style="text-align:left;"><span style="color:var(--primary); font-size: clamp(1.3rem, 5vw, 1.6rem);">${m.en}</span><br><span style="color:var(--text); font-size: clamp(1.1rem, 4vw, 1.3rem);">${m.hi}</span></div><button class="btn-icon btn-speak" onclick="speakBilingual('${m.en} means', '${m.hi}')">🔊</button></div>`; });
-        showScreen('months-screen');
-    }
-
-    const daysData = [{en:"Monday", hi:"सोमवार"}, {en:"Tuesday", hi:"मंगलवार"}, {en:"Wednesday", hi:"बुधवार"}, {en:"Thursday", hi:"गुरुवार"}, {en:"Friday", hi:"शुक्रवार"}, {en:"Saturday", hi:"शनिवार"}, {en:"Sunday", hi:"रविवार"}];
-    function openDays() {
-        const c = document.getElementById('days-content'); c.innerHTML = '';
-        daysData.forEach(d => { c.innerHTML += `<div class="list-item"><div style="text-align:left;"><span style="color:var(--color-days); font-size: clamp(1.3rem, 5vw, 1.6rem);">${d.en}</span><br><span style="color:var(--text); font-size: clamp(1.1rem, 4vw, 1.3rem);">${d.hi}</span></div><button class="btn-icon btn-speak" onclick="speakBilingual('${d.en} means', '${d.hi}')">🔊</button></div>`; });
-        showScreen('days-screen');
-    }
-
-    // --- MATH, TABLES & NUMBERS ---
-    const hindiNumbersList = "एक,दो,तीन,चार,पाँच,छह,सात,आठ,नौ,दस,ग्यारह,बारह,तेरह,चौदह,पंद्रह,सोलह,सत्रह,अठारह,उन्नीस,बीस,इक्कीस,बाईस,तेईस,चौबीस,पच्चीस,छब्बीस,सत्ताईस,अट्ठाईस,उनतीस,तीस,इकतीस,बत्तीस,तैंतीस,चौंतीस,पैंतीस,छत्तीस,सैंतीस,अड़तीस,उनतालीस,चालीस,इकतालीस,बयालीस,तिरालीस,चवालीस,पैंतालीस,छियालीस,सैंतालीस,अड़तालीस,उनचास,पचास,इक्यावन,बावन,तिरपन,चौवन,पचपन,छप्पन,सत्तावन,अट्ठावन,उनसठ,साठ,इकसठ,बासठ,तिरसठ,चौंसठ,पैंसठ,छियासठ,सड़सठ,अड़सठ,उनहत्तर,सत्तर,इकहत्तर,बहत्तर,तिहत्तर,चौहत्तर,पचहत्तर,छिहत्तर,सतहत्तर,अठहत्तर,उनासी,अस्सी,इक्यासी,बयासी,तिरासी,चौरासी,पचासी,छियासी,सत्तासी,अट्ठासी,नवासी,नब्बे,इक्यानवे,बानवे,तिरानवे,चौरानवे,पचानवे,छियानवे,सत्तानवे,अट्ठानवे,निन्यानवे,सौ".split(',');
-
-    function openLearn(topic) {
-        showScreen('learn');
-        const c = document.getElementById('learn-content-area'); const t = document.getElementById('learn-title'); c.innerHTML = '';
-        if (topic === 'numbers') {
-            t.innerText = "Numbers 1-100 🔢"; let grid = '<div class="number-grid">';
-            for(let i=1; i<=100; i++) {
-                grid += `<div class="number-cell" style="background:${['#FFE66D', '#a8e6cf', '#ff8b94', '#e1f5fe', '#e1bee7'][i%5]}" onclick="speakBilingual('${getNumberName(i)}', '${hindiNumbersList[i-1]}')">${i}</div>`;
-            }
-            grid += '</div>'; c.innerHTML = grid;
-        } else if (topic === 'add') {
-            t.innerText = "Addition ➕"; c.innerHTML = `<div class="learn-row" onclick="speakText('1 plus 1 equals 2')"><span>1 + 1 = 2 <br> 🍎 + 🍎 = 🍎🍎</span><button class="btn-icon btn-speak">🔊</button></div><div class="learn-row" onclick="speakText('2 plus 1 equals 3')"><span>2 + 1 = 3 <br> 🐶🐶 + 🐶 = 🐶🐶🐶</span><button class="btn-icon btn-speak">🔊</button></div><p style="text-align:center;">Addition means bringing things together! ✅</p>`;
-        } else if (topic === 'sub') {
-            t.innerText = "Subtraction ➖"; c.innerHTML = `<div class="learn-row" onclick="speakText('3 minus 1 equals 2')"><span>3 - 1 = 2 <br> 🍎🍎🍎 take away 🍎 = 🍎🍎</span><button class="btn-icon btn-speak">🔊</button></div><div class="learn-row" onclick="speakText('5 minus 2 equals 3')"><span>5 - 2 = 3 <br> 🍪🍪🍪🍪🍪 eat 🍪🍪 = 🍪🍪🍪</span><button class="btn-icon btn-speak">🔊</button></div><p style="text-align:center;">Subtraction means taking away! ❌</p>`;
-        } else if (topic === 'mul') {
-            t.innerText = "Multiplication ✖️"; c.innerHTML = `<div class="learn-row" onclick="speakText('2 times 2 equals 4')"><span>2 × 2 = 4 <br> 2 groups of 2 🔵🔵 + 🔵🔵</span><button class="btn-icon btn-speak">🔊</button></div><p style="text-align:center;">Multiplication is fast addition! ⚡</p>`;
-        } else if (topic === 'div') {
-            t.innerText = "Division ➗"; c.innerHTML = `<div class="learn-row" onclick="speakText('4 divided by 2 equals 2')"><span>4 ÷ 2 = 2 <br> 4 🍬 shared with 2 kids = 2 🍬 each</span><button class="btn-icon btn-speak">🔊</button></div><p style="text-align:center;">Division means sharing fairly! 🤝</p>`;
-        }
-    }
-
-    let currentTableNumber = 1;
-    function openTables() { currentTableNumber = 1; renderCurrentTable(); showScreen('tables-screen'); }
-    function changeTable(dir) { stopVoice(); currentTableNumber += dir; if(currentTableNumber < 1) currentTableNumber = 20; if(currentTableNumber > 20) currentTableNumber = 1; renderCurrentTable(); }
-    function renderCurrentTable() {
-        document.getElementById('current-table-title').innerText = `Table of ${currentTableNumber}`;
-        const c = document.getElementById('tables-content'); c.innerHTML = ''; const colors = ['#ffeaa7', '#81ecec', '#fab1a0', '#74b9ff', '#a29bfe'];
-        for(let i=1; i<=10; i++) {
-            c.innerHTML += `<div class="list-item center" style="border-color:${colors[i%colors.length]}; background: white;"><div style="display:flex; align-items:center; flex-wrap:wrap; justify-content:center; gap:5px;"><span style="color:var(--text)">${currentTableNumber}</span> <span style="color:var(--primary);">×</span> <span style="color:var(--text)">${i}</span> <span style="color:var(--accent2);">=</span> <span style="color:var(--success); font-size:clamp(1.5rem, 6vw, 2rem); margin-right:15px;">${currentTableNumber * i}</span></div><button class="btn-icon btn-speak" style="width:40px; height:40px; flex-shrink:0;" onclick="speakText('${currentTableNumber} times ${i} is ${currentTableNumber * i}')">🔊</button></div>`;
-        }
-    }
-    function readTableAloud() { let text = `Table of ${currentTableNumber}. `; for(let i=1; i<=10; i++) text += `${currentTableNumber} times ${i} is ${currentTableNumber * i}. `; speakText(text); }
-
-    function getNumberName(n) {
-        const ones = ['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen'];
-        const tens = ['','','Twenty','Thirty','Forty','Fifty','Sixty','Seventy','Eighty','Ninety'];
-        if(n === 100) return "One Hundred"; if(n < 20) return ones[n]; return tens[Math.floor(n/10)] + (n%10 !== 0 ? " " + ones[n%10] : "");
-    }
-    function openNumberNames() {
-        const c = document.getElementById('names-content'); c.innerHTML = '';
-        for(let i=1; i<=100; i++) c.innerHTML += `<div class="list-item"><span style="color:var(--primary); font-size: clamp(1.5rem, 5vw, 2rem); min-width: 40px;">${i}</span><span style="flex:1; text-align:left;">${getNumberName(i)}</span> <button class="btn-icon btn-speak" onclick="speakBilingual('${getNumberName(i)}', '${hindiNumbersList[i-1]}')">🔊</button></div>`;
-        showScreen('names-screen');
-    }
-
-    function getRoman(n) {
-        const tens = ['','X','XX','XXX','XL','L','LX','LXX','LXXX','XC','C']; const ones = ['','I','II','III','IV','V','VI','VII','VIII','IX'];
-        if(n === 100) return "C"; return tens[Math.floor(n/10)] + ones[n%10];
-    }
-    function openRomanNumbers() {
-        const c = document.getElementById('roman-content'); c.innerHTML = '';
-        for(let i=1; i<=100; i++) c.innerHTML += `<div class="list-item"><span style="color:var(--text); font-size: clamp(1.2rem, 5vw, 1.5rem); min-width: 40px;">${i}</span><span style="color:var(--accent2); font-size: clamp(1.5rem, 5vw, 2rem); letter-spacing: 2px; flex:1; text-align:left;">${getRoman(i)}</span> <button class="btn-icon btn-speak" onclick="speakText('${i} in Roman numerals is ${getRoman(i).split('').join(' ')}')">🔊</button></div>`;
-        showScreen('roman-screen');
-    }
-
-    // --- QUIZ & GAME GENERATOR (30 Questions, Shapes Included) ---
-    function generateRandomQuestion() {
-        const types = ['math', 'math', 'compare', 'tf', 'shape', 'shape'];
-        const qType = types[Math.floor(Math.random() * types.length)];
-
-        if (qType === 'shape') {
-            const sq = [
-                { q: "Which shape has 3 sides?", qHi: "किस आकार की 3 भुजाएँ होती हैं?", a: "Triangle", opts: ["Square", "Circle", "Pentagon", "Triangle"] },
-                { q: "Circle has how many sides?", qHi: "वृत्त की कितनी भुजाएँ होती हैं?", a: "0", opts: ["0", "1", "3", "4"] },
-                { q: "Which shape is round?", qHi: "कौन सा आकार गोल है?", a: "Circle", opts: ["Square", "Triangle", "Circle", "Line"] },
-                { q: "Which shape is this? 🔺", qHi: "यह कौन सा आकार है? 🔺", a: "Triangle", opts: ["Square", "Circle", "Triangle", "Pentagon"] },
-                { q: "Which shape is this? ⬛", qHi: "यह कौन सा आकार है? ⬛", a: "Square", opts: ["Square", "Circle", "Triangle", "Pentagon"] },
-                { q: "Which shape is this? ⚪", qHi: "यह कौन सा आकार है? ⚪", a: "Circle", opts: ["Square", "Circle", "Triangle", "Line"] },
-                { q: "Which shape has 5 sides?", qHi: "किस आकार की 5 भुजाएँ होती हैं?", a: "Pentagon", opts: ["Pentagon", "Triangle", "Circle", "Square"] },
-                { q: "Which shape has 6 sides?", qHi: "किस आकार की 6 भुजाएँ होती हैं?", a: "Hexagon", opts: ["Pentagon", "Hexagon", "Octagon", "Square"] },
-                { q: "Which shape has 8 sides?", qHi: "किस आकार की 8 भुजाएँ होती हैं?", a: "Octagon", opts: ["Hexagon", "Octagon", "Square", "Circle"] },
-                { q: "Which shape looks like an egg? 🥚", qHi: "कौन सा आकार अंडे जैसा दिखता है? 🥚", a: "Oval", opts: ["Circle", "Oval", "Square", "Star"] },
-                { q: "Which shape is a long square? ▭", qHi: "कौन सा आकार लंबे वर्ग जैसा है? ▭", a: "Rectangle", opts: ["Square", "Rectangle", "Line", "Oval"] },
-                { q: "Which shape is this? ⭐", qHi: "यह कौन सा आकार है? ⭐", a: "Star", opts: ["Triangle", "Circle", "Star", "Pentagon"] }
-            ];
-            let pick = sq[Math.floor(Math.random() * sq.length)];
-            return { type: 'shape', question: pick.q, questionHi: pick.qHi, answer: pick.a, options: pick.opts.sort(()=>Math.random()-0.5) };
-        } 
-        else if (qType === 'compare') {
-            let n1 = Math.floor(Math.random()*20)+1, n2 = Math.floor(Math.random()*20)+1;
-            return { type:'compare', question:`${n1} __ ${n2}`, answer:(n1>n2?'>':(n1<n2?'<':'=')), options:['<','=','>'] };
-        } 
-        else if (qType === 'tf') {
-            const op = ['+','-','*','/'][Math.floor(Math.random()*4)]; let n1, n2, ans;
-            if(op==='+'){ n1=Math.floor(Math.random()*15)+1; n2=Math.floor(Math.random()*15)+1; ans=n1+n2; }
-            else if(op==='-'){ n1=Math.floor(Math.random()*20)+5; n2=Math.floor(Math.random()*n1)+1; ans=n1-n2; }
-            else if(op==='*'){ n1=Math.floor(Math.random()*10)+1; n2=Math.floor(Math.random()*5)+1; ans=n1*n2; }
-            else { n2=Math.floor(Math.random()*10)+1; ans=Math.floor(Math.random()*10)+1; n1=n2*ans; }
-            let isTrue = Math.random()>0.5; let disp = isTrue?ans:ans+Math.floor(Math.random()*5)+1;
-            return { type:'tf', question:`${n1} ${op==='*'?'×':(op==='/'?'÷':op)} ${n2} = ${disp}`, answer:isTrue?'True':'False', options:['True','False'] };
-        } 
-        else {
-            const op = ['+','-','*','/'][Math.floor(Math.random()*4)]; let n1, n2, ans;
-            if(op==='+'){ n1=Math.floor(Math.random()*20)+1; n2=Math.floor(Math.random()*20)+1; ans=n1+n2; }
-            else if(op==='-'){ n1=Math.floor(Math.random()*20)+5; n2=Math.floor(Math.random()*n1)+1; ans=n1-n2; }
-            else if(op==='*'){ n1=Math.floor(Math.random()*10)+1; n2=Math.floor(Math.random()*5)+1; ans=n1*n2; }
-            else { n2=Math.floor(Math.random()*10)+1; ans=Math.floor(Math.random()*10)+1; n1=n2*ans; }
-            let opts = new Set([ans]);
-            while(opts.size < 4) { let f = ans + Math.floor(Math.random()*10)-5; if(f>0 && f!==ans) opts.add(f); else opts.add(ans+Math.floor(Math.random()*5)+1); }
-            return { type:'math', question:`${n1} ${op==='*'?'×':(op==='/'?'÷':op)} ${n2} = ?`, answer:ans, options:Array.from(opts).sort(()=>Math.random()-0.5) };
-        }
-    }
-    
-    function parseQuestionForVoice(qObj) {
-        if(qObj.type === 'shape') { return qObj.question.replace(/🔺|⬛|⚪|⬟|⬡|🛑|🥚|▭|⭐/g,''); }
-        let t = qObj.question.replace(/\+/g, 'plus').replace(/\-/g, 'minus').replace(/×|\*/g, 'times').replace(/÷|\//g, 'divided by');
-        if (qObj.type === 'compare') return "Compare: " + t.replace('__', 'and'); 
-        if (qObj.type === 'tf') return "True or false: " + t.replace('=', 'equals'); 
-        return t.replace('=', 'equals').replace('?', 'what'); 
-    }
-
-    // --- QUIZ MODE (30 Questions) ---
-    const TOTAL_QUESTIONS = 30;
-    let quizData = [], currentQ = 0, score = { correct:0, wrong:0 }, mistakes = [];
-    function startQuiz() {
-        quizData = Array.from({length: TOTAL_QUESTIONS}, generateRandomQuestion); currentQ = 0; score = {correct:0, wrong:0}; mistakes = [];
-        document.getElementById('save-score-box').style.display = 'block'; document.getElementById('player-name').value = '';
-        showScreen('quiz'); renderQuestion();
-    }
-    function renderQuestion() {
-        if (currentQ >= TOTAL_QUESTIONS) return endQuiz();
-        const q = quizData[currentQ], qBox = document.getElementById('quiz-question');
-        qBox.innerHTML = q.questionHi ? `${q.question}<br><span style="font-size: clamp(1rem, 4vw, 1.2rem); color: gray; font-weight: normal;">${q.questionHi}</span>` : q.question; 
-        qBox.classList.remove('bounce', 'shake');
-        document.getElementById('question-counter').innerText = `${currentQ+1}/${TOTAL_QUESTIONS}`;
-        document.getElementById('quiz-progress').style.width = `${(currentQ/TOTAL_QUESTIONS)*100}%`;
-        const optsContainer = document.getElementById('quiz-options'); optsContainer.innerHTML = '';
-        optsContainer.style.gridTemplateColumns = q.type==='compare'?'repeat(3, 1fr)':'repeat(2, 1fr)';
-        q.options.forEach(opt => {
-            const btn = document.createElement('button'); btn.className = 'btn option-btn secondary';
-            btn.innerText = q.type==='tf'?(opt==='True'?'✅ True':'❌ False'):opt; btn.dataset.val = opt; 
-            btn.onclick = () => handleAnswer(opt, btn); optsContainer.appendChild(btn);
-        });
-        lastSpokenText = parseQuestionForVoice(q); speakText(lastSpokenText);
-    }
-    function handleAnswer(sel, btn) {
-        document.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
-        const q = quizData[currentQ], isCorrect = (sel == q.answer), qBox = document.getElementById('quiz-question');
-        playSound(isCorrect);
-        if(isCorrect){ btn.style.background = 'var(--success)'; score.correct++; qBox.classList.add('bounce'); }
-        else {
-            btn.style.background = 'var(--danger)'; score.wrong++; 
-            mistakes.push({ q: q.questionHi ? `${q.question}<br><span style="font-size: clamp(0.9rem, 3.5vw, 1.1rem); color: gray;">${q.questionHi}</span>` : q.question, u:sel, c:q.answer }); 
-            qBox.classList.add('shake');
-            document.querySelectorAll('.option-btn').forEach(b => { if(b.dataset.val == q.answer) b.style.background = 'var(--success)'; });
-        }
-        setTimeout(() => { currentQ++; renderQuestion(); }, 1500);
-    }
-    function endQuiz() {
-        showScreen('results'); document.getElementById('res-correct').innerText = score.correct; document.getElementById('res-wrong').innerText = score.wrong;
-        const mList = document.getElementById('mistakes-list'), mTitle = document.getElementById('mistakes-title'); mList.innerHTML = '';
-        if(mistakes.length === 0) mTitle.innerText = "Perfect Score! You are a genius! 🌟🎉";
-        else { mTitle.innerText = "Let's review mistakes 📘:"; mistakes.forEach(m => mList.innerHTML += `<div class="mistake-item" style="background:#f1f2f6; padding: 10px; border-radius: 10px; margin-bottom: 10px;"><strong>${m.q}</strong><br>You answered: <span style="color:var(--danger)">${m.u} ❌</span><br>Correct answer: <span style="color:green; font-weight:bold">${m.c} ✅</span></div>`); }
-    }
-
-    // --- LEADERBOARD ---
-    function saveQuizScore() {
-        let board = JSON.parse(localStorage.getItem('pariMathBoard') || '[]');
-        board.push({ name: document.getElementById('player-name').value.trim()||'Anonymous', score: score.correct, total: TOTAL_QUESTIONS, date: new Date().toLocaleDateString() });
-        board.sort((a,b) => b.score - a.score); localStorage.setItem('pariMathBoard', JSON.stringify(board.slice(0,10)));
-        document.getElementById('save-score-box').style.display = 'none'; openLeaderboard();
-    }
-    function openLeaderboard() {
-        showScreen('leaderboard'); const tbody = document.getElementById('leaderboard-body'); tbody.innerHTML = '';
-        let board = JSON.parse(localStorage.getItem('pariMathBoard') || '[]');
-        if (board.length === 0) return tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">No scores yet. Play a quiz!</td></tr>`;
-        board.forEach((b, i) => {
-            let total = b.total || 20; 
-            tbody.innerHTML += `<tr><td>${i<3?['🥇','🥈','🥉'][i]:`#${i+1}`}</td><td><b>${b.name}</b></td><td style="color:var(--success); font-weight:bold;">${b.score}/${total}</td><td>${b.date}</td></tr>`;
-        });
-    }
-    function clearLeaderboard() { if(confirm("Delete all scores?")) { localStorage.removeItem('pariMathBoard'); openLeaderboard(); } }
-
-    // --- GAME MODE ---
-    let gameLives = 3, gameScore = 0, currentGameQ = null;
-    function startGameMode() { gameLives = 3; gameScore = 0; updateGameStats(); showScreen('game-mode'); nextGameQuestion(); }
-    function updateGameStats() { document.getElementById('game-lives').innerText = '❤️'.repeat(gameLives); document.getElementById('game-score').innerText = gameScore; }
-    function nextGameQuestion() {
-        currentGameQ = generateRandomQuestion(); const qBox = document.getElementById('game-question');
-        qBox.innerHTML = currentGameQ.questionHi ? `${currentGameQ.question}<br><span style="font-size: clamp(1rem, 4vw, 1.2rem); color: gray; font-weight: normal;">${currentGameQ.questionHi}</span>` : currentGameQ.question; 
-        qBox.classList.remove('bounce', 'shake');
-        const optsContainer = document.getElementById('game-options'); optsContainer.innerHTML = '';
-        optsContainer.style.gridTemplateColumns = currentGameQ.type==='compare'?'repeat(3, 1fr)':'repeat(2, 1fr)';
-        currentGameQ.options.forEach(opt => {
-            const btn = document.createElement('button'); btn.className = 'btn option-btn secondary';
-            btn.innerText = currentGameQ.type==='tf'?(opt==='True'?'✅ True':'❌ False'):opt;
-            btn.onclick = () => {
-                document.querySelectorAll('#game-options .option-btn').forEach(b => b.disabled=true);
-                let isC = (opt == currentGameQ.answer); playSound(isC);
-                if(isC) { btn.style.background='var(--success)'; gameScore++; updateGameStats(); qBox.classList.add('bounce'); setTimeout(nextGameQuestion, 1200); }
-                else { btn.style.background='var(--danger)'; gameLives--; updateGameStats(); qBox.classList.add('shake'); setTimeout(gameLives<=0?endGameMode:nextGameQuestion, 1500); }
-            }; optsContainer.appendChild(btn);
-        });
-        lastSpokenText = parseQuestionForVoice(currentGameQ); speakText(lastSpokenText);
-    }
-    function endGameMode() { document.getElementById('final-game-score').innerText = gameScore; showScreen('game-over'); }
-
-    // --- CALCULATOR ---
-    let calcCurrent = '0';
-    function openCalculator() { calcCurrent = '0'; updateCalcDisplay(); showScreen('calculator'); }
-    function updateCalcDisplay() { document.getElementById('calc-display').innerText = calcCurrent; }
-    function calcInput(val) {
-        if(calcCurrent === '0' && !isNaN(val)) calcCurrent = val;
-        else if(!isNaN(val) || !isNaN(calcCurrent.slice(-1))) calcCurrent += val;
-        updateCalcDisplay();
-    }
-    function calcClear() { calcCurrent = '0'; updateCalcDisplay(); }
-    function calcCalculate() {
-        try { let res = new Function('return ' + calcCurrent.replace(/×/g, '*').replace(/÷/g, '/'))(); calcCurrent = (res%1!==0 ? res.toFixed(2) : res).toString(); updateCalcDisplay(); }
-        catch(e) { calcCurrent = 'Error'; updateCalcDisplay(); setTimeout(calcClear, 1500); }
-    }
-
-    // ⭐ NEW PWA DOWNLOAD LOGIC WITH SW REGISTRATION ⭐
-    let deferredPrompt;
-    const downloadAppBtn = document.getElementById('downloadAppBtn');
-
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js').then(reg => {
-          console.log('Service Worker Registered!', reg);
-        }).catch(err => console.log('SW Fail', err));
-      });
-    }
-
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-        downloadAppBtn.style.display = 'block'; 
-    });
-
-    downloadAppBtn.addEventListener('click', async () => {
-        if (deferredPrompt) {
-            deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
-            if (outcome === 'accepted') {
-                console.log('VIP PWA Installed!');
-                downloadAppBtn.style.display = 'none';
-            }
-            deferredPrompt = null;
-        } else {
-            document.getElementById('installModal').style.display = 'flex';
-        }
-    });
-
-</script>
-
-</body>
-</html>
+    const AudioContext=window.AudioContext||window.webkitAudioContext;let audioCtx;
+    function playSound(c){if(!audioCtx)audioCtx=new AudioContext();if(audioCtx.state==='suspended')audioCtx.resume();const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.connect(g);g.connect(audioCtx.destination);if(c){o.type='sine';o.frequency.setValueAtTime(523.25,audioCtx.currentTime);o.frequency.setValueAtTime(659.25,audioCtx.currentTime+0.1);o.frequency.exponentialRampToValueAtTime(1046.50,audioCtx.currentTime+0.2);g.gain.setValueAtTime(0.3,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(0.01,audioCtx.currentTime+0.3);o.start();o.stop(audioCtx.currentTime+0.3)}else{o.type='sawtooth';o.frequency.setValueAtTime(200,audioCtx.currentTime);o.frequency.exponentialRampToValueAtTime(100,audioCtx.currentTime+0.3);g.gain.setValueAtTime(0.3,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(0.01,audioCtx.currentTime+0.3);o.start();o.stop(audioCtx.currentTime+0.3)}}
+    function stopVoice(){if('speechSynthesis' in window)window.speechSynthesis.cancel()}
+    function speakText(t){if(!('speechSynthesis' in window))return;stopVoice();const m=new SpeechSynthesisUtterance(t);m.rate=0.8;m.pitch=1.2;m.lang='hi-IN';window.speechSynthesis.speak(m)}
+    function speakBilingual(e,h){if(!('speechSynthesis' in window))return;stopVoice();const mE=new SpeechSynthesisUtterance(e);mE.lang='en-US';mE.rate=0.7;const mH=new SpeechSynthesisUtterance(h);mH.lang='hi-IN';mH.rate=0.7;window.speechSynthesis.speak(mE);window.speechSynthesis.speak(mH)}
+    let lastSpokenText="";function repeatQuestionVoice(){if(lastSpokenText)speakText(lastSpokenText)}
+    function showScreen(id){stopVoice();document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
+    function goHome(){showScreen('home')}
+
+    const GEMINI_API_KEY="AIzaSyCor3y7MXZHUdbgllhsyhvxSiVUE1l4kwg";let isListening=false;const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;let recognition;
+    if(SpeechRecognition){recognition=new SpeechRecognition();recognition.lang='hi-IN';recognition.interimResults=false;recognition.onresult=async(e)=>{const t=e.results[0][0].transcript;isListening=false;resetMicUI();document.getElementById('user-chat').style.display='block';document.getElementById('user-text-span').innerText=t;document.getElementById('ai-chat').style.display='block';document.getElementById('ai-text-span').innerText="Thinking... 🤔";const c=document.getElementById('chat-container');c.scrollTop=c.scrollHeight;await askGemini(t)};recognition.onerror=()=>{isListening=false;resetMicUI();document.getElementById('mic-status').innerText="Oops! Didn't hear clearly. 😕"};recognition.onend=()=>{if(isListening){isListening=false;resetMicUI()}}}
+    function openAIHelper(){document.getElementById('user-chat').style.display='none';document.getElementById('ai-chat').style.display='none';resetMicUI();showScreen('ai-helper-screen')}
+    function toggleMic(){if(!recognition)return alert("Mic not supported. Try Chrome! 🎙️❌");if(isListening){recognition.stop();return}try{recognition.start();isListening=true;document.getElementById('mic-status').innerText="Listening... Speak now! 👂";const m=document.getElementById('mic-btn');m.style.transform="scale(1.2)";m.style.background="var(--danger)";m.style.color="white";m.style.boxShadow="0 0 20px rgba(255,139,148,0.8)";stopVoice()}catch(e){console.log(e)}}
+    function resetMicUI(){const m=document.getElementById('mic-btn');m.style.transform="scale(1)";m.style.background="var(--accent1)";m.style.color="var(--text)";m.style.boxShadow="0 10px 20px rgba(0,0,0,0.2)";document.getElementById('mic-status').innerText="Tap Mic to speak"}
+    async function askGemini(q){const p=`You are a sweet, funny AI teacher for Pari and Jiya. Give a very short, simple, safe answer in 1-2 lines. No * or ** formatting. Reply in Hindi if asked in Hindi, else easy English. Kid asked: "${q}"`;try{const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:p}]}]})});const d=await r.json();if(d.candidates&&d.candidates[0].content.parts[0].text){let a=d.candidates[0].content.parts[0].text.replace(/\*/g,'');document.getElementById('ai-text-span').innerText=a;const c=document.getElementById('chat-container');c.scrollTop=c.scrollHeight;speakText(a)}else throw new Error("No ans")}catch(e){document.getElementById('ai-text-span').innerText="My brain is sleeping! 😴";speakText("My brain is sleeping! Try again later.")}}
+
+    let currentSearchType='normal';function openSafeSearch(){document.getElementById('safe-search-input').value='';setSearchType('normal',document.getElementById('tab-normal'));showScreen('safe-search-screen')}
+    function setSearchType(t,b){currentSearchType=t;document.querySelectorAll('.type-btn').forEach(x=>{x.classList.remove('primary');x.classList.add('secondary')});b.classList.remove('secondary');b.classList.add('primary')}
+    function checkEnterSearch(e){if(e.key==='Enter')performWebSearch('ddg')}
+    function performWebSearch(e){const q=document.getElementById('safe-search-input').value.trim();if(q){const eq=encodeURIComponent(q);let u='';if(e==='ddg'){if(currentSearchType==='normal')u='https://duckduckgo.com/?q='+eq;else if(currentSearchType==='image')u='https://duckduckgo.com/?q='+eq+'&iax=images&ia=images';else u='https://duckduckgo.com/?q='+eq+'+meaning'}else{if(currentSearchType==='normal')u='https://www.google.com/search?q='+eq;else if(currentSearchType==='image')u='https://www.google.com/search?tbm=isch&q='+eq;else u='https://www.google.com/search?q='+eq+'+meaning'}window.open(u,'_blank')}else speakText("Please type something to search")}
+
+    const shapesData=[{id:'triangle',en:'Triangle',hi:'त्रिभुज',css:'css-triangle',emoji:'🔺'},{id:'square',en:'Square',hi:'वर्ग',css:'css-square',emoji:'⬛'},{id:'circle',en:'Circle',hi:'वृत्त',css:'css-circle',emoji:'⚪'},{id:'line',en:'Line',hi:'रेखा',css:'css-line',emoji:'➖'},{id:'pentagon',en:'Pentagon',hi:'पंचभुज',css:'css-pentagon',emoji:'⬟'},{id:'hexagon',en:'Hexagon',hi:'षट्भुज',css:'css-hexagon',emoji:'⬡'},{id:'octagon',en:'Octagon',hi:'अष्टभुज',css:'css-octagon',emoji:'🛑'},{id:'oval',en:'Oval',hi:'अंडाकार',css:'css-oval',emoji:'🥚'},{id:'rectangle',en:'Rectangle',hi:'आयत',css:'css-rectangle',emoji:'▭'},{id:'star',en:'Star',hi:'तारा',css:'css-star',emoji:'⭐'}];
+    let currentShapeIdx=0;function openShapesScreen(){currentShapeIdx=0;renderCurrentShape();showScreen('shapes-screen')}
+    function changeShape(d){stopVoice();currentShapeIdx+=d;if(currentShapeIdx<0)currentShapeIdx=shapesData.length-1;if(currentShapeIdx>=shapesData.length)currentShapeIdx=0;renderCurrentShape()}
+    function renderCurrentShape(){const s=shapesData[currentShapeIdx];document.getElementById('shape-display-box').innerHTML=`<div class="css-shape ${s.css}"></div><div style="font-size:clamp(1.8rem,8vw,2.5rem);font-weight:bold;color:var(--primary);text-align:center;">${s.en} ${s.emoji}</div><div style="font-size:clamp(1.4rem,6vw,1.8rem);color:var(--text);text-align:center;">${s.hi}</div><button class="btn accent" style="font-size:clamp(1.2rem,5vw,1.5rem);margin-top:10px;" onclick="speakBilingual('${s.en} means','${s.hi}')">🔊 Speak</button>`}
+
+    const baseDictionary={"apple":"सेब","banana":"केला","mango":"आम","dog":"कुत्ता","cat":"बिल्ली","cow":"गाय","red":"लाल","blue":"नीला","green":"हरा","head":"सिर","hair":"बाल","eye":"आँख","school":"स्कूल","class":"कक्षा","teacher":"शिक्षक","go":"जाना","come":"आना","eat":"खाना","sun":"सूरज","moon":"चाँद","star":"तारा","house":"घर","room":"कमरा","door":"दरवाज़ा","a":"एक","about":"के बारे में","above":"ऊपर","boy":"लड़का","girl":"लड़की","man":"आदमी","woman":"औरत","water":"पानी","fire":"आग","earth":"पृथ्वी","world":"दुनिया","day":"दिन","night":"रात","morning":"सुबह","good":"अच्छा","bad":"बुरा","happy":"खुश","sad":"उदास"}; // Compressed dict for brevity
+    let customDictionary=JSON.parse(localStorage.getItem('pariCustomDict')||'{}');let transMode='en2hi';
+    function openTranslator(){document.getElementById('trans-input').value='';document.getElementById('trans-result').innerHTML='';showScreen('translator-screen')}
+    function swapTranslator(){transMode=transMode==='en2hi'?'hi2en':'en2hi';document.getElementById('lang-from').innerText=transMode==='en2hi'?'English':'Hindi';document.getElementById('lang-to').innerText=transMode==='en2hi'?'Hindi':'English';document.getElementById('trans-input').value='';document.getElementById('trans-result').innerHTML='';document.getElementById('trans-input').placeholder=transMode==='en2hi'?'Word...':'हिंदी...';speakText(transMode==='en2hi'?'Eng to Hi':'Hi to Eng')}
+    function checkEnterTrans(e){if(e.key==='Enter')translateWord()}
+    function translateWord(){const i=document.getElementById('trans-input').value.trim().toLowerCase(),r=document.getElementById('trans-result');if(!i)return;const d={...baseDictionary,...customDictionary};let m=null,o=i;if(transMode==='en2hi')m=d[i];else for(let k in d)if(d[k]===i){m=k;break}if(m){const e=transMode==='en2hi'?o:m,h=transMode==='en2hi'?m:o,D=o.charAt(0).toUpperCase()+o.slice(1);r.innerHTML=`<div class="list-item center" style="flex-direction:column;gap:10px;border-color:var(--color-trans);"><div style="font-size:clamp(1.8rem,6vw,2.5rem);color:var(--text);">${D}</div><div style="font-size:clamp(1.5rem,5vw,2rem);color:var(--primary);">${m}</div><button class="btn accent" style="margin-top:15px;background:var(--color-trans);" onclick="speakBilingual('${e}','${h}')">🔊 Speak</button></div>`;speakBilingual(e,h)}else{r.innerHTML=`<div style="font-size:1.8rem;color:var(--danger);font-weight:bold;">Not found ❌</div>`;speakText("Not found")}}
+
+    let dictRenderLimit=50,currentFilterText='';
+    function openDictionaryBook(){document.getElementById('dict-search-input').value='';document.getElementById('add-word-panel').classList.remove('active');document.getElementById('add-word-msg').innerText='';renderDictBook('',true);showScreen('dict-book-screen')}
+    function renderDictBook(f='',r=true){if(r){dictRenderLimit=50;currentFilterText=f.toLowerCase().trim()}const c=document.getElementById('dict-list-container'),d={...baseDictionary,...customDictionary},k=Object.keys(d).sort();let m=[];k.forEach(e=>{if(e.includes(currentFilterText)||d[e].includes(currentFilterText))m.push(e)});let h='';const K=m.slice(0,dictRenderLimit);K.forEach(e=>{const H=d[e],C=customDictionary.hasOwnProperty(e);let a=`<button class="btn-icon btn-speak" onclick="speakBilingual('${e}','${H}')">🔊</button>`;if(C)a+=`<button class="btn-icon btn-del" onclick="deleteCustomWord('${e}')">🗑️</button>`;h+=`<div class="dict-word-card"><div class="dict-word-text"><span class="dict-en">${e}</span><span class="dict-hi">${H}</span></div><div class="dict-actions">${a}</div></div>`});let t=`<div style="text-align:center;color:gray;font-size:clamp(1rem,3vw,1.2rem);margin-bottom:10px;">${K.length}/${m.length} words</div>`;if(m.length===0)h=`<div style="text-align:center;font-size:1.5rem;color:var(--danger);padding:20px;font-weight:bold;">Not found 😕</div>`;else if(m.length>dictRenderLimit)h+=`<button class="btn yellow" style="margin:15px auto;" onclick="loadMoreDictWords()">Load More ⬇️</button>`;c.innerHTML=t+h}
+    function loadMoreDictWords(){dictRenderLimit+=50;renderDictBook(currentFilterText,false)}
+    function filterDictBook(){renderDictBook(document.getElementById('dict-search-input').value,true)}
+    function toggleAddWordPanel(){document.getElementById('add-word-panel').classList.toggle('active');document.getElementById('add-word-msg').innerText=''}
+    function saveNewDictWord(){const e=document.getElementById('add-en').value.trim().toLowerCase(),h=document.getElementById('add-hi').value.trim(),m=document.getElementById('add-word-msg');if(!e||!h)return m.innerText="Fill both! ❌",m.style.color="var(--danger)";if(baseDictionary[e]||customDictionary[e])return m.innerText="Already added! ⚠️",m.style.color="#e67e22";customDictionary[e]=h;localStorage.setItem('pariCustomDict',JSON.stringify(customDictionary));m.innerText="Saved ✅";m.style.color="var(--success)";document.getElementById('add-en').value='';document.getElementById('add-hi').value='';filterDictBook()}
+    function deleteCustomWord(e){if(confirm(`Delete "${e}"?`)){delete customDictionary[e];localStorage.setItem('pariCustomDict',JSON.stringify(customDictionary));filterDictBook()}}
+
+    const monthsData=[{en:"January",hi:"जनवरी"},{en:"February",hi:"फरवरी"},{en:"March",hi:"मार्च"},{en:"April",hi:"अप्रैल"},{en:"May",hi:"मई"},{en:"June",hi:"जून"},{en:"July",hi:"जुलाई"},{en:"August",hi:"अगस्त"},{en:"September",hi:"सितंबर"},{en:"October",hi:"अक्टूबर"},{en:"November",hi:"नवंबर"},{en:"December",hi:"दिसंबर"}];
+    function openMonths(){const c=document.getElementById('months-content');c.innerHTML='';monthsData.forEach(m=>{c.innerHTML+=`<div class="list-item"><div style="text-align:left;"><span style="color:var(--primary);font-size:clamp(1.3rem,5vw,1.6rem);">${m.en}</span><br><span style="color:var(--text);font-size:clamp(1.1rem,4vw,1.3rem);">${m.hi}</span></div><button class="btn-icon btn-speak" onclick="speakBilingual('${m.en}','${m.hi}')">🔊</button></div>`});showScreen('months-screen')}
+    const daysData=[{en:"Monday",hi:"सोमवार"},{en:"Tuesday",hi:"मंगलवार"},{en:"Wednesday",hi:"बुधवार"},{en:"Thursday",hi:"गुरुवार"},{en:"Friday",hi:"शुक्रवार"},{en:"Saturday",hi:"शनिवार"},{en:"Sunday",hi:"रविवार"}];
+    function openDays(){const c=document.getElementById('days-content');c.innerHTML='';daysData.forEach(d=>{c.innerHTML+=`<div class="list-item"><div style="text-align:left;"><span style="color:var(--color-days);font-size:clamp(1.3rem,5vw,1.6rem);">${d.en}</span><br><span style="color:var(--text);font-size:clamp(1.1rem,4vw,1.3rem);">${d.hi}</span></div><button class="btn-icon btn-speak" onclick="speakBilingual('${d.en}','${d.hi}')">🔊</button></div>`});showScreen('days-screen')}
+
+    const hNum="एक,दो,तीन,चार,पाँच,छह,सात,आठ,नौ,दस,ग्यारह,बारह,तेरह,चौदह,पंद्रह,सोलह,सत्रह,अठारह,उन्नीस,बीस,इक्कीस,बाईस,तेईस,चौबीस,पच्चीस,छब्बीस,सत्ताईस,अट्ठाईस,उनतीस,तीस,इकतीस,बत्तीस,तैंतीस,चौंतीस,पैंतीस,छत्तीस,सैंतीस,अड़तीस,उनतालीस,चालीस,इकतालीस,बयालीस,तिरालीस,चवालीस,पैंतालीस,छियालीस,सैंतालीस,अड़तालीस,उनचास,पचास,इक्यावन,बावन,तिरपन,चौवन,पचपन,छप्पन,सत्तावन,अट्ठावन,उनसठ,साठ,इकसठ,बासठ,तिरसठ,चौंसठ,पैंसठ,छियासठ,सड़सठ,अड़सठ,उनहत्तर,सत्तर,इकहत्तर,बहत्तर,तिहत्तर,चौहत्तर,पचहत्तर,छिहत्तर,सतहत्तर,अठहत्तर,उनासी,अस्सी,इक्यासी,बयासी,तिरासी,चौरासी,पचासी,छियासी,सत्तासी,अट्ठासी,नवासी,नब्बे,इक्यानवे,बानवे,तिरानवे,चौरानवे,पचानवे,छियानवे,सत्तानवे,अट्ठानवे,निन्यानवे,सौ".split(',');
+    function openLearn(t){showScreen('learn');const c=document.getElementById('learn-content-area'),title=document.getElementById('learn-title');c.innerHTML='';if(t==='numbers'){title.innerText="Numbers 1-100 🔢";let g='<div class="number-grid">';for(let i=1;i<=100;i++)g+=`<div class="number-cell" style="background:${['#FFE66D','#a8e6cf','#ff8b94','#e1f5fe','#e1bee7'][i%5]}" onclick="speakBilingual('${getNumberName(i)}','${hNum[i-1]}')">${i}</div>`;c.innerHTML=g+'</div>'}else if(t==='add'){title.innerText="Addition ➕";c.innerHTML=`<div class="learn-row" onclick="speakText('1 plus 1 is 2')"><span>1+1=2<br>🍎+🍎=🍎🍎</span>🔊</div><div class="learn-row" onclick="speakText('2 plus 1 is 3')"><span>2+1=3<br>🐶🐶+🐶=🐶🐶🐶</span>🔊</div>`}else if(t==='sub'){title.innerText="Subtraction ➖";c.innerHTML=`<div class="learn-row" onclick="speakText('3 minus 1 is 2')"><span>3-1=2<br>🍎🍎🍎 - 🍎 = 🍎🍎</span>🔊</div>`}else if(t==='mul'){title.innerText="Multiply ✖️";c.innerHTML=`<div class="learn-row" onclick="speakText('2 times 2 is 4')"><span>2×2=4<br>2 groups of 2</span>🔊</div>`}else if(t==='div'){title.innerText="Divide ➗";c.innerHTML=`<div class="learn-row" onclick="speakText('4 divided by 2 is 2')"><span>4÷2=2<br>Share 4 fairly by 2</span>🔊</div>`}}
+
+    let currTab=1;function openTables(){currTab=1;renderTable();showScreen('tables-screen')}function changeTable(d){stopVoice();currTab+=d;if(currTab<1)currTab=20;if(currTab>20)currTab=1;renderTable()}
+    function renderTable(){document.getElementById('current-table-title').innerText=`Table of ${currTab}`;const c=document.getElementById('tables-content');c.innerHTML='';const col=['#ffeaa7','#81ecec','#fab1a0','#74b9ff','#a29bfe'];for(let i=1;i<=10;i++)c.innerHTML+=`<div class="list-item center" style="border-color:${col[i%col.length]};background:white;"><div style="display:flex;gap:5px;"><span>${currTab}</span><span style="color:var(--primary)">×</span><span>${i}</span><span style="color:var(--accent2)">=</span><span style="color:var(--success);font-size:2rem;">${currTab*i}</span></div><button class="btn-icon btn-speak" onclick="speakText('${currTab} times ${i} is ${currTab*i}')">🔊</button></div>`}
+    function readTableAloud(){let t=`Table of ${currTab}. `;for(let i=1;i<=10;i++)t+=`${currTab} times ${i} is ${currTab*i}. `;speakText(t)}
+
+    function getNumberName(n){const o=['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen'],t=['','','Twenty','Thirty','Forty','Fifty','Sixty','Seventy','Eighty','Ninety'];if(n===100)return "One Hundred";if(n<20)return o[n];return t[Math.floor(n/10)]+(n%10!==0?" "+o[n%10]:"")}
+    function openNumberNames(){const c=document.getElementById('names-content');c.innerHTML='';for(let i=1;i<=100;i++)c.innerHTML+=`<div class="list-item"><span style="color:var(--primary);font-size:1.5rem;min-width:40px;">${i}</span><span style="flex:1;">${getNumberName(i)}</span><button class="btn-icon btn-speak" onclick="speakBilingual('${getNumberName(i)}','${hNum[i-1]}')">🔊</button></div>`;showScreen('names-screen')}
+    function getRoman(n){const t=['','X','XX','XXX','XL','L','LX','LXX','LXXX','XC','C'],o=['','I','II','III','IV','V','VI','VII','VIII','IX'];if(n===100)return "C";return t[Math.floor(n/10)]+o[n%10]}
+    function openRomanNumbers(){const c=document.getElementById('roman-content');c.innerHTML='';for(let i=1;i<=100;i++)c.innerHTML+=`<div class="list-item"><span>${i}</span><span style="color:var(--accent2);font-size:1.5rem;flex:1;">${getRoman(i)}</span><button class="btn-icon btn-speak" onclick="speakText('${i} in Roman is ${getRoman(i).split('').join(' ')}')">🔊</button></div>`;showScreen('roman-screen')}
+
+    function generateQ(){const t=['math','math','compare','tf','shape','shape'],qt=t[Math.floor(Math.random()*t.length)];if(qt==='shape'){const s=[{q:"Has 3 sides?",qH:"3 भुजाएँ?",a:"Triangle",o:["Square","Circle","Pentagon","Triangle"]},{q:"Circle sides?",qH:"वृत्त की भुजाएँ?",a:"0",o:["0","1","3","4"]},{q:"Round shape?",qH:"गोल आकार?",a:"Circle",o:["Square","Triangle","Circle","Line"]},{q:"Which? 🔺",qH:"कौन सा? 🔺",a:"Triangle",o:["Square","Circle","Triangle","Pentagon"]}];let p=s[Math.floor(Math.random()*s.length)];return{type:'shape',q:p.q,qh:p.qH,a:p.a,o:p.o.sort(()=>Math.random()-0.5)}}else if(qt==='compare'){let n1=Math.floor(Math.random()*20)+1,n2=Math.floor(Math.random()*20)+1;return{type:'compare',q:`${n1} __ ${n2}`,a:(n1>n2?'>':(n1<n2?'<':'=')),o:['<','=','>']}}else if(qt==='tf'){let n1=Math.floor(Math.random()*10)+1,n2=Math.floor(Math.random()*10)+1,a=n1+n2,isT=Math.random()>0.5,d=isT?a:a+2;return{type:'tf',q:`${n1} + ${n2} = ${d}`,a:isT?'True':'False',o:['True','False']}}else{let n1=Math.floor(Math.random()*10)+1,n2=Math.floor(Math.random()*10)+1,a=n1+n2,os=new Set([a]);while(os.size<4)os.add(a+Math.floor(Math.random()*10)-5||a+1);return{type:'math',q:`${n1} + ${n2} = ?`,a:a,o:Array.from(os).sort(()=>Math.random()-0.5)}}}
+    function parseQ(q){if(q.type==='shape')return q.q.replace(/🔺|⬛|⚪|⬟/g,'');let t=q.q.replace(/\+/g,'plus').replace(/\-/g,'minus').replace(/×/g,'times').replace(/÷/g,'divided by');if(q.type==='compare')return"Compare "+t.replace('__','and');if(q.type==='tf')return"True or false: "+t.replace('=','equals');return t.replace('=','equals').replace('?','what')}
+
+    let qD=[],cQ=0,sc={c:0,w:0},mis=[];const TQ=30;
+    function startQuiz(){qD=Array.from({length:TQ},generateQ);cQ=0;sc={c:0,w:0};mis=[];document.getElementById('save-score-box').style.display='block';document.getElementById('player-name').value='';showScreen('quiz');rendQ()}
+    function rendQ(){if(cQ>=TQ)return endQ();const q=qD[cQ],qb=document.getElementById('quiz-question');qb.innerHTML=q.qh?`${q.q}<br><span style="font-size:1rem;color:gray">${q.qh}</span>`:q.q;qb.classList.remove('bounce','shake');document.getElementById('question-counter').innerText=`${cQ+1}/${TQ}`;document.getElementById('quiz-progress').style.width=`${(cQ/TQ)*100}%`;const oC=document.getElementById('quiz-options');oC.innerHTML='';oC.style.gridTemplateColumns=q.type==='compare'?'repeat(3,1fr)':'repeat(2,1fr)';q.o.forEach(o=>{const b=document.createElement('button');b.className='btn option-btn secondary';b.innerText=q.type==='tf'?(o==='True'?'✅ True':'❌ False'):o;b.onclick=()=>{document.querySelectorAll('.option-btn').forEach(x=>x.disabled=true);let ic=(o==q.a);playSound(ic);if(ic){b.style.background='var(--success)';sc.c++;qb.classList.add('bounce')}else{b.style.background='var(--danger)';sc.w++;mis.push({q:q.q,u:o,c:q.a});qb.classList.add('shake');document.querySelectorAll('.option-btn').forEach(x=>{if(x.innerText.includes(q.a))x.style.background='var(--success)'})}setTimeout(()=>{cQ++;rendQ()},1500)};oC.appendChild(b)});lastSpokenText=parseQ(q);speakText(lastSpokenText)}
+    function endQ(){showScreen('results');document.getElementById('res-correct').innerText=sc.c;document.getElementById('res-wrong').innerText=sc.w;const ml=document.getElementById('mistakes-list'),mt=document.getElementById('mistakes-title');ml.innerHTML='';if(mis.length===0)mt.innerText="Perfect Score! 🌟";else{mt.innerText="Mistakes 📘:";mis.forEach(m=>ml.innerHTML+=`<div style="background:#f1f2f6;padding:10px;border-radius:10px;margin-bottom:10px;"><b>${m.q}</b><br>You: <span style="color:red">${m.u} ❌</span><br>Correct: <span style="color:green">${m.c} ✅</span></div>`)}}
+
+    function saveQuizScore(){let b=JSON.parse(localStorage.getItem('pariMB')||'[]');b.push({name:document.getElementById('player-name').value.trim()||'Anon',score:sc.c,total:TQ,date:new Date().toLocaleDateString()});b.sort((x,y)=>y.score-x.score);localStorage.setItem('pariMB',JSON.stringify(b.slice(0,10)));document.getElementById('save-score-box').style.display='none';openLeaderboard()}
+    function openLeaderboard(){showScreen('leaderboard');const tb=document.getElementById('leaderboard-body');tb.innerHTML='';let b=JSON.parse(localStorage.getItem('pariMB')||'[]');if(b.length===0)return tb.innerHTML=`<tr><td colspan="4">No scores yet.</td></tr>`;b.forEach((x,i)=>{tb.innerHTML+=`<tr><td>${i<3?['🥇','🥈','🥉'][i]:`#${i+1}`}</td><td><b>${x.name}</b></td><td style="color:var(--success);">${x.score}/${x.total||TQ}</td><td>${x.date}</td></tr>`})}
+    function clearLeaderboard(){if(confirm("Clear all?")){localStorage.removeItem('pariMB');openLeaderboard()}}
+
+    let gl=3,gs=0,cgq=null;function startGameMode(){gl=3;gs=0;updGS();showScreen('game-mode');nextGQ()}function updGS(){document.getElementById('game-lives').innerText='❤️'.repeat(gl);document.getElementById('game-score').innerText=gs}
+    function nextGQ(){cgq=generateQ();const qb=document.getElementById('game-question');qb.innerHTML=cgq.qh?`${cgq.q}<br><span style="font-size:1rem;color:gray">${cgq.qh}</span>`:cgq.q;qb.classList.remove('bounce','shake');const oc=document.getElementById('game-options');oc.innerHTML='';oc.style.gridTemplateColumns=cgq.type==='compare'?'repeat(3,1fr)':'repeat(2,1fr)';cgq.o.forEach(o=>{const b=document.createElement('button');b.className='btn option-btn secondary';b.innerText=cgq.type==='tf'?(o==='True'?'✅ True':'❌ False'):o;b.onclick=()=>{document.querySelectorAll('#game-options .option-btn').forEach(x=>x.disabled=true);let ic=(o==cgq.a);playSound(ic);if(ic){b.style.background='var(--success)';gs++;updGS();qb.classList.add('bounce');setTimeout(nextGQ,1200)}else{b.style.background='var(--danger)';gl--;updGS();qb.classList.add('shake');setTimeout(gl<=0?endGM:nextGQ,1500)}};oc.appendChild(b)});lastSpokenText=parseQ(cgq);speakText(lastSpokenText)}
+    function endGM(){document.getElementById('final-game-score').innerText=gs;showScreen('game-over')}
+
+    let cC='0';function openCalculator(){cC='0';updC();showScreen('calculator')}function updC(){document.getElementById('calc-display').innerText=cC}
+    function calcInput(v){if(cC==='0'&&!isNaN(v))cC=v;else if(!isNaN(v)||!isNaN(cC.slice(-1)))cC+=v;updC()}
+    function calcClear(){cC='0';updC()}
+    function calcCalculate(){try{let r=new Function('return '+cC.replace(/×/g,'*').replace(/÷/g,'/'))();cC=(r%1!==0?r.toFixed(2):r).toString();updC()}catch(e){cC='Error';updC();setTimeout(calcClear,1500)}}
+
+    let dp;const db=document.getElementById('downloadAppBtn');if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(e=>console.log('SW Fail')));
+    window.addEventListener('beforeinstallprompt',(e)=>{e.preventDefault();dp=e;db.style.display='block'});
+    db.addEventListener('click',async()=>{if(dp){dp.prompt();const{outcome}=await dp.userChoice;if(outcome==='accepted')db.style.display='none';dp=null}else document.getElementById('installModal').style.display='flex'});
+</script></body></html>
