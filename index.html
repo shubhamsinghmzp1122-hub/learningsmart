@@ -43,8 +43,8 @@
             font-family: 'Comic Neue', 'Comic Sans MS', cursive, sans-serif;
             margin: 0;
             padding: 0;
-            user-select: none; /* Prevents text selection highlighting */
-            touch-action: manipulation; /* 5. ❌ Disable double-tap zoom on mobile */
+            user-select: none; 
+            touch-action: manipulation; 
         }
 
         body {
@@ -54,25 +54,22 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            /* Adjust padding so it sits flush on small mobile screens */
             padding: 0; 
             overflow-x: hidden;
         }
 
-        /* 3. 📦 Container Fix */
         #app {
             background: white;
             width: 100%;
-            max-width: 500px; /* Restricting width as requested */
+            max-width: 500px; 
             margin: auto;
-            height: 100dvh; /* Use dynamic viewport height for mobile browsers */
+            height: 100dvh; 
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            padding: 10px; /* Added inner padding as requested */
+            padding: 10px; 
         }
 
-        /* Added desktop enhancement for the restricted container */
         @media (min-width: 501px) {
             #app {
                 height: 95vh;
@@ -90,7 +87,7 @@
             height: 100%;
             overflow-y: auto;
             overflow-x: hidden;
-            width: 100%; /* 2. 🎨 Fix Layout Scaling */
+            width: 100%; 
         }
 
         .screen.active {
@@ -103,24 +100,24 @@
         .bounce { animation: bounce 0.6s; }
         @keyframes shake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-10px); } 40%, 80% { transform: translateX(10px); } }
         .shake { animation: shake 0.4s; }
+        @keyframes pulse { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.7); } 70% { transform: scale(1.1); box-shadow: 0 0 0 20px rgba(255, 107, 107, 0); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 107, 107, 0); } }
 
         h1, h2, h3 { text-align: center; color: var(--primary); margin-bottom: clamp(10px, 3vw, 20px); text-shadow: 2px 2px 0px var(--accent1); width: 100%; }
         h1 { font-size: clamp(1.8rem, 6vw, 2.5rem); }
         h2 { font-size: clamp(1.5rem, 5vw, 2rem); color: var(--accent2); }
         h3 { font-size: clamp(1.3rem, 4vw, 1.8rem); }
 
-        /* 4. 🔘 Button & Input Fix */
         .btn {
             background: var(--secondary); color: white; border: none;
             padding: 15px 20px;
-            font-size: clamp(16px, 4vw, 1.2rem); /* Ensured at least 16px to prevent iOS zoom */
+            font-size: clamp(16px, 4vw, 1.2rem); 
             border-radius: 25px; cursor: pointer;
             margin: clamp(5px, 1vw, 10px) 0; 
             box-shadow: 0 6px 0 rgba(0,0,0,0.2);
             transition: transform 0.1s, box-shadow 0.1s, background-color 0.3s;
             display: flex; align-items: center; justify-content: center; gap: 10px;
-            width: 100%; /* Make full width */
-            max-width: 100%; /* Removed max-width fixed pixels */
+            width: 100%; 
+            max-width: 100%; 
             min-height: 50px; text-align: center;
         }
 
@@ -144,7 +141,6 @@
         .list-item { background: #f1f2f6; font-size: clamp(1.1rem, 4vw, 1.4rem); padding: clamp(12px, 3vw, 20px); border-radius: 15px; display: flex; justify-content: space-between; align-items: center; border: 3px solid var(--secondary); font-weight: bold; flex-wrap: wrap; gap: 10px; width: 100%; }
         .list-item.center { justify-content: center; font-size: clamp(1.3rem, 5vw, 1.6rem); text-align: center; }
 
-        /* ADVANCED DICTIONARY & TRANSLATOR UI */
         .dict-toolbar { display: flex; flex-direction: column; gap: 10px; width: 100%; margin-bottom: 15px; }
         .dict-search { font-size: 16px; padding: 15px; border-radius: 15px; border: 3px solid var(--color-dict); width: 100%; text-align: center; font-weight: bold; user-select: auto;}
         .add-word-panel { display: none; background: #e1f5fe; padding: 15px; border-radius: 15px; border: 3px dashed var(--color-dict); width: 100%; flex-direction: column; gap: 10px; margin-bottom: 15px; }
@@ -160,7 +156,6 @@
         .btn-speak { background: var(--accent2); color: white; }
         .btn-del { background: var(--danger); color: white; }
 
-        /* CSS Shapes */
         .shape-display-box { background: white; width: 100%; padding: clamp(20px, 5vw, 40px) 10px; border-radius: 20px; border: 4px dashed var(--color-shapes); display: flex; flex-direction: column; align-items: center; gap: 20px; margin-bottom: 20px; }
         .css-shape { margin: 10px auto; transition: transform 0.3s; }
         .css-circle { width: clamp(100px, 30vw, 150px); height: clamp(100px, 30vw, 150px); background: var(--danger); border-radius: 50%; }
@@ -174,33 +169,27 @@
         .css-rectangle { width: clamp(150px, 45vw, 200px); height: clamp(80px, 25vw, 110px); background: #27ae60; }
         .css-star { width: clamp(100px, 30vw, 150px); height: clamp(100px, 30vw, 150px); background: var(--color-gold); clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); }
 
-        /* Learn Content */
         .learn-content { font-size: clamp(1.2rem, 4vw, 1.5rem); text-align: center; line-height: 1.8; width: 100%; }
         .learn-row { background: #fff3e0; margin: 10px 0; padding: clamp(10px, 3vw, 15px); border-radius: 15px; border: 3px dashed var(--secondary); cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap:wrap; text-align:left; width: 100%;}
         
-        /* Quiz UI */
         .progress-bar { width: 100%; height: 20px; background: #e0e0e0; border-radius: 10px; margin-bottom: 20px; overflow: hidden; flex-shrink: 0; }
         .progress-fill { height: 100%; background: var(--success); width: 0%; transition: width 0.3s ease; }
         .question-box { font-size: clamp(1.8rem, 7vw, 2.5rem); font-weight: bold; color: var(--text); margin: 20px 0; text-align: center; background: #e1f5fe; padding: clamp(15px, 5vw, 25px); border-radius: 20px; width: 100%; transition: transform 0.2s; word-wrap: break-word;}
         .options-grid { display: grid; gap: clamp(10px, 3vw, 15px); width: 100%; grid-template-columns: repeat(2, 1fr); }
         .option-btn { font-size: clamp(1.3rem, 5vw, 1.6rem); padding: 15px; border-radius: 20px; margin: 0; max-width: 100%; width: 100%; }
 
-        /* General Inputs */
         .save-score-box { background: #fdf5e6; padding: clamp(15px, 4vw, 20px); border-radius: 15px; width: 100%; margin-top: 20px; text-align: center; border: 3px dashed var(--color-gold); }
         .name-input { font-size: 16px; padding: 15px; border-radius: 10px; border: 2px solid var(--secondary); width: 100%; margin-bottom: 10px; text-align: center; user-select: auto; }
 
-        /* Calculator & Leaderboard */
         .leaderboard-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         .leaderboard-table th, .leaderboard-table td { padding: clamp(8px, 2vw, 12px) 5px; text-align: left; border-bottom: 2px solid #eee; font-size: clamp(1rem, 3.5vw, 1.2rem); }
         .calc-display { width: 100%; background: #2C3E50; color: var(--accent1); font-size: clamp(2rem, 8vw, 2.5rem); text-align: right; padding: 20px; border-radius: 15px; margin-bottom: 20px; min-height: 80px; word-wrap: break-word; flex-shrink: 0;}
         .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(5px, 2vw, 10px); width: 100%; flex: 1;}
         .calc-btn { font-size: clamp(1.5rem, 6vw, 1.8rem); padding: 10px 5px; margin: 0; width: 100%; height: 100%; border-radius: 15px; }
 
-        /* Search Types */
         .search-type-tabs { display: flex; gap: 5px; width: 100%; margin-top: 10px; flex-wrap: wrap; }
         .type-btn { flex: 1; margin: 0; font-size: clamp(0.9rem, 3vw, 1.1rem); padding: 10px; min-height: 40px; border-radius: 15px; width: auto;}
 
-        /* ⭐ PWA MODAL STYLES ⭐ */
         .pwa-modal-overlay {
             display: none; 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -209,7 +198,6 @@
             backdrop-filter: blur(5px);
             align-items: center; justify-content: center;
         }
-
         .pwa-confirm-box {
             background: #fff;
             color: var(--text);
@@ -223,7 +211,6 @@
             animation: bounce 0.5s ease-out;
         }
 
-        /* Media Queries for full Responsiveness within constraints */
         @media (max-width: 360px) {
             .home-grid { grid-template-columns: 1fr; }
             .options-grid { grid-template-columns: 1fr; }
@@ -240,6 +227,10 @@
         
         <button id="downloadAppBtn" class="btn" style="background: linear-gradient(90deg, #FF6B6B, #4ECDC4); border: 2px solid #fff; box-shadow: 0 0 15px rgba(255, 107, 107, 0.5); display: none; font-weight: bold; margin-bottom: 15px; animation: bounce 2s infinite;">
             📲 INSTALL LEARNING APP
+        </button>
+
+        <button class="btn" style="background: var(--accent2); color: white; width: 100%; margin-bottom: 15px; animation: pulse 2s infinite; font-size: clamp(1.2rem, 5vw, 1.4rem); font-weight: bold; border: 2px solid #fff;" onclick="openAIHelper()">
+            🤖 Ask AI Voice Helper 🎙️
         </button>
 
         <div class="home-grid">
@@ -275,253 +266,48 @@
         </div>
     </div>
 
-    <div id="installModal" class="pwa-modal-overlay">
-        <div class="pwa-confirm-box">
-            <h2 style="color: var(--primary); margin-bottom: 10px;">Install App! 📱</h2>
-            <p style="font-size: 1.1rem; color: var(--text); line-height: 1.5; margin-bottom: 20px;">
-                To install this learning app ad-free:<br><br>
-                1. Click the <b>3-dots menu (⋮)</b> in Chrome (top-right).<br>
-                2. Select <b>"Add to Home screen"</b> or <b>"Install app"</b>.<br>
-                3. Enjoy learning safely! 🎈
-            </p>
-            <button onclick="document.getElementById('installModal').style.display='none';" class="btn primary" style="margin: 0;">Okay!</button>
-        </div>
-    </div>
-
-    <div id="safe-search-screen" class="screen">
+    <div id="ai-helper-screen" class="screen">
         <div class="top-bar">
             <button class="btn back-btn" onclick="goHome()">🔙</button>
-            <h2 style="margin:0; color:var(--color-ddg);">Safe Search 🔍</h2>
-            <div style="width: 40px;"></div>
-        </div>
-        <div class="save-score-box" style="border-color:var(--color-ddg);">
-            <h3 style="color:var(--text); margin-bottom: 5px;">What do you want to learn?</h3>
-            
-            <p style="font-size: clamp(0.9rem, 3.5vw, 1.1rem); color: var(--color-ddg); margin-bottom: 15px; font-weight: bold;">
-                DuckDuckGo does not track your searches 🔒
-            </p>
-
-            <input type="text" id="safe-search-input" class="name-input" placeholder="Type here (e.g. apple)..." style="border-color:var(--color-ddg);" onkeyup="checkEnterSearch(event)">
-            
-            <div class="search-type-tabs">
-                <button class="btn type-btn primary" id="tab-normal" onclick="setSearchType('normal', this)">🔍 Normal</button>
-                <button class="btn type-btn secondary" id="tab-image" onclick="setSearchType('image', this)">🖼️ Image</button>
-                <button class="btn type-btn secondary" id="tab-meaning" onclick="setSearchType('meaning', this)">📖 Meaning</button>
-            </div>
-
-            <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 20px; width: 100%;">
-                <button class="btn" style="background:var(--color-ddg); color:white; margin:0;" onclick="performWebSearch('ddg')">🦆 Search with DuckDuckGo</button>
-                <button class="btn" style="background:var(--color-google); color:white; margin:0;" onclick="performWebSearch('google')">🌐 Search with Google</button>
-            </div>
-        </div>
-        
-        <button class="btn yellow" style="margin-top: 20px;" onclick="goHome()">🏠 Back to Home</button>
-    </div>
-
-    <div id="shapes-screen" class="screen">
-        <div class="top-bar">
-            <button class="btn back-btn" onclick="goHome()">🔙</button>
-            <h2 style="margin:0; color:var(--color-shapes);">Shapes 🔺</h2>
+            <h2 style="margin:0; color:var(--accent2);">AI Assistant 🤖</h2>
             <div style="width: 40px;"></div>
         </div>
         
-        <div class="shape-display-box" id="shape-display-box"></div>
-
-        <div style="display:flex; justify-content:space-between; width: 100%; gap: 10px;">
-            <button class="btn primary" style="flex:1;" onclick="changeShape(-1)">⬅️ Prev</button>
-            <button class="btn primary" style="flex:1;" onclick="changeShape(1)">Next ➡️</button>
-        </div>
-    </div>
-
-    <div id="translator-screen" class="screen">
-        <div class="top-bar">
-            <button class="btn back-btn" onclick="goHome()">🔙</button>
-            <h2 style="margin:0; color:var(--color-trans);">Translator 🌐</h2>
-            <div style="width: 40px;"></div>
-        </div>
-        <div class="save-score-box" style="border-color:var(--color-trans);">
-            <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:15px; font-size:clamp(1.1rem, 4vw, 1.4rem); font-weight:bold; color:var(--text); width: 100%;">
-                <span id="lang-from" style="flex:1; text-align:right;">English</span>
-                <button class="btn-icon" onclick="swapTranslator()" style="background:var(--accent1); font-size:1.5rem; flex-shrink:0;">🔄</button>
-                <span id="lang-to" style="flex:1; text-align:left;">Hindi</span>
+        <div class="save-score-box" style="border-color:var(--accent2); flex:1; display:flex; flex-direction:column; align-items:center;">
+            <p style="font-size: 1.2rem; color: var(--text); margin-bottom: 20px; font-weight: bold;">Tap Mic & Ask me anything!</p>
+            
+            <button id="mic-btn" class="btn-icon bounce" style="width:100px; height:100px; font-size:3.5rem; background:var(--accent1); box-shadow: 0 10px 20px rgba(0,0,0,0.2); transition: 0.3s;" onclick="toggleMic()">🎙️</button>
+            <p id="mic-status" style="margin-top:15px; font-weight:bold; color:var(--text); font-size: 1.1rem;">Ready to listen...</p>
+            
+            <div id="chat-container" style="width:100%; margin-top:30px; text-align:left; flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:15px; padding: 5px;">
+                <div id="user-chat" style="display:none; background:#e1f5fe; padding:15px; border-radius:20px 20px 20px 0; border:2px solid #81d4fa; align-self:flex-start; max-width:90%;">
+                    <b style="color:#0288d1; font-size:1rem;">Pari/Jiya:</b><br> <span id="user-text-span" style="font-size:1.2rem; color:#01579b;"></span>
+                </div>
+                <div id="ai-chat" style="display:none; background:#f3e5f5; padding:15px; border-radius:20px 20px 0 20px; border:2px solid #ce93d8; align-self:flex-end; max-width:90%;">
+                    <b style="color:#8e24aa; font-size:1rem;">AI Robot:</b><br> <span id="ai-text-span" style="font-size:1.2rem; color:#4a148c;"></span>
+                </div>
             </div>
-            <input type="text" id="trans-input" class="name-input" placeholder="English Word..." style="border-color:var(--color-trans);" onkeyup="checkEnterTrans(event)">
-            <button class="btn primary" style="background:var(--color-trans); margin:0;" onclick="translateWord()">🔍 Translate</button>
         </div>
-        <div id="trans-result" style="margin-top:20px; width:100%; text-align:center;"></div>
     </div>
 
-    <div id="dict-book-screen" class="screen">
-        <div class="top-bar">
-            <button class="btn back-btn" onclick="goHome()">🔙</button>
-            <h2 style="margin:0; color:var(--color-dict);">Dictionary 📚</h2>
-            <div style="width: 40px;"></div>
-        </div>
-        <div class="dict-toolbar">
-            <input type="text" id="dict-search-input" class="dict-search" placeholder="🔍 Search a word..." onkeyup="filterDictBook()">
-            <button class="btn yellow" style="margin:0; color:var(--text);" onclick="toggleAddWordPanel()">➕ Add New Word</button>
-        </div>
-        <div id="add-word-panel" class="add-word-panel">
-            <h3 style="margin:0; font-size:1.5rem; color:var(--color-dict);">Add Your Word!</h3>
-            <input type="text" id="add-en" class="dict-search" placeholder="English Word (e.g. Tree)">
-            <input type="text" id="add-hi" class="dict-search" placeholder="Hindi Meaning (e.g. पेड़)">
-            <button class="btn primary" style="margin:0;" onclick="saveNewDictWord()">💾 Save Word</button>
-            <div id="add-word-msg" style="text-align:center; font-size:1.2rem; font-weight:bold;"></div>
-        </div>
-        <div id="dict-list-container" class="dict-list-wrap"></div>
-    </div>
-
-    <div id="months-screen" class="screen">
-        <div class="top-bar">
-            <button class="btn back-btn" onclick="goHome()">🔙</button>
-            <h2 style="margin:0; color:var(--color-months);">Months 📅</h2>
-            <div style="width: 40px;"></div>
-        </div>
-        <div id="months-content" class="list-container"></div>
-    </div>
-
-    <div id="days-screen" class="screen">
-        <div class="top-bar">
-            <button class="btn back-btn" onclick="goHome()">🔙</button>
-            <h2 style="margin:0; color:var(--color-days);">Days 📆</h2>
-            <div style="width: 40px;"></div>
-        </div>
-        <div id="days-content" class="list-container"></div>
-    </div>
-
-    <div id="learn" class="screen">
-        <div class="top-bar">
-            <button class="btn back-btn" onclick="goHome()">🔙</button>
-            <h2 id="learn-title" style="margin:0;">Learn</h2>
-            <div style="width: 40px;"></div>
-        </div>
-        <div id="learn-content-area" class="learn-content"></div>
-    </div>
-
-    <div id="tables-screen" class="screen">
-        <div class="top-bar">
-            <button class="btn back-btn" onclick="goHome()">🔙</button>
-            <h2 style="margin:0; color:var(--color-tables);">Tables 📊</h2>
-            <div style="width: 40px;"></div>
-        </div>
-        <div style="display:flex; justify-content:space-between; align-items:center; width: 100%; margin-bottom: 20px; background: #fdf5e6; padding: 10px; border-radius: 15px; gap: 5px;">
-            <button class="btn primary" style="width: auto; margin:0;" onclick="changeTable(-1)">⬅️</button>
-            <h3 id="current-table-title" style="margin:0; font-size: clamp(1.3rem, 5vw, 1.8rem); color: var(--text);">Table of 1</h3>
-            <button class="btn primary" style="width: auto; margin:0;" onclick="changeTable(1)">➡️</button>
-        </div>
-        <button class="btn accent" style="margin-bottom: 20px;" onclick="readTableAloud()">🔊 Read Full Table</button>
-        <div id="tables-content" class="list-container"></div>
-    </div>
-
-    <div id="names-screen" class="screen">
-        <div class="top-bar">
-            <button class="btn back-btn" onclick="goHome()">🔙</button>
-            <h2 style="margin:0; color:var(--color-names);">Number Names 🔤</h2>
-            <div style="width: 40px;"></div>
-        </div>
-        <div id="names-content" class="list-container"></div>
-    </div>
-
-    <div id="roman-screen" class="screen">
-        <div class="top-bar">
-            <button class="btn back-btn" onclick="goHome()">🔙</button>
-            <h2 style="margin:0; color:var(--color-roman);">Roman Numbers 🏛️</h2>
-            <div style="width: 40px;"></div>
-        </div>
-        <div id="roman-content" class="list-container"></div>
-    </div>
-
-    <div id="quiz" class="screen">
-        <div class="top-bar">
-            <button class="btn back-btn" onclick="goHome()">🔙</button>
-            <h2 style="margin:0;">Quiz Time! 🧠</h2>
-            <div style="width: 60px; font-size: clamp(1rem, 4vw, 1.2rem); text-align:center;" id="question-counter">1/30</div>
-        </div>
-        <div class="progress-bar"><div class="progress-fill" id="quiz-progress"></div></div>
-        <div class="question-box" id="quiz-question">2 + 2 = ?</div>
-        <button class="btn yellow" style="font-size:clamp(1rem, 4vw, 1.2rem); padding: 10px; width:auto; margin: -10px auto 20px auto;" onclick="repeatQuestionVoice()">🔊 Listen Again</button>
-        <div class="options-grid" id="quiz-options"></div>
-    </div>
-
-    <div id="results" class="screen">
-        <h1>🏆 Quiz Finished! 🎉</h1>
-        <div class="result-stat" style="color: var(--success); font-size: clamp(1.2rem, 5vw, 1.5rem); font-weight: bold;">✅ Correct: <span id="res-correct">0</span></div>
-        <div class="result-stat" style="color: var(--danger); font-size: clamp(1.2rem, 5vw, 1.5rem); font-weight: bold; margin-bottom: 10px;">❌ Wrong: <span id="res-wrong">0</span></div>
-        <div class="save-score-box" id="save-score-box">
-            <h3>Save your Score!</h3>
-            <input type="text" id="player-name" class="name-input" placeholder="Enter your name" maxlength="15">
-            <button class="btn accent" onclick="saveQuizScore()">💾 Save to Leaderboard</button>
-        </div>
-        <h3 style="margin-top: 20px; font-size:clamp(1.2rem, 4vw, 1.5rem);" id="mistakes-title">Let's review mistakes 📘:</h3>
-        <div class="mistakes-list" id="mistakes-list" style="width: 100%; text-align: left;"></div>
-        <button class="btn primary" style="margin-top: 20px;" onclick="startQuiz()">🔄 Start New Quiz</button>
-        <button class="btn yellow" onclick="goHome()">🏠 Go Home</button>
-    </div>
-
-    <div id="game-mode" class="screen">
-        <div class="top-bar">
-            <button class="btn back-btn" onclick="goHome()">🔙</button>
-            <h2 style="margin:0;">Game Mode 🎮</h2>
-            <div style="width: 40px;"></div>
-        </div>
-        <div class="game-stats" style="display: flex; justify-content: space-between; width: 100%; font-size: clamp(1.2rem, 5vw, 1.5rem); margin-bottom: 15px; font-weight: bold;">
-            <div class="lives" id="game-lives">❤️❤️❤️</div>
-            <div class="score">⭐ <span id="game-score">0</span></div>
-        </div>
-        <div class="question-box" id="game-question">2 + 2 = ?</div>
-        <button class="btn yellow" style="font-size:clamp(1rem, 4vw, 1.2rem); padding: 10px; width:auto; margin: -10px auto 20px auto;" onclick="repeatQuestionVoice()">🔊 Listen Again</button>
-        <div class="options-grid" id="game-options"></div>
-    </div>
-
-    <div id="game-over" class="screen">
-        <h1>Game Over! 🕹️</h1>
-        <h2 style="font-size: clamp(3rem, 10vw, 5rem); margin: 20px 0;">⭐ <span id="final-game-score">0</span></h2>
-        <p style="font-size: clamp(1.2rem, 4vw, 1.5rem); margin-bottom: 20px;">Great trying! Keep practicing.</p>
-        <button class="btn primary" onclick="startGameMode()">🔄 Play Again</button>
-        <button class="btn yellow" onclick="goHome()">🏠 Go Home</button>
-    </div>
-
-    <div id="leaderboard" class="screen">
-        <div class="top-bar">
-            <button class="btn back-btn" onclick="goHome()">🔙</button>
-            <h2 style="margin:0;">Leaderboard 🏆</h2>
-            <div style="width: 40px;"></div>
-        </div>
-        <div style="width:100%; overflow-x:auto;">
-            <table class="leaderboard-table" id="leaderboard-table">
-                <thead><tr><th>Rank</th><th>Name</th><th>Score</th><th>Date</th></tr></thead>
-                <tbody id="leaderboard-body"></tbody>
-            </table>
-        </div>
-        <button class="btn danger" style="background: var(--danger); margin-top: 30px;" onclick="clearLeaderboard()">🗑️ Clear Board</button>
-    </div>
-
-    <div id="calculator" class="screen">
-        <div class="top-bar">
-            <button class="btn back-btn" onclick="goHome()">🔙</button>
-            <h2 style="margin:0;">Calculator 🧮</h2>
-            <div style="width: 40px;"></div>
-        </div>
-        <div class="calc-display" id="calc-display">0</div>
-        <div class="calc-grid">
-            <button class="btn calc-btn secondary" onclick="calcInput('7')">7</button>
-            <button class="btn calc-btn secondary" onclick="calcInput('8')">8</button>
-            <button class="btn calc-btn secondary" onclick="calcInput('9')">9</button>
-            <button class="btn calc-btn yellow" onclick="calcInput('/')">÷</button>
-            <button class="btn calc-btn secondary" onclick="calcInput('4')">4</button>
-            <button class="btn calc-btn secondary" onclick="calcInput('5')">5</button>
-            <button class="btn calc-btn secondary" onclick="calcInput('6')">6</button>
-            <button class="btn calc-btn yellow" onclick="calcInput('*')">×</button>
-            <button class="btn calc-btn secondary" onclick="calcInput('1')">1</button>
-            <button class="btn calc-btn secondary" onclick="calcInput('2')">2</button>
-            <button class="btn calc-btn secondary" onclick="calcInput('3')">3</button>
-            <button class="btn calc-btn yellow" onclick="calcInput('-')">−</button>
-            <button class="btn calc-btn primary" onclick="calcClear()">C</button>
-            <button class="btn calc-btn secondary" onclick="calcInput('0')">0</button>
-            <button class="btn calc-btn accent" onclick="calcCalculate()">=</button>
-            <button class="btn calc-btn yellow" onclick="calcInput('+')">+</button>
-        </div>
-    </div>
+    <div id="installModal" class="pwa-modal-overlay"><div class="pwa-confirm-box"><h2 style="color: var(--primary); margin-bottom: 10px;">Install App! 📱</h2><p style="font-size: 1.1rem; color: var(--text); line-height: 1.5; margin-bottom: 20px;">To install this learning app ad-free:<br><br>1. Click the <b>3-dots menu (⋮)</b> in Chrome (top-right).<br>2. Select <b>"Add to Home screen"</b> or <b>"Install app"</b>.<br>3. Enjoy learning safely! 🎈</p><button onclick="document.getElementById('installModal').style.display='none';" class="btn primary" style="margin: 0;">Okay!</button></div></div>
+    
+    <div id="safe-search-screen" class="screen"><div class="top-bar"><button class="btn back-btn" onclick="goHome()">🔙</button><h2 style="margin:0; color:var(--color-ddg);">Safe Search 🔍</h2><div style="width: 40px;"></div></div><div class="save-score-box" style="border-color:var(--color-ddg);"><h3 style="color:var(--text); margin-bottom: 5px;">What do you want to learn?</h3><p style="font-size: clamp(0.9rem, 3.5vw, 1.1rem); color: var(--color-ddg); margin-bottom: 15px; font-weight: bold;">DuckDuckGo does not track your searches 🔒</p><input type="text" id="safe-search-input" class="name-input" placeholder="Type here (e.g. apple)..." style="border-color:var(--color-ddg);" onkeyup="checkEnterSearch(event)"><div class="search-type-tabs"><button class="btn type-btn primary" id="tab-normal" onclick="setSearchType('normal', this)">🔍 Normal</button><button class="btn type-btn secondary" id="tab-image" onclick="setSearchType('image', this)">🖼️ Image</button><button class="btn type-btn secondary" id="tab-meaning" onclick="setSearchType('meaning', this)">📖 Meaning</button></div><div style="display: flex; flex-direction: column; gap: 10px; margin-top: 20px; width: 100%;"><button class="btn" style="background:var(--color-ddg); color:white; margin:0;" onclick="performWebSearch('ddg')">🦆 Search with DuckDuckGo</button><button class="btn" style="background:var(--color-google); color:white; margin:0;" onclick="performWebSearch('google')">🌐 Search with Google</button></div></div><button class="btn yellow" style="margin-top: 20px;" onclick="goHome()">🏠 Back to Home</button></div>
+    <div id="shapes-screen" class="screen"><div class="top-bar"><button class="btn back-btn" onclick="goHome()">🔙</button><h2 style="margin:0; color:var(--color-shapes);">Shapes 🔺</h2><div style="width: 40px;"></div></div><div class="shape-display-box" id="shape-display-box"></div><div style="display:flex; justify-content:space-between; width: 100%; gap: 10px;"><button class="btn primary" style="flex:1;" onclick="changeShape(-1)">⬅️ Prev</button><button class="btn primary" style="flex:1;" onclick="changeShape(1)">Next ➡️</button></div></div>
+    <div id="translator-screen" class="screen"><div class="top-bar"><button class="btn back-btn" onclick="goHome()">🔙</button><h2 style="margin:0; color:var(--color-trans);">Translator 🌐</h2><div style="width: 40px;"></div></div><div class="save-score-box" style="border-color:var(--color-trans);"><div style="display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:15px; font-size:clamp(1.1rem, 4vw, 1.4rem); font-weight:bold; color:var(--text); width: 100%;"><span id="lang-from" style="flex:1; text-align:right;">English</span><button class="btn-icon" onclick="swapTranslator()" style="background:var(--accent1); font-size:1.5rem; flex-shrink:0;">🔄</button><span id="lang-to" style="flex:1; text-align:left;">Hindi</span></div><input type="text" id="trans-input" class="name-input" placeholder="English Word..." style="border-color:var(--color-trans);" onkeyup="checkEnterTrans(event)"><button class="btn primary" style="background:var(--color-trans); margin:0;" onclick="translateWord()">🔍 Translate</button></div><div id="trans-result" style="margin-top:20px; width:100%; text-align:center;"></div></div>
+    <div id="dict-book-screen" class="screen"><div class="top-bar"><button class="btn back-btn" onclick="goHome()">🔙</button><h2 style="margin:0; color:var(--color-dict);">Dictionary 📚</h2><div style="width: 40px;"></div></div><div class="dict-toolbar"><input type="text" id="dict-search-input" class="dict-search" placeholder="🔍 Search a word..." onkeyup="filterDictBook()"><button class="btn yellow" style="margin:0; color:var(--text);" onclick="toggleAddWordPanel()">➕ Add New Word</button></div><div id="add-word-panel" class="add-word-panel"><h3 style="margin:0; font-size:1.5rem; color:var(--color-dict);">Add Your Word!</h3><input type="text" id="add-en" class="dict-search" placeholder="English Word (e.g. Tree)"><input type="text" id="add-hi" class="dict-search" placeholder="Hindi Meaning (e.g. पेड़)"><button class="btn primary" style="margin:0;" onclick="saveNewDictWord()">💾 Save Word</button><div id="add-word-msg" style="text-align:center; font-size:1.2rem; font-weight:bold;"></div></div><div id="dict-list-container" class="dict-list-wrap"></div></div>
+    <div id="months-screen" class="screen"><div class="top-bar"><button class="btn back-btn" onclick="goHome()">🔙</button><h2 style="margin:0; color:var(--color-months);">Months 📅</h2><div style="width: 40px;"></div></div><div id="months-content" class="list-container"></div></div>
+    <div id="days-screen" class="screen"><div class="top-bar"><button class="btn back-btn" onclick="goHome()">🔙</button><h2 style="margin:0; color:var(--color-days);">Days 📆</h2><div style="width: 40px;"></div></div><div id="days-content" class="list-container"></div></div>
+    <div id="learn" class="screen"><div class="top-bar"><button class="btn back-btn" onclick="goHome()">🔙</button><h2 id="learn-title" style="margin:0;">Learn</h2><div style="width: 40px;"></div></div><div id="learn-content-area" class="learn-content"></div></div>
+    <div id="tables-screen" class="screen"><div class="top-bar"><button class="btn back-btn" onclick="goHome()">🔙</button><h2 style="margin:0; color:var(--color-tables);">Tables 📊</h2><div style="width: 40px;"></div></div><div style="display:flex; justify-content:space-between; align-items:center; width: 100%; margin-bottom: 20px; background: #fdf5e6; padding: 10px; border-radius: 15px; gap: 5px;"><button class="btn primary" style="width: auto; margin:0;" onclick="changeTable(-1)">⬅️</button><h3 id="current-table-title" style="margin:0; font-size: clamp(1.3rem, 5vw, 1.8rem); color: var(--text);">Table of 1</h3><button class="btn primary" style="width: auto; margin:0;" onclick="changeTable(1)">➡️</button></div><button class="btn accent" style="margin-bottom: 20px;" onclick="readTableAloud()">🔊 Read Full Table</button><div id="tables-content" class="list-container"></div></div>
+    <div id="names-screen" class="screen"><div class="top-bar"><button class="btn back-btn" onclick="goHome()">🔙</button><h2 style="margin:0; color:var(--color-names);">Number Names 🔤</h2><div style="width: 40px;"></div></div><div id="names-content" class="list-container"></div></div>
+    <div id="roman-screen" class="screen"><div class="top-bar"><button class="btn back-btn" onclick="goHome()">🔙</button><h2 style="margin:0; color:var(--color-roman);">Roman Numbers 🏛️</h2><div style="width: 40px;"></div></div><div id="roman-content" class="list-container"></div></div>
+    <div id="quiz" class="screen"><div class="top-bar"><button class="btn back-btn" onclick="goHome()">🔙</button><h2 style="margin:0;">Quiz Time! 🧠</h2><div style="width: 60px; font-size: clamp(1rem, 4vw, 1.2rem); text-align:center;" id="question-counter">1/30</div></div><div class="progress-bar"><div class="progress-fill" id="quiz-progress"></div></div><div class="question-box" id="quiz-question">2 + 2 = ?</div><button class="btn yellow" style="font-size:clamp(1rem, 4vw, 1.2rem); padding: 10px; width:auto; margin: -10px auto 20px auto;" onclick="repeatQuestionVoice()">🔊 Listen Again</button><div class="options-grid" id="quiz-options"></div></div>
+    <div id="results" class="screen"><h1>🏆 Quiz Finished! 🎉</h1><div class="result-stat" style="color: var(--success); font-size: clamp(1.2rem, 5vw, 1.5rem); font-weight: bold;">✅ Correct: <span id="res-correct">0</span></div><div class="result-stat" style="color: var(--danger); font-size: clamp(1.2rem, 5vw, 1.5rem); font-weight: bold; margin-bottom: 10px;">❌ Wrong: <span id="res-wrong">0</span></div><div class="save-score-box" id="save-score-box"><h3>Save your Score!</h3><input type="text" id="player-name" class="name-input" placeholder="Enter your name" maxlength="15"><button class="btn accent" onclick="saveQuizScore()">💾 Save to Leaderboard</button></div><h3 style="margin-top: 20px; font-size:clamp(1.2rem, 4vw, 1.5rem);" id="mistakes-title">Let's review mistakes 📘:</h3><div class="mistakes-list" id="mistakes-list" style="width: 100%; text-align: left;"></div><button class="btn primary" style="margin-top: 20px;" onclick="startQuiz()">🔄 Start New Quiz</button><button class="btn yellow" onclick="goHome()">🏠 Go Home</button></div>
+    <div id="game-mode" class="screen"><div class="top-bar"><button class="btn back-btn" onclick="goHome()">🔙</button><h2 style="margin:0;">Game Mode 🎮</h2><div style="width: 40px;"></div></div><div class="game-stats" style="display: flex; justify-content: space-between; width: 100%; font-size: clamp(1.2rem, 5vw, 1.5rem); margin-bottom: 15px; font-weight: bold;"><div class="lives" id="game-lives">❤️❤️❤️</div><div class="score">⭐ <span id="game-score">0</span></div></div><div class="question-box" id="game-question">2 + 2 = ?</div><button class="btn yellow" style="font-size:clamp(1rem, 4vw, 1.2rem); padding: 10px; width:auto; margin: -10px auto 20px auto;" onclick="repeatQuestionVoice()">🔊 Listen Again</button><div class="options-grid" id="game-options"></div></div>
+    <div id="game-over" class="screen"><h1>Game Over! 🕹️</h1><h2 style="font-size: clamp(3rem, 10vw, 5rem); margin: 20px 0;">⭐ <span id="final-game-score">0</span></h2><p style="font-size: clamp(1.2rem, 4vw, 1.5rem); margin-bottom: 20px;">Great trying! Keep practicing.</p><button class="btn primary" onclick="startGameMode()">🔄 Play Again</button><button class="btn yellow" onclick="goHome()">🏠 Go Home</button></div>
+    <div id="leaderboard" class="screen"><div class="top-bar"><button class="btn back-btn" onclick="goHome()">🔙</button><h2 style="margin:0;">Leaderboard 🏆</h2><div style="width: 40px;"></div></div><div style="width:100%; overflow-x:auto;"><table class="leaderboard-table" id="leaderboard-table"><thead><tr><th>Rank</th><th>Name</th><th>Score</th><th>Date</th></tr></thead><tbody id="leaderboard-body"></tbody></table></div><button class="btn danger" style="background: var(--danger); margin-top: 30px;" onclick="clearLeaderboard()">🗑️ Clear Board</button></div>
+    <div id="calculator" class="screen"><div class="top-bar"><button class="btn back-btn" onclick="goHome()">🔙</button><h2 style="margin:0;">Calculator 🧮</h2><div style="width: 40px;"></div></div><div class="calc-display" id="calc-display">0</div><div class="calc-grid"><button class="btn calc-btn secondary" onclick="calcInput('7')">7</button><button class="btn calc-btn secondary" onclick="calcInput('8')">8</button><button class="btn calc-btn secondary" onclick="calcInput('9')">9</button><button class="btn calc-btn yellow" onclick="calcInput('/')">÷</button><button class="btn calc-btn secondary" onclick="calcInput('4')">4</button><button class="btn calc-btn secondary" onclick="calcInput('5')">5</button><button class="btn calc-btn secondary" onclick="calcInput('6')">6</button><button class="btn calc-btn yellow" onclick="calcInput('*')">×</button><button class="btn calc-btn secondary" onclick="calcInput('1')">1</button><button class="btn calc-btn secondary" onclick="calcInput('2')">2</button><button class="btn calc-btn secondary" onclick="calcInput('3')">3</button><button class="btn calc-btn yellow" onclick="calcInput('-')">−</button><button class="btn calc-btn primary" onclick="calcClear()">C</button><button class="btn calc-btn secondary" onclick="calcInput('0')">0</button><button class="btn calc-btn accent" onclick="calcCalculate()">=</button><button class="btn calc-btn yellow" onclick="calcInput('+')">+</button></div></div>
 
 </div>
 
@@ -557,8 +343,9 @@
         if (!('speechSynthesis' in window)) return;
         stopVoice();
         const msg = new SpeechSynthesisUtterance(text);
-        msg.rate = 0.7; // Slow for kids
-        msg.pitch = 1.1; 
+        msg.rate = 0.8; // Set slightly faster than 0.7 so AI doesn't sound too slow
+        msg.pitch = 1.2; // Cute kids pitch
+        msg.lang = 'hi-IN'; // Works for both Hindi and English mixed naturally
         window.speechSynthesis.speak(msg);
     }
 
@@ -584,6 +371,126 @@
         document.getElementById(screenId).classList.add('active');
     }
     function goHome() { showScreen('home'); }
+
+    // ⭐ NAYA: AI Assistant (JARVIS) Code ⭐
+    const GEMINI_API_KEY = "AIzaSyCor3y7MXZHUdbgllhsyhvxSiVUE1l4kwg"; 
+    let isListening = false;
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    let recognition;
+
+    if (SpeechRecognition) {
+        recognition = new SpeechRecognition();
+        recognition.lang = 'hi-IN'; // Understands both English and Hindi very well
+        recognition.interimResults = false;
+        
+        recognition.onresult = async (event) => {
+            const transcript = event.results[0][0].transcript;
+            isListening = false;
+            resetMicUI();
+            
+            document.getElementById('user-chat').style.display = 'block';
+            document.getElementById('user-text-span').innerText = transcript;
+            
+            document.getElementById('ai-chat').style.display = 'block';
+            document.getElementById('ai-text-span').innerText = "Thinking... 🤔";
+            
+            // Scroll to bottom
+            const chatContainer = document.getElementById('chat-container');
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+
+            await askGemini(transcript);
+        };
+
+        recognition.onerror = (event) => {
+            isListening = false;
+            resetMicUI();
+            document.getElementById('mic-status').innerText = "Oops! Didn't hear you clearly. 😕";
+        };
+
+        recognition.onend = () => {
+            if(isListening) {
+                isListening = false;
+                resetMicUI();
+            }
+        };
+    }
+
+    function openAIHelper() {
+        document.getElementById('user-chat').style.display = 'none';
+        document.getElementById('ai-chat').style.display = 'none';
+        resetMicUI();
+        showScreen('ai-helper-screen');
+    }
+
+    function toggleMic() {
+        if (!recognition) {
+            alert("Sorry! Mic is not supported on this browser. Try Chrome! 🎙️❌");
+            return;
+        }
+
+        if (isListening) {
+            recognition.stop();
+            return;
+        }
+
+        try {
+            recognition.start();
+            isListening = true;
+            document.getElementById('mic-status').innerText = "Listening... Speak now! 👂";
+            const micBtn = document.getElementById('mic-btn');
+            micBtn.style.transform = "scale(1.2)";
+            micBtn.style.background = "var(--danger)";
+            micBtn.style.color = "white";
+            micBtn.style.boxShadow = "0 0 20px rgba(255,139,148, 0.8)";
+            stopVoice(); // Stop AI if it was already speaking
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    function resetMicUI() {
+        const micBtn = document.getElementById('mic-btn');
+        micBtn.style.transform = "scale(1)";
+        micBtn.style.background = "var(--accent1)";
+        micBtn.style.color = "var(--text)";
+        micBtn.style.boxShadow = "0 10px 20px rgba(0,0,0,0.2)";
+        document.getElementById('mic-status').innerText = "Tap Mic to speak";
+    }
+
+    async function askGemini(question) {
+        // System Prompt to make AI act like a sweet teacher for kids
+        const prompt = `You are a sweet, funny, and highly intelligent AI teacher for two kids named Pari and Jiya. Give a very short, simple, and safe answer in just 1 or 2 lines. Do not use * or ** formatting symbols. If the kid asks in Hindi, reply in sweet Hindi. If in English, reply in easy English. The kid asked: "${question}"`;
+        
+        try {
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [{ parts: [{ text: prompt }] }]
+                })
+            });
+            
+            const data = await response.json();
+            if (data.candidates && data.candidates[0].content.parts[0].text) {
+                let ans = data.candidates[0].content.parts[0].text;
+                ans = ans.replace(/\*/g, ''); // Remove markdown bold symbols so speech is clean
+                
+                document.getElementById('ai-text-span').innerText = ans;
+                
+                // Scroll down
+                const chatContainer = document.getElementById('chat-container');
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+
+                speakText(ans); // Read the answer out loud!
+            } else {
+                throw new Error("No answer from Brain");
+            }
+        } catch (error) {
+            document.getElementById('ai-text-span').innerText = "Oh no! My brain is sleeping right now. Try again later! 😴";
+            speakText("Oh no! My brain is sleeping right now. Try again later!");
+        }
+    }
+
 
     // --- NEW SEARCH TYPE LOGIC ---
     let currentSearchType = 'normal';
@@ -691,7 +598,7 @@
         "school":"स्कूल","class":"कक्षा","teacher":"शिक्षक","student":"छात्र","book":"किताब","pen":"कलम","pencil":"पेंसिल","eraser":"रबर","notebook":"कॉपी","bag":"थैला","desk":"डेस्क","bench":"बेंच","chair":"कुर्सी","board":"बोर्ड","chalk":"चाक","map":"नक्शा","paper":"कागज़","bell":"घंटी",
         "go":"जाना","come":"आना","eat":"खाना","drink":"पीना","sleep":"सोना","run":"दौड़ना","walk":"चलना","jump":"कूदना","sit":"बैठना","stand":"खड़े होना","read":"पढ़ना","write":"लिखना","play":"खेलना","laugh":"हंसना","cry":"रोना","smile":"मुस्कान","see":"देखना","look":"देखना","hear":"सुनना","listen":"सुनना","say":"कहना","speak":"बोलना","tell":"बताना","ask":"पूछना","give":"देना","take":"लेना","bring":"लाना","buy":"खरीदना","sell":"बेचना","catch":"पकड़ना","throw":"फेंकना","open":"खुला","close":"बंद करना","push":"धकेलना","pull":"खींचना","wash":"धोना","clean":"साफ","help":"मदद","work":"काम","learn":"सीखना","teach":"सिखाना",
         "sun":"सूरज","moon":"चाँद","star":"तारा","sky":"आसमान","cloud":"बादल","rain":"बारिश","wind":"हवा","water":"पानी","fire":"आग","earth":"पृथ्वी","world":"दुनिया","day":"दिन","night":"रात","morning":"सुबह","evening":"शाम","time":"समय","today":"आज","tomorrow":"कल","yesterday":"कल (बीता)","house":"घर","room":"कमरा","door":"दरवाज़ा","window":"खिड़की","roof":"छत","wall":"दीवार","floor":"फ़र्श","bed":"बिस्तर","table":"मेज़","food":"भोजन","milk":"दूध","tea":"चाय","rice":"चावल","vegetable":"सब्जी","boy":"लड़का","girl":"लड़की","man":"आदमी","woman":"औरत","mother":"माँ","father":"पिता","brother":"भाई","sister":"बहन","friend":"दोस्त","baby":"बच्चा","name":"नाम","age":"उम्र","city":"शहर","village":"गाँव","road":"सड़क","way":"रास्ता","car":"गाड़ी","bus":"बस","train":"रेलगाड़ी","plane":"विमान","boat":"नाव","ship":"जहाज़",
-        "a":"एक","ability":"क्षमता","able":"सक्षम","about":"के बारे में","above":"ऊपर","accept":"स्वीकार करना","according":"के अनुसार","account":"खाता","across":"पार","act":"कार्य","action":"कार्रवाई","activity":"गतिविधि","actually":"वास्तव में","add":"जोड़ना","address":"पता","administration":"प्रशासन","admit":"स्वीकार करना","adult":"वयस्क","affect":"प्रभावित करना","after":"बाद में","again":"फिर से","against":"के खिलाफ","agency":"एजेंसी","agent":"दलाल","ago":"पूर्व","agree":"सहमत होना","agreement":"समझौता","ahead":"आगे","air":"हवा","all":"सब","allow":"अनुमति देना","almost":"लगभग","alone":"अकेला","along":"साथ में","already":"पहले से","also":"भी","although":"हालांकि","always":"हमेशा","among":"के बीच","amount":"मात्रा","analysis":"विश्लेषण","and":"और","animal":"जानवर","another":"एक और","answer":"उत्तर","any":"कोई","anyone":"कोई भी","anything":"कुछ भी","appear":"प्रकट होना","apply":"लागू करना","approach":"दृष्टिकोण","area":"क्षेत्र","argue":"बहस करना","around":"चारों ओर","arrive":"पहुंचना","art":"कला","article":"लेख","artist":"कलाकार","as":"जैसा","assume":"मान लेना","at":"पर","attack":"आक्रमण","attention":"ध्यान","attorney":"वकील","audience":"दर्शक","author":"लेखक","authority":"अधिकार","available":"उपलब्ध","avoid":"बचना","away":"दूर","bad":"बुरा","bank":"बैंक","bar":"बार","base":"आधार","be":"होना","beat":"पीटना","beautiful":"सुंदर","because":"क्योंकि","become":"बनना","before":"पहले","begin":"शुरू","behavior":"व्यवहार","behind":"पीछे","believe":"विश्वास करना","benefit":"लाभ","best":"सबसे अच्छा","better":"बेहतर","between":"के बीच","beyond":"परे","big":"बड़ा","bill":"बिल","billion":"अरब","bit":"थोड़ा","board":"बोर्ड","body":"शरीर","born":"पैदा हुआ","both":"दोनों","box":"डिब्बा","break":"तोड़ना","budget":"बजट","build":"बनाना","building":"इमारत","business":"व्यापार","but":"लेकिन","by":"द्वारा","call":"बुलाना","camera":"कैमरा","campaign":"अभियान","can":"सकना","cancer":"कैंसर","candidate":"उम्मीदवार","capital":"राजधानी","card":"कार्ड","care":"देखभाल","career":"करियर","carry":"ले जाना","case":"मामला","cause":"कारण","cell":"कोशिका","center":"केंद्र","central":"केंद्रीय","century":"सदी","certain":"निश्चित","certainly":"निश्चित रूप से","challenge":"चुनौती","chance":"मौका","change":"बदलना","character":"चरित्र","charge":"प्रभार","check":"जांचना","choice":"विकल्प","choose":"चुनना","church":"गिरजाघर","citizen":"नागरिक","civil":"नागरिक (विशेषण)","claim":"दावा","clear":"स्पष्ट","clearly":"स्पष्ट रूप से","coach":"प्रशिक्षक","cold":"ठंडा","collection":"संग्रह","college":"कॉलेज","color":"रंग","commercial":"व्यावसायिक","common":"सामान्य","community":"समुदाय","company":"कंपनी","compare":"तुलना करना","computer":"कंप्यूटर","concern":"चिंता","condition":"स्थिति","conference":"सम्मेलन","consider":"विचार करना","consumer":"उपभोक्ता","contain":"शामिल करना","continue":"जारी रखना","control":"नियंत्रण","cost":"कीमत","could":"सकता था","country":"देश","couple":"जोड़ा","course":"पाठ्यक्रम","court":"अदालत","cover":"कवर","create":"बनाना","crime":"अपराध","cultural":"सांस्कृतिक","culture":"संस्कृति","cup":"प्याला","current":"वर्तमान","customer":"ग्राहक","cut":"काटना","dark":"अंधेरा","data":"डेटा","daughter":"बेटी","dead":"मृत","deal":"सौदा","death":"मृत्यु","debate":"बहस","decade":"दशक","decide":"निर्णय करना","decision":"निर्णय","deep":"गहरा","defense":"रक्षा","degree":"डिग्री","democratic":"लोकतांत्रिक","describe":"वर्णन करना","design":"डिजाइन","despite":"के बावजूद","detail":"विवरण","determine":"निर्धारित करना","develop":"विकसित करना","development":"विकास","die":"मरना","difference":"अंतर","different":"अलग","difficult":"कठिन","dinner":"रात का खाना","direction":"दिशा","director":"निदेशक","discover":"खोज करना","discuss":"चर्चा करना","disease":"बीमारी","do":"करना","doctor":"चिकित्सक","down":"नीचे","draw":"चित्र बनाना","dream":"सपना","drive":"चलाना","drop":"गिराना","drug":"दवा","during":"के दौरान","each":"प्रत्येक","early":"जल्दी","east":"पूर्व","easy":"आसान","economic":"आर्थिक","economy":"अर्थव्यवस्था","edge":"किनारा","education":"शिक्षा","effect":"प्रभाव","effort":"प्रयास","eight":"आठ","either":"या तो","election":"चुनाव","else":"अन्यथा","employee":"कर्मचारी","end":"अंत","energy":"ऊर्जा","enjoy":"आनंद लेना","enough":"पर्याप्त","enter":"दर्ज करना","entire":"संपूर्ण","environment":"पर्यावरण","environmental":"पर्यावरणीय","especially":"विशेष रूप से","establish":"स्थापित करना","even":"यहाँ तक ​​की","event":"घटना","ever":"कभी","every":"हर","everybody":"हर कोई","everyone":"हर कोई","everything":"सब कुछ","evidence":"सबूत","exactly":"बिल्कुल","example":"उदाहरण","executive":"कार्यकारी","exist":"मौजूद","expect":"अपेक्षा करना","experience":"अनुभव","expert":"विशेषज्ञ","explain":"समझाना","fact":"तथ्य","factor":"कारक","fail":"विफल","fall":"गिरना","family":"परिवार","far":"दूर","fast":"तेज़","father":"पिता","fear":"डर","federal":"संघीय","feel":"महसूस करना","feeling":"भावना","few":"कुछ","field":"खेत","fight":"लड़ना","figure":"आंकड़ा","fill":"भरना","film":"फिल्म","final":"अंतिम","finally":"आखिरकार","financial":"वित्तीय","find":"खोजना","fine":"ठीक","finish":"खत्म करना","fire":"आग","firm":"दृढ़","first":"प्रथम","fish":"मछली","five":"पाँच","floor":"मंज़िल","fly":"उड़ना","focus":"ध्यान केंद्रित करना","follow":"पालन करना","for":"के लिए","force":"बल","foreign":"विदेशी","forget":"भूलना","form":"प्रपत्र","former":"पूर्व","forward":"आगे","four":"चार","free":"मुफ्त","from":"से","front":"सामने","full":"पूरा","fund":"निधि","future":"भविष्य","game":"खेल","garden":"बगीचा","gas":"गैस","general":"सामान्य","generation":"पीढ़ी","get":"पाना","glass":"कांच/गिलास","goal":"लक्ष्य","good":"अच्छा","government":"सरकार","great":"महान","ground":"ज़मीन","group":"समूह","grow":"बढ़ना","growth":"विकास","guess":"अनुमान","gun":"बंदूक","guy":"लड़का/व्यक्ति","half":"आधा","hang":"लटकाना","happen":"होना","happy":"खुश","hard":"कठिन","have":"पास होना","he":"वह","health":"स्वास्थ्य","heart":"दिल","heat":"गर्मी","heavy":"भारी","her":"उसकी","here":"यहाँ","herself":"वह स्वयं","high":"ऊँचा","him":"उसे","himself":"वह स्वयं","his":"उसका","history":"इतिहास","hit":"मारना","hold":"पकड़ना","home":"घर","hope":"आशा","hospital":"अस्पताल","hot":"गर्म","hotel":"होटल","hour":"घंटा","how":"कैसे","however":"तथापि","huge":"विशाल","human":"मानव","hundred":"सौ","husband":"पति","I":"मैं","idea":"विचार","identify":"पहचानना","if":"यदि","image":"छवि","imagine":"कल्पना करना","impact":"प्रभाव","important":"महत्वपूर्ण","improve":"सुधारना","in":"में","include":"शामिल करना","including":"सहित","increase":"बढ़ाना","indeed":"वास्तव में","indicate":"संकेत देना","individual":"व्यक्तिगत","industry":"उद्योग","information":"जानकारी","inside":"अंदर","instead":"बजाय","institution":"संस्थान","interest":"दिलचस्पी","interesting":"दिलचस्प","international":"अंतरराष्ट्रीय","interview":"साक्षात्कार","into":"के अंदर","investment":"निवेश","involve":"शामिल करना","issue":"मुद्दा","it":"यह","item":"वस्तु","its":"इसका","itself":"यह स्वयं","job":"नौकरी","join":"जुड़ना","just":"बस/अभी","keep":"रखना","key":"चाबी","kid":"बच्चा","kill":"मारना","kind":"दयालु/प्रकार","kitchen":"रसोईघर","know":"जानना","knowledge":"ज्ञान","land":"भूमि","language":"भाषा","large":"बड़ा","last":"अंतिम","late":"देर","later":"बाद में","laugh":"हंसना","law":"कानून","lawyer":"वकील","lay":"लेटना","lead":"नेतृत्व","leader":"नेता","leadership":"नेतृत्व","least":"कम से कम","leave":"छोड़ना","left":"बाएं","legal":"कानूनी","less":"कम","let":"अनुमति देना","letter":"पत्र","level":"स्तर","lie":"झूठ","life":"जीवन","light":"रोशनी/हल्का","like":"पसंद","likely":"संभवतः","line":"रेखा","list":"सूची","little":"थोड़ा","live":"रहना","local":"स्थानीय","long":"लंबा","lose":"खोना","loss":"नुकसान","lot":"बहुत","love":"प्यार","low":"नीचा","machine":"मशीन","magazine":"पत्रिका","main":"मुख्य","maintain":"बनाए रखना","major":"प्रमुख","majority":"बहुमत","make":"बनाना","manage":"प्रबंधित करना","management":"प्रबंधन","manager":"प्रबंधक","many":"कई","market":"बाज़ार","marriage":"विवाह","material":"सामग्री","matter":"मामला","may":"शायद","maybe":"शायद","me":"मुझे","mean":"मतलब","measure":"उपाय","media":"मीडिया","medical":"चिकित्सीय","meet":"मिलना","meeting":"बैठक","member":"सदस्य","memory":"स्मृति","mention":"उल्लेख","message":"संदेश","method":"तरीका","middle":"मध्य","might":"शायद","military":"सैन्य","million":"दस लाख","mind":"दिमाग","minute":"मिनट","miss":"चूकना","mission":"मिशन","model":"आदर्श","modern":"आधुनिक","moment":"पल","money":"पैसा","month":"महीना","more":"अधिक","most":"सबसे","move":"हिलना","movement":"आंदोलन","movie":"चलचित्र","Mr":"श्री","Mrs":"श्रीमती","much":"बहुत","music":"संगीत","must":"ज़रूर","my":"मेरा","myself":"मैं स्वयं","nation":"राष्ट्र","national":"राष्ट्रीय","natural":"प्राकृतिक","nature":"प्रकृति","near":"पास","nearly":"लगभग","necessary":"ज़रूरी","need":"ज़रूरत","network":"नेटवर्क","never":"कभी नहीं","new":"नया","news":"समाचार","newspaper":"अखबार","next":"अगला","nice":"अच्छा","no":"नहीं","none":"कोई नहीं","nor":"न ही","north":"उत्तर","not":"नहीं","note":"ध्यान दें","nothing":"कुछ नहीं","notice":"सूचना","now":"अब","number":"संख्या","occur":"घटित होना","of":"का","off":"बंद","offer":"प्रस्ताव","office":"कार्यालय","officer":"अधिकारी","official":"अधिकारी","often":"अक्सर","oh":"ओह","oil":"तेल","ok":"ठीक","old":"पुराना","on":"पर","once":"एक बार","one":"एक","only":"केवल","onto":"पर","open":"खुला","operation":"ऑपरेशन","opportunity":"अवसर","option":"विकल्प","or":"या","order":"आदेश","organization":"संगठन","other":"अन्य","others":"अन्य लोग","our":"हमारा","out":"बाहर","outside":"बाहर","over":"ऊपर से","own":"अपना","owner":"मालिक","page":"पृष्ठ","pain":"दर्द","painting":"चित्रकारी","parent":"माता-पिता","part":"हिस्सा","participant":"प्रतिभागी","particular":"विशेष","particularly":"विशेष रूप से","partner":"भागीदार","party":"पार्टी","pass":"गुज़रना","past":"अतीत","patient":"मरीज","pattern":"पैटर्न","pay":"भुगतान","peace":"शांति","people":"लोग","per":"प्रति","perform":"प्रदर्शन करना","performance":"प्रदर्शन","perhaps":"शायद","period":"अवधि","person":"व्यक्ति","personal":"व्यक्तिगत","phone":"फोन","physical":"शारीरिक","pick":"चुनना","picture":"चित्र","piece":"टुकड़ा","place":"जगह","plan":"योजना","plant":"पौधा","play":"खेलना","player":"खिलाड़ी","PM":"अपराह्न","point":"बिंदु","police":"पुलिस","policy":"नीति","political":"राजनीतिक","politics":"राजनीति","poor":"गरीब","popular":"लोकप्रिय","population":"आबादी","position":"स्थिति","positive":"सकारात्मक","possible":"संभव","power":"शक्ति","practice":"अभ्यास","prepare":"तैयार करना","present":"वर्तमान","president":"अध्यक्ष","pressure":"दबाव","price":"कीमत","private":"निजी","probably":"शायद","problem":"समस्या","process":"प्रक्रिया","produce":"उत्पादन करना","product":"उत्पाद","production":"उत्पादन","professional":"पेशेवर","professor":"प्रोफेसर","program":"कार्यक्रम","project":"परियोजना","property":"संपत्ति","protect":"रक्षा करना","prove":"साबित करना","provide":"प्रदान करना","public":"सार्वजनिक","pull":"खींचना","purpose":"उद्देश्य","put":"रखना","quality":"गुणवत्ता","question":"सवाल","quickly":"जल्दी से","quite":"काफी","race":"दौड़","radio":"रेडियो","raise":"उठाना","range":"सीमा","rate":"दर","rather":"बल्कि","reach":"पहुंचना","ready":"तैयार","real":"असली","reality":"वास्तविकता","realize":"एहसास होना","really":"सचमुच","reason":"कारण","receive":"प्राप्त करना","recent":"हाल ही में","recently":"हाल ही में","recognize":"पहचानना","record":"रिकॉर्ड","reduce":"कम करना","reflect":"प्रतिबिंबित करना","region":"क्षेत्र","relate":"संबंधित होना","relationship":"रिश्ता","religious":"धार्मिक","remain":"बने रहना","remember":"याद रखना","remove":"हटाना","report":"रिपोर्ट","represent":"प्रतिनिधित्व करना","Republican":"रिपब्लिकन","require":"आवश्यकता होना","research":"अनुसंधान","resource":"संसाधन","respond":"जवाब देना","response":"प्रतिक्रिया","responsibility":"ज़िम्मेदारी","rest":"आराम","result":"परिणाम","return":"वापसी","reveal":"प्रकट करना","rich":"अमीर","right":"सही/दाएं","rise":"उठना","risk":"जोखिम","road":"सड़क","rock":"पत्थर","role":"भूमिका","rule":"नियम","safe":"सुरक्षित","same":"समान","save":"बचाना","say":"कहना","scene":"दृश्य","science":"विज्ञान","scientist":"वैज्ञानिक","score":"स्कोर","sea":"समुद्र","season":"मौसम","seat":"सीट","second":"दूसरा","section":"अनुभाग","security":"सुरक्षा","seek":"मांगना","seem":"प्रतीत होना","send":"भेजना","senior":"वरिष्ठ","sense":"समझ","series":"श्रृंखला","serious":"गंभीर","serve":"सेवा करना","service":"सेवा","set":"सेट","seven":"सात","several":"कई","sex":"लिंग","sexual":"यौन","shake":"हिलाना","share":"साझा करना","she":"वह (स्त्री.)","shoot":"गोली मारना","short":"छोटा","shot":"शॉट","should":"चाहिए","shoulder":"कंधा","show":"दिखाना","side":"तरफ","sign":"संकेत","significant":"महत्वपूर्ण","similar":"समान","simple":"सरल","simply":"बस","since":"चूंकि","sing":"गाना","single":"अकेला","sit":"बैठना","site":"साइट","situation":"स्थिति","six":"छह","size":"आकार","skill":"कौशल","small":"छोटा","so":"इसलिए","social":"सामाजिक","society":"समाज","soldier":"सैनिक","some":"कुछ","somebody":"कोई","someone":"कोई","something":"कुछ","sometimes":"कभी कभी","son":"बेटा","song":"गीत","soon":"जल्द ही","sort":"प्रकार","sound":"आवाज़","source":"स्रोत","south":"दक्षिण","southern":"दक्षिणी","space":"अंतरिक्ष","speak":"बोलना","special":"विशेष","specific":"विशिष्ट","speech":"भाषण","spend":"खर्च करना","sport":"खेल","spring":"वसंत","staff":"कर्मचारी","stage":"मंच","stand":"खड़े होना","standard":"मानक","star":"तारा","start":"शुरू","state":"राज्य","statement":"बयान","station":"स्टेशन","stay":"ठहरना","step":"कदम","still":"अभी भी","stock":"स्टॉक","stop":"रुकना","store":"दुकान","story":"कहानी","strategy":"रणनीति","street":"सड़क","strong":"मज़बूत","structure":"संरचना","student":"छात्र","study":"अध्ययन","stuff":"सामग्री","style":"शैली","subject":"विषय","success":"सफलता","successful":"सफल","such":"ऐसा","suddenly":"अचानक","suffer":"भुगतना","suggest":"सुझाव देना","summer":"गर्मी","support":"समर्थन","sure":"ज़रूर","surface":"सतह","system":"प्रणाली","table":"मेज़","take":"लेना","talk":"बात करना","task":"कार्य","tax":"कर","teach":"सिखाना","teacher":"शिक्षक","team":"टीम","technology":"प्रौद्योगिकी","television":"टेलीविज़न","tell":"बताना","ten":"दस","tend":"प्रवृत्ति होना","term":"अवधि","test":"परीक्षा","than":"से","thank":"धन्यवाद","that":"वह","the":"वह/यह","their":"उनका","them":"उन्हें","themselves":"वे स्वयं","then":"तब","theory":"सिद्धांत","there":"वहाँ","these":"ये","they":"वे","thing":"चीज़","think":"सोचना","third":"तीसरा","this":"यह","those":"वे","though":"हालांकि","thought":"विचार","thousand":"हज़ार","threat":"खतरा","three":"तीन","through":"के माध्यम से","throughout":"भर में","throw":"फेंकना","thus":"इस प्रकार","time":"समय","to":"को","today":"आज","together":"साथ में","tonight":"आज रात","too":"भी","top":"शीर्ष","total":"कुल","tough":"कठिन","toward":"की ओर","town":"कस्बा","trade":"व्यापार","traditional":"पारंपरिक","training":"प्रशिक्षण","travel":"यात्रा","treat":"इलाज करना","treatment":"इलाज","tree":"पेड़","trial":"परीक्षण","trip":"यात्रा","trouble":"परेशानी","true":"सच","truth":"सच्चाई","try":"कोशिश","turn":"मोड़","TV":"टीवी","two":"दो","type":"प्रकार","under":"नीचे","understand":"समझना","unit":"इकाई","until":"जब तक","up":"ऊपर","upon":"के ऊपर","us":"हमें","use":"उपयोग","usually":"आमतौर पर","value":"मूल्य","various":"विभिन्न","very":"बहुत","victim":"शिकार","view":"दृश्य","violence":"हिंसा","visit":"भेंट","voice":"आवाज़","vote":"वोट","wait":"प्रतीक्षा","walk":"चलना","wall":"दीवार","want":"चाहना","war":"युद्ध","watch":"घड़ी/देखना","water":"पानी","way":"रास्ता","we":"हम","weapon":"हथियार","wear":"पहनना","week":"सप्ताह","weight":"वजन","well":"कुआं/अच्छा","west":"पश्चिम","western":"पश्चिमी","what":"क्या","whatever":"जो कुछ भी","when":"कब","where":"कहाँ","whether":"चाहे","which":"कौन सा","while":"जबकि","white":"सफेद","who":"कौन","whole":"पूरा","whom":"किसको","whose":"किसका","why":"क्यों","wide":"चौड़ा","wife":"पत्नी","will":"होगा","win":"जीतना","wind":"हवा","window":"खिड़की","wish":"इच्छा","with":"के साथ","within":"के भीतर","without":"के बिना","woman":"औरत","wonder":"आश्चर्य","word":"शब्द","work":"काम","worker":"कार्यकर्ता","world":"दुनिया","worry":"चिंता","would":"होगा","write":"लिखना","writer":"लेखक","wrong":"गलत","yard":"आंगन","yeah":"हाँ","year":"वर्ष","yes":"हाँ","yet":"अभी तक","you":"तुम","young":"युवा","your":"तुम्हारा","yourself":"तुम स्वयं"
+        "a":"एक","ability":"क्षमता","able":"सक्षम","about":"के बारे में","above":"ऊपर","accept":"स्वीकार करना","according":"के अनुसार","account":"खाता","across":"पार","act":"कार्य","action":"कार्रवाई","activity":"गतिविधि","actually":"वास्तव में","add":"जोड़ना","address":"पता","administration":"प्रशासन","admit":"स्वीकार करना","adult":"वयस्क","affect":"प्रभावित करना","after":"बाद में","again":"फिर से","against":"के खिलाफ","agency":"एजेंसी","agent":"दलाल","ago":"पूर्व","agree":"सहमत होना","agreement":"समझौता","ahead":"आगे","air":"हवा","all":"सब","allow":"अनुमति देना","almost":"लगभग","alone":"अकेला","along":"साथ में","already":"पहले से","also":"भी","although":"हालांकि","always":"हमेशा","among":"के बीच","amount":"मात्रा","analysis":"विश्लेषण","and":"और","animal":"जानवर","another":"एक और","answer":"उत्तर","any":"कोई","anyone":"कोई भी","anything":"कुछ भी","appear":"प्रकट होना","apply":"लागू करना","approach":"दृष्टिकोण","area":"क्षेत्र","argue":"बहस करना","around":"चारों ओर","arrive":"पहुंचना","art":"कला","article":"लेख","artist":"कलाकार","as":"जैसा","assume":"मान लेना","at":"पर","attack":"आक्रमण","attention":"ध्यान","attorney":"वकील","audience":"दर्शक","author":"लेखक","authority":"अधिकार","available":"उपलब्ध","avoid":"बचना","away":"दूर","bad":"बुरा","bank":"बैंक","bar":"बार","base":"आधार","be":"होना","beat":"पीटना","beautiful":"सुंदर","because":"क्योंकि","become":"बनना","before":"पहले","begin":"शुरू","behavior":"व्यवहार","behind":"पीछे","believe":"विश्वास करना","benefit":"लाभ","best":"सबसे अच्छा","better":"बेहतर","between":"के बीच","beyond":"परे","big":"बड़ा","bill":"बिल","billion":"अरब","bit":"थोड़ा","board":"बोर्ड","body":"शरीर","born":"पैदा हुआ","both":"दोनों","box":"डिब्बा","break":"तोड़ना","budget":"बजट","build":"बनाना","building":"इमारत","business":"व्यापार","but":"लेकिन","by":"द्वारा","call":"बुलाना","camera":"कैमरा","campaign":"अभियान","can":"सकना","cancer":"कैंसर","candidate":"उम्मीदवार","capital":"राजधानी","card":"कार्ड","care":"देखभाल","career":"करियर","carry":"ले जाना","case":"मामला","cause":"कारण","cell":"कोशिका","center":"केंद्र","central":"केंद्रीय","century":"सदी","certain":"निश्चित","certainly":"निश्चित रूप से","challenge":"चुनौती","chance":"मौका","change":"बदलना","character":"चरित्र","charge":"प्रभार","check":"जांचना","choice":"विकल्प","choose":"चुनना","church":"गिरजाघर","citizen":"नागरिक","civil":"नागरिक (विशेषण)","claim":"दावा","clear":"स्पष्ट","clearly":"स्पष्ट रूप से","coach":"प्रशिक्षक","cold":"ठंडा","collection":"संग्रह","college":"कॉलेज","color":"रंग","commercial":"व्यावसायिक","common":"सामान्य","community":"समुदाय","company":"कंपनी","compare":"तुलना करना","computer":"कंप्यूटर","concern":"चिंता","condition":"स्थिति","conference":"सम्मेलन","consider":"विचार करना","consumer":"उपभोक्ता","contain":"शामिल करना","continue":"जारी रखना","control":"नियंत्रण","cost":"कीमत","could":"सकता था","country":"देश","couple":"जोड़ा","course":"पाठ्यक्रम","court":"अदालत","cover":"कवर","create":"बनाना","crime":"अपराध","cultural":"सांस्कृतिक","culture":"संस्कृति","cup":"प्याला","current":"वर्तमान","customer":"ग्राहक","cut":"काटना","dark":"अंधेरा","data":"डेटा","daughter":"बेटी","dead":"मृत","deal":"सौदा","death":"मृत्यु","debate":"बहस","decade":"दशक","decide":"निर्णय करना","decision":"निर्णय","deep":"गहरा","defense":"रक्षा","degree":"डिग्री","democratic":"लोकतांत्रिक","describe":"वर्णन करना","design":"डिजाइन","despite":"के बावजूद","detail":"विवरण","determine":"निर्धारित करना","develop":"विकसित करना","development":"विकास","die":"मरना","difference":"अंतर","different":"अलग","difficult":"कठिन","dinner":"रात का खाना","direction":"दिशा","director":"निदेशक","discover":"खोज करना","discuss":"चर्चा करना","disease":"बीमारी","do":"करना","doctor":"चिकित्सक","down":"नीचे","draw":"चित्र बनाना","dream":"सपना","drive":"चलाना","drop":"गिराना","drug":"दवा","during":"के दौरान","each":"प्रत्येक","early":"जल्दी","east":"पूर्व","easy":"आसान","economic":"आर्थिक","economy":"अर्थव्यवस्था","edge":"किनारा","education":"शिक्षा","effect":"प्रभाव","effort":"प्रयास","eight":"आठ","either":"या तो","election":"चुनाव","else":"अन्यथा","employee":"कर्मचारी","end":"अंत","energy":"ऊर्जा","enjoy":"आनंद लेना","enough":"पर्याप्त","enter":"दर्ज करना","entire":"संपूर्ण","environment":"पर्यावरण","environmental":"पर्यावरणीय","especially":"विशेष रूप से","establish":"स्थापित करना","even":"यहाँ तक ​​की","event":"घटना","ever":"कभी","every":"हर","everybody":"हर कोई","everyone":"हर कोई","everything":"सब कुछ","evidence":"सबूत","exactly":"बिल्कुल","example":"उदाहरण","executive":"कार्यकारी","exist":"मौजूद","expect":"अपेक्षा करना","experience":"अनुभव","expert":"विशेषज्ञ","explain":"समझाना","fact":"तथ्य","factor":"कारक","fail":"विफल","fall":"गिरना","family":"परिवार","far":"दूर","fast":"तेज़","father":"पिता","fear":"डर","federal":"संघीय","feel":"महसूस करना","feeling":"भावना","few":"कुछ","field":"खेत","fight":"लड़ना","figure":"आंकड़ा","fill":"भरना","film":"फिल्म","final":"अंतिम","finally":"आखिरकार","financial":"वित्तीय","find":"खोजना","fine":"ठीक","finish":"खत्म करना","fire":"आग","firm":"दृढ़","first":"प्रथम","fish":"मछली","five":"पाँच","floor":"मंज़िल","fly":"उड़ना","focus":"ध्यान केंद्रित करना","follow":"पालन करना","for":"के लिए","force":"बल","foreign":"विदेशी","forget":"भूलना","form":"प्रपत्र","former":"पूर्व","forward":"आगे","four":"चार","free":"मुफ्त","from":"से","front":"सामने","full":"पूरा","fund":"निधि","future":"भविष्य","game":"खेल","garden":"बगीचा","gas":"गैस","general":"सामान्य","generation":"पीढ़ी","get":"पाना","glass":"कांच/गिलास","goal":"लक्ष्य","good":"अच्छा","government":"सरकार","great":"महान","ground":"ज़मीन","group":"समूह","grow":"बढ़ना","growth":"विकास","guess":"अनुमान","gun":"बंदूक","guy":"लड़का/व्यक्ति","half":"आधा","hang":"लटकाना","happen":"होना","happy":"खुश","hard":"कठिन","have":"पास होना","he":"वह","health":"स्वास्थ्य","heart":"दिल","heat":"गर्मी","heavy":"भारी","her":"उसकी","here":"यहाँ","herself":"वह स्वयं","high":"ऊँचा","him":"उसे","himself":"वह स्वयं","his":"उसका","history":"इतिहास","hit":"मारना","hold":"पकड़ना","home":"घर","hope":"आशा","hospital":"अस्पताल","hot":"गर्म","hotel":"होटल","hour":"घंटा","how":"कैसे","however":"तथापि","huge":"विशाल","human":"मानव","hundred":"सौ","husband":"पति","I":"मैं","idea":"विचार","identify":"पहचानना","if":"यदि","image":"छवि","imagine":"कल्पना करना","impact":"प्रभाव","important":"महत्वपूर्ण","improve":"सुधारना","in":"में","include":"शामिल करना","including":"सहित","increase":"बढ़ाना","indeed":"वास्तव में","indicate":"संकेत देना","individual":"व्यक्तिगत","industry":"उद्योग","information":"जानकारी","inside":"अंदर","instead":"बजाय","institution":"संस्थान","interest":"दिलचस्पी","interesting":"दिलचस्प","international":"अंतरराष्ट्रीय","interview":"साक्षात्कार","into":"के अंदर","investment":"निवेश","involve":"शामिल करना","issue":"मुद्दा","it":"यह","item":"वस्तु","its":"इसका","itself":"यह स्वयं","job":"नौकरी","join":"जुड़ना","just":"बस/अभी","keep":"रखना","key":"चाबी","kid":"बच्चा","kill":"मारना","kind":"दयालु/प्रकार","kitchen":"रसोईघर","know":"जानना","knowledge":"ज्ञान","land":"भूमि","language":"भाषा","large":"बड़ा","last":"अंतिम","late":"देर","later":"बाद में","laugh":"हंसना","law":"कानून","lawyer":"वकील","lay":"लेटना","lead":"नेतृत्व","leader":"नेता","leadership":"नेतृत्व","least":"कम से कम","leave":"छोड़ना","left":"बाएं","legal":"कानूनी","less":"कम","let":"अनुमति देना","letter":"पत्र","level":"स्तर","lie":"झूठ","life":"जीवन","light":"रोशनी/हल्का","like":"पसंद","likely":"संभवतः","line":"रेखा","list":"सूची","little":"थोड़ा","live":"रहना","local":"स्थानीय","long":"लंबा","lose":"खोना","loss":"नुकसान","lot":"बहुत","love":"प्यार","low":"नीचा","machine":"मशीन","magazine":"पत्रिका","main":"मुख्य","maintain":"बनाए रखना","major":"प्रमुख","majority":"बहुमत","make":"बनाना","manage":"प्रबंधित करना","management":"प्रबंधन","manager":"प्रबंधक","many":"कई","market":"बाज़ार","marriage":"विवाह","material":"सामग्री","matter":"मामला","may":"शायद","maybe":"शायद","me":"मुझे","mean":"मतलब","measure":"उपाय","media":"मीडिया","medical":"चिकित्सीय","meet":"मिलना","meeting":"बैठक","member":"सदस्य","memory":"स्मृति","mention":"उल्लेख","message":"संदेश","method":"तरीका","middle":"मध्य","might":"शायद","military":"सैन्य","million":"दस लाख","mind":"दिमाग","minute":"मिनट","miss":"चूकना","mission":"मिशन","model":"आदर्श","modern":"आधुनिक","moment":"पल","money":"पैसा","month":"महीना","more":"अधिक","most":"सबसे","move":"हिलना","movement":"आंदोलन","movie":"चलचित्र","Mr":"श्री","Mrs":"श्रीमती","much":"बहुत","music":"संगीत","must":"ज़रूर","my":"मेरा","myself":"मैं स्वयं","nation":"राष्ट्र","national":"राष्ट्रीय","natural":"प्राकृतिक","nature":"प्रकृति","near":"पास","nearly":"लगभग","necessary":"ज़रूरी","need":"ज़रूरत","network":"नेटवर्क","never":"कभी नहीं","new":"नया","news":"समाचार","newspaper":"अखबार","next":"अगला","nice":"अच्छा","no":"नहीं","none":"कोई नहीं","nor":"न ही","north":"उत्तर","not":"नहीं","note":"ध्यान दें","nothing":"कुछ नहीं","notice":"सूचना","now":"अब","number":"संख्या","occur":"घटित होना","of":"का","off":"बंद","offer":"प्रस्ताव","office":"कार्यालय","officer":"अधिकारी","official":"अधिकारी","often":"अक्सर","oh":"ओह","oil":"तेल","ok":"ठीक","old":"पुराना","on":"पर","once":"एक बार","one":"एक","only":"केवल","onto":"पर","open":"खुला","operation":"ऑपरेशन","opportunity":"अवसर","option":"विकल्प","or":"या","order":"आदेश","organization":"संगठन","other":"अन्य","others":"अन्य लोग","our":"हमारा","out":"बाहर","outside":"बाहर","over":"ऊपर से","own":"अपना","owner":"मालिक","page":"पृष्ठ","pain":"दर्द","painting":"चित्रकारी","parent":"माता-पिता","part":"हिस्सा","participant":"प्रतिभागी","particular":"विशेष","particularly":"विशेष रूप से","partner":"भागीदार","party":"पार्टी","pass":"गुज़रना","past":"अतीत","patient":"मरीज","pattern":"पैटर्न","pay":"भुगतान","peace":"शांति","people":"लोग","per":"प्रति","perform":"प्रदर्शन करना","performance":"प्रदर्शन","perhaps":"शायद","period":"अवधि","person":"व्यक्ति","personal":"व्यक्तिगत","phone":"फोन","physical":"श शारीरिक","pick":"चुनना","picture":"चित्र","piece":"टुकड़ा","place":"जगह","plan":"योजना","plant":"पौधा","play":"खेलना","player":"खिलाड़ी","PM":"अपराह्न","point":"बिंदु","police":"पुलिस","policy":"नीति","political":"राजनीतिक","politics":"राजनीति","poor":"गरीब","popular":"लोकप्रिय","population":"आबादी","position":"स्थिति","positive":"सकारात्मक","possible":"संभव","power":"शक्ति","practice":"अभ्यास","prepare":"तैयार करना","present":"वर्तमान","president":"अध्यक्ष","pressure":"दबाव","price":"कीमत","private":"निजी","probably":"शायद","problem":"समस्या","process":"प्रक्रिया","produce":"उत्पादन करना","product":"उत्पाद","production":"उत्पादन","professional":"पेशेवर","professor":"प्रोफेसर","program":"कार्यक्रम","project":"परियोजना","property":"संपत्ति","protect":"रक्षा करना","prove":"साबित करना","provide":"प्रदान करना","public":"सार्वजनिक","pull":"खींचना","purpose":"उद्देश्य","put":"रखना","quality":"गुणवत्ता","question":"सवाल","quickly":"जल्दी से","quite":"काफी","race":"दौड़","radio":"रेडियो","raise":"उठाना","range":"सीमा","rate":"दर","rather":"बल्कि","reach":"पहुंचना","ready":"तैयार","real":"असली","reality":"वास्तविकता","realize":"एहसास होना","really":"सचमुच","reason":"कारण","receive":"प्राप्त करना","recent":"हाल ही में","recently":"हाल ही में","recognize":"पहचानना","record":"रिकॉर्ड","reduce":"कम करना","reflect":"प्रतिबिंबित करना","region":"क्षेत्र","relate":"संबंधित होना","relationship":"रिश्ता","religious":"धार्मिक","remain":"बने रहना","remember":"याद रखना","remove":"हटाना","report":"रिपोर्ट","represent":"प्रतिनिधित्व करना","Republican":"रिपब्लिकन","require":"आवश्यकता होना","research":"अनुसंधान","resource":"संसाधन","respond":"जवाब देना","response":"प्रतिक्रिया","responsibility":"ज़िम्मेदारी","rest":"आराम","result":"परिणाम","return":"वापसी","reveal":"प्रकट करना","rich":"अमीर","right":"सही/दाएं","rise":"उठना","risk":"जोखिम","road":"सड़क","rock":"पत्थर","role":"भूमिका","rule":"नियम","safe":"सुरक्षित","same":"समान","save":"बचाना","say":"कहना","scene":"दृश्य","science":"विज्ञान","scientist":"वैज्ञानिक","score":"स्कोर","sea":"समुद्र","season":"मौसम","seat":"सीट","second":"दूसरा","section":"अनुभाग","security":"सुरक्षा","seek":"मांगना","seem":"प्रतीत होना","send":"भेजना","senior":"वरिष्ठ","sense":"समझ","series":"श्रृंखला","serious":"गंभीर","serve":"सेवा करना","service":"सेवा","set":"सेट","seven":"सात","several":"कई","sex":"लिंग","sexual":"यौन","shake":"हिलाना","share":"साझा करना","she":"वह (स्त्री.)","shoot":"गोली मारना","short":"छोटा","shot":"शॉट","should":"चाहिए","shoulder":"कंधा","show":"दिखाना","side":"तरफ","sign":"संकेत","significant":"महत्वपूर्ण","similar":"समान","simple":"सरल","simply":"बस","since":"चूंकि","sing":"गाना","single":"अकेला","sit":"बैठना","site":"साइट","situation":"स्थिति","six":"छह","size":"आकार","skill":"कौशल","small":"छोटा","so":"इसलिए","social":"सामाजिक","society":"समाज","soldier":"सैनिक","some":"कुछ","somebody":"कोई","someone":"कोई","something":"कुछ","sometimes":"कभी कभी","son":"बेटा","song":"गीत","soon":"जल्द ही","sort":"प्रकार","sound":"आवाज़","source":"स्रोत","south":"दक्षिण","southern":"दक्षिणी","space":"अंतरिक्ष","speak":"बोलना","special":"विशेष","specific":"विशिष्ट","speech":"भाषण","spend":"खर्च करना","sport":"खेल","spring":"वसंत","staff":"कर्मचारी","stage":"मंच","stand":"खड़े होना","standard":"मानक","star":"तारा","start":"शुरू","state":"राज्य","statement":"बयान","station":"स्टेशन","stay":"ठहरना","step":"कदम","still":"अभी भी","stock":"स्टॉक","stop":"रुकना","store":"दुकान","story":"कहानी","strategy":"रणनीति","street":"सड़क","strong":"मज़बूत","structure":"संरचना","student":"छात्र","study":"अध्ययन","stuff":"सामग्री","style":"शैली","subject":"विषय","success":"सफलता","successful":"सफल","such":"ऐसा","suddenly":"अचानक","suffer":"भुगतना","suggest":"सुझाव देना","summer":"गर्मी","support":"समर्थन","sure":"ज़रूर","surface":"सतह","system":"प्रणाली","table":"मेज़","take":"लेना","talk":"बात करना","task":"कार्य","tax":"कर","teach":"सिखाना","teacher":"शिक्षक","team":"टीम","technology":"प्रौद्योगिकी","television":"टेलीविज़न","tell":"बताना","ten":"दस","tend":"प्रवृत्ति होना","term":"अवधि","test":"परीक्षा","than":"से","thank":"धन्यवाद","that":"वह","the":"वह/यह","their":"उनका","them":"उन्हें","themselves":"वे स्वयं","then":"तब","theory":"सिद्धांत","there":"वहाँ","these":"ये","they":"वे","thing":"चीज़","think":"सोचना","third":"तीसरा","this":"यह","those":"वे","though":"हालांकि","thought":"विचार","thousand":"हज़ार","threat":"खतरा","three":"तीन","through":"के माध्यम से","throughout":"भर में","throw":"फेंकना","thus":"इस प्रकार","time":"समय","to":"को","today":"आज","together":"साथ में","tonight":"आज रात","too":"भी","top":"शीर्ष","total":"कुल","tough":"कठिन","toward":"की ओर","town":"कस्बा","trade":"व्यापार","traditional":"पारंपरिक","training":"प्रशिक्षण","travel":"यात्रा","treat":"इलाज करना","treatment":"इलाज","tree":"पेड़","trial":"परीक्षण","trip":"यात्रा","trouble":"परेशानी","true":"सच","truth":"सच्चाई","try":"कोशिश","turn":"मोड़","TV":"टीवी","two":"दो","type":"प्रकार","under":"नीचे","understand":"समझना","unit":"इकाई","until":"जब तक","up":"ऊपर","upon":"के ऊपर","us":"हमें","use":"उपयोग","usually":"आमतौर पर","value":"मूल्य","various":"विभिन्न","very":"बहुत","victim":"शिकार","view":"दृश्य","violence":"हिंसा","visit":"भेंट","voice":"आवाज़","vote":"वोट","wait":"प्रतीक्षा","walk":"चलना","wall":"दीवार","want":"चाहना","war":"युद्ध","watch":"घड़ी/देखना","water":"पानी","way":"रास्ता","we":"हम","weapon":"हथियार","wear":"पहनना","week":"सप्ताह","weight":"वजन","well":"कुआं/अच्छा","west":"पश्चिम","western":"पश्चिमी","what":"क्या","whatever":"जो कुछ भी","when":"कब","where":"कहाँ","whether":"चाहे","which":"कौन सा","while":"जबकि","white":"सफेद","who":"कौन","whole":"पूरा","whom":"किसको","whose":"किसका","why":"क्यों","wide":"चौड़ा","wife":"पत्नी","will":"होगा","win":"जीतना","wind":"हवा","window":"खिड़की","wish":"इच्छा","with":"के साथ","within":"के भीतर","without":"के बिना","woman":"औरत","wonder":"आश्चर्य","word":"शब्द","work":"काम","worker":"कार्यकर्ता","world":"दुनिया","worry":"चिंता","would":"होगा","write":"लिखना","writer":"लेखक","wrong":"गलत","yard":"आंगन","yeah":"हाँ","year":"वर्ष","yes":"हाँ","yet":"अभी तक","you":"तुम","young":"युवा","your":"तुम्हारा","yourself":"तुम स्वयं"
     };
 
     let customDictionary = JSON.parse(localStorage.getItem('pariCustomDict') || '{}');
@@ -1057,7 +964,7 @@
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
-        downloadAppBtn.style.display = 'block'; // Button sirf tab dikhega jab browser install allow karega
+        downloadAppBtn.style.display = 'block'; 
     });
 
     downloadAppBtn.addEventListener('click', async () => {
@@ -1078,5 +985,3 @@
 
 </body>
 </html>
-
-
