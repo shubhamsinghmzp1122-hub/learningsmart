@@ -205,7 +205,7 @@
         .search-type-tabs { display: flex; gap: 5px; width: 100%; margin-top: 10px; flex-wrap: wrap; }
         .type-btn { flex: 1; margin: 0; font-size: clamp(0.9rem, 3vw, 1.1rem); padding: 10px; min-height: 40px; border-radius: 15px; width: auto;}
 
-        /* PWA MODAL STYLES */
+        /* ⭐ PWA MODAL STYLES ⭐ */
         .pwa-modal-overlay {
             display: none; 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -703,10 +703,24 @@
         await askFreeAI(t, aiSpan);
     }
 
+    /* 🔥 THE ULTIMATE FREE ENGINE (Unlimited Text Length / Anti-Crash) 🔥 */
     async function askFreeAI(q, spanEl){
-        const p=`You are JARVIS, a magical AI Robot teacher for two sweet kids named Pari and Jiya. STRICT RULES: 1. NEVER say you are ChatGPT or OpenAI. 2. Your name is JARVIS. 3. Give very short, simple, safe answers in 1-2 lines. 4. No * symbols. 5. Reply in sweet Hindi if asked in Hindi, else easy English. Kid asked: "${q}"`;
-        try{
-            const response = await fetch(`https://text.pollinations.ai/${encodeURIComponent(p)}`);
+        const sysPrompt = "You are JARVIS, a magical AI Robot teacher for two sweet kids named Pari and Jiya. STRICT RULES: 1. NEVER say you are ChatGPT or OpenAI. 2. Your name is JARVIS. 3. Give very short, simple, safe answers in 1-2 lines. 4. No * symbols. 5. Reply in sweet Hindi if asked in Hindi, else easy English.";
+        
+        try {
+            const response = await fetch('https://text.pollinations.ai/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    messages: [
+                        { role: 'system', content: sysPrompt },
+                        { role: 'user', content: q }
+                    ]
+                })
+            });
+
             if(!response.ok) throw new Error("Server Busy");
             
             let ans = await response.text();
@@ -715,8 +729,8 @@
             spanEl.innerText = ans;
             document.getElementById('chat-container').scrollTop = document.getElementById('chat-container').scrollHeight;
             speakText(ans);
-        }catch(e){
-            spanEl.innerText = `🚨 Error: Network issue. Thodi der baad try karo!`; 
+        } catch(e) {
+            spanEl.innerText = `🚨 Error: Message load nahi hua. Wapas try karo!`; 
             speakText("Network error aagaya hai.");
         }
     }
