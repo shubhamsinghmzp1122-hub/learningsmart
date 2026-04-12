@@ -497,20 +497,25 @@ async function handleUserQuery(t){
     const aiSpan = appendChat('ai', 'Thinking... 🤔', aiSpanId);
     await askGemini(t, aiSpan);
 }
+
 async function askGemini(q, spanEl){
     const p=`You are a sweet, funny AI teacher for Pari and Jiya. Give a very short, simple, safe answer in 1-2 lines. No * or ** formatting. Reply in Hindi if asked in Hindi, else easy English. Kid asked: "${q}"`;
     try{
         const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:p}]}]})});
+        if(!r.ok){
+            const errData = await r.json();
+            throw new Error(errData.error?.message || "HTTP Error: " + r.status);
+        }
         const d=await r.json();
         if(d.candidates&&d.candidates[0].content.parts[0].text){
             let a=d.candidates[0].content.parts[0].text.replace(/\*/g,'');
             spanEl.innerText=a;
             document.getElementById('chat-container').scrollTop=document.getElementById('chat-container').scrollHeight;
             speakText(a);
-        }else throw new Error("No ans");
+        }else throw new Error("No answer from Gemini");
     }catch(e){
-        spanEl.innerText="My brain is sleeping! 😴 Check internet or API key.";
-        speakText("My brain is sleeping! Try again later.");
+        spanEl.innerText=`🚨 Asli Error: ${e.message}`; 
+        speakText("Boss, error aagaya hai.");
     }
 }
 
@@ -525,7 +530,7 @@ let currentShapeIdx=0;function openShapesScreen(){currentShapeIdx=0;renderCurren
 function changeShape(d){stopVoice();currentShapeIdx+=d;if(currentShapeIdx<0)currentShapeIdx=shapesData.length-1;if(currentShapeIdx>=shapesData.length)currentShapeIdx=0;renderCurrentShape()}
 function renderCurrentShape(){const s=shapesData[currentShapeIdx];document.getElementById('shape-display-box').innerHTML=`<div class="css-shape ${s.css}"></div><div style="font-size:clamp(1.8rem,8vw,2.5rem);font-weight:bold;color:var(--primary);text-align:center;">${s.en} ${s.emoji}</div><div style="font-size:clamp(1.4rem,6vw,1.8rem);color:var(--text);text-align:center;">${s.hi}</div><button class="btn accent" style="font-size:clamp(1.2rem,5vw,1.5rem);margin-top:10px;" onclick="speakBilingual('${s.en} means','${s.hi}')">🔊 Speak</button>`}
 
-const baseDictionary={"apple":"सेब","banana":"केला","mango":"आम","dog":"कुत्ता","cat":"बिल्ली","cow":"गाय","red":"लाल","blue":"नीला","green":"हरा","head":"सिर","hair":"बाल","eye":"आँख","school":"स्कूल","class":"कक्षा","teacher":"शिक्षक","go":"जाना","come":"आना","eat":"खाना","sun":"सूरज","moon":"चाँद","star":"तारा","house":"घर","room":"कमरा","door":"दरवाज़ा","a":"एक","about":"के बारे में","above":"ऊपर","boy":"लड़का","girl":"लड़की","man":"आदमी","woman":"औरत","water":"पानी","fire":"आग","earth":"पृथ्वी","world":"दुनिया","day":"दिन","night":"रात","morning":"सुबह","good":"अच्छा","bad":"बुरा","happy":"खुश","sad":"उदास"}; 
+const baseDictionary={"apple":"सेब","banana":"केला","mango":"आम","dog":"कुत्ता","cat":"बिल्ली","cow":"गाय","red":"लाल","blue":"नीला","green":"हरा","head":"सिर","hair":"बाल","eye":"आँख","school":"स्कूल","class":"कक्षा","teacher":"शिक्षक","go":"जाना","come":"आना","eat":"खाना","sun":"सूरज","moon":"चाँद","star":"तारा","house":"घर","room":"कमरा","door":"दरवाज़ा","a":"एक","about":"के बारे बारे में","above":"ऊपर","boy":"लड़का","girl":"लड़की","man":"आदमी","woman":"औरत","water":"पानी","fire":"आग","earth":"पृथ्वी","world":"दुनिया","day":"दिन","night":"रात","morning":"सुबह","good":"अच्छा","bad":"बुरा","happy":"खुश","sad":"उदास"}; 
 let customDictionary=JSON.parse(localStorage.getItem('pariCustomDict')||'{}');let transMode='en2hi';
 function openTranslator(){document.getElementById('trans-input').value='';document.getElementById('trans-result').innerHTML='';showScreen('translator-screen')}
 function swapTranslator(){transMode=transMode==='en2hi'?'hi2en':'en2hi';document.getElementById('lang-from').innerText=transMode==='en2hi'?'English':'Hindi';document.getElementById('lang-to').innerText=transMode==='en2hi'?'Hindi':'English';document.getElementById('trans-input').value='';document.getElementById('trans-result').innerHTML='';document.getElementById('trans-input').placeholder=transMode==='en2hi'?'Word...':'हिंदी...';speakText(transMode==='en2hi'?'Eng to Hi':'Hi to Eng')}
