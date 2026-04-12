@@ -43,8 +43,8 @@
             font-family: 'Comic Neue', 'Comic Sans MS', cursive, sans-serif;
             margin: 0;
             padding: 0;
-            user-select: none; 
-            touch-action: manipulation; 
+            user-select: none; /* Prevents text selection highlighting */
+            touch-action: manipulation; /* 5. ❌ Disable double-tap zoom on mobile */
         }
 
         body {
@@ -54,22 +54,25 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            /* Adjust padding so it sits flush on small mobile screens */
             padding: 0; 
             overflow-x: hidden;
         }
 
+        /* 3. 📦 Container Fix */
         #app {
             background: white;
             width: 100%;
-            max-width: 500px; 
+            max-width: 500px; /* Restricting width as requested */
             margin: auto;
-            height: 100dvh; 
+            height: 100dvh; /* Use dynamic viewport height for mobile browsers */
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            padding: 10px; 
+            padding: 10px; /* Added inner padding as requested */
         }
 
+        /* Added desktop enhancement for the restricted container */
         @media (min-width: 501px) {
             #app {
                 height: 95vh;
@@ -87,7 +90,7 @@
             height: 100%;
             overflow-y: auto;
             overflow-x: hidden;
-            width: 100%; 
+            width: 100%; /* 2. 🎨 Fix Layout Scaling */
         }
 
         .screen.active {
@@ -100,24 +103,24 @@
         .bounce { animation: bounce 0.6s; }
         @keyframes shake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-10px); } 40%, 80% { transform: translateX(10px); } }
         .shake { animation: shake 0.4s; }
-        @keyframes pulse { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(132, 94, 194, 0.7); } 70% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(132, 94, 194, 0); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(132, 94, 194, 0); } }
 
         h1, h2, h3 { text-align: center; color: var(--primary); margin-bottom: clamp(10px, 3vw, 20px); text-shadow: 2px 2px 0px var(--accent1); width: 100%; }
         h1 { font-size: clamp(1.8rem, 6vw, 2.5rem); }
         h2 { font-size: clamp(1.5rem, 5vw, 2rem); color: var(--accent2); }
         h3 { font-size: clamp(1.3rem, 4vw, 1.8rem); }
 
+        /* 4. 🔘 Button & Input Fix */
         .btn {
             background: var(--secondary); color: white; border: none;
             padding: 15px 20px;
-            font-size: clamp(16px, 4vw, 1.2rem); 
+            font-size: clamp(16px, 4vw, 1.2rem); /* Ensured at least 16px to prevent iOS zoom */
             border-radius: 25px; cursor: pointer;
             margin: clamp(5px, 1vw, 10px) 0; 
             box-shadow: 0 6px 0 rgba(0,0,0,0.2);
             transition: transform 0.1s, box-shadow 0.1s, background-color 0.3s;
             display: flex; align-items: center; justify-content: center; gap: 10px;
-            width: 100%; 
-            max-width: 100%; 
+            width: 100%; /* Make full width */
+            max-width: 100%; /* Removed max-width fixed pixels */
             min-height: 50px; text-align: center;
         }
 
@@ -140,14 +143,6 @@
         .list-container { width: 100%; display: flex; flex-direction: column; gap: clamp(10px, 2vw, 15px); padding-bottom: 20px; }
         .list-item { background: #f1f2f6; font-size: clamp(1.1rem, 4vw, 1.4rem); padding: clamp(12px, 3vw, 20px); border-radius: 15px; display: flex; justify-content: space-between; align-items: center; border: 3px solid var(--secondary); font-weight: bold; flex-wrap: wrap; gap: 10px; width: 100%; }
         .list-item.center { justify-content: center; font-size: clamp(1.3rem, 5vw, 1.6rem); text-align: center; }
-
-        /* ⭐ AI CHAT UI ⭐ */
-        .chat-wrapper { width: 100%; flex: 1; border: 3px dashed var(--accent2); border-radius: 20px; display: flex; flex-direction: column; overflow: hidden; background: #fffaf0; margin-bottom: 10px; }
-        .chat-container { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
-        .chat-input-area { display: flex; gap: 10px; padding: 10px; background: white; border-top: 3px dashed var(--accent2); align-items: center; }
-        .ai-input { flex: 1; padding: 12px; border-radius: 15px; border: 2px solid var(--accent1); font-size: 1rem; outline: none; }
-        .mic-btn { width: 50px; height: 50px; border-radius: 50%; border: none; background: var(--accent1); font-size: 1.5rem; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.1); flex-shrink:0; display:flex; align-items:center; justify-content:center;}
-        .send-btn { width: 50px; height: 50px; border-radius: 15px; border: none; background: var(--secondary); color: white; font-size: 1.5rem; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.1); flex-shrink:0; display:flex; align-items:center; justify-content:center;}
 
         /* ADVANCED DICTIONARY & TRANSLATOR UI */
         .dict-toolbar { display: flex; flex-direction: column; gap: 10px; width: 100%; margin-bottom: 15px; }
@@ -228,6 +223,7 @@
             animation: bounce 0.5s ease-out;
         }
 
+        /* Media Queries for full Responsiveness within constraints */
         @media (max-width: 360px) {
             .home-grid { grid-template-columns: 1fr; }
             .options-grid { grid-template-columns: 1fr; }
@@ -245,8 +241,6 @@
         <button id="downloadAppBtn" class="btn" style="background: linear-gradient(90deg, #FF6B6B, #4ECDC4); border: 2px solid #fff; box-shadow: 0 0 15px rgba(255, 107, 107, 0.5); display: none; font-weight: bold; margin-bottom: 15px; animation: bounce 2s infinite;">
             📲 INSTALL LEARNING APP
         </button>
-
-        <button class="btn" style="background:var(--accent2); color:white; font-size:clamp(1.2rem, 5vw, 1.5rem); animation: pulse 2s infinite; margin-bottom: 15px;" onclick="openAIHelper()">🤖 AI Robot Teacher ✨</button>
 
         <div class="home-grid">
             <button class="btn accent" onclick="openLearn('numbers')">🔢 Numbers</button>
@@ -278,29 +272,6 @@
         <div style="display:flex; width:100%; gap:10px;">
             <button class="btn accent" style="flex:1;" onclick="openCalculator()">🧮 Calc</button>
             <button class="btn" style="background:var(--color-gold); flex:1; color:white;" onclick="openLeaderboard()">🏆 Leaders</button>
-        </div>
-    </div>
-
-    <div id="ai-helper-screen" class="screen">
-        <div class="top-bar">
-            <button class="btn back-btn" onclick="goHome()">🔙</button>
-            <h2 style="margin:0; color:var(--accent2);">AI Assistant 🤖</h2>
-            <div style="width: 40px;"></div>
-        </div>
-        
-        <div class="chat-wrapper">
-            <div class="chat-container" id="chat-container">
-                <div style="background:#f3e5f5;padding:15px;border-radius:20px 20px 20px 0;border:2px solid #ce93d8;align-self:flex-start;max-width:90%;margin-top:10px;">
-                    <b style="color:#8e24aa;font-size:1rem;">JARVIS:</b><br>
-                    <span style="font-size:1.2rem;color:#4a148c;">Hello Pari & Jiya! Ask me anything by speaking or typing! ✨</span>
-                </div>
-            </div>
-            <div style="text-align:center; padding:5px; font-size:0.9rem; color:gray;" id="mic-status">Tap Mic or Type to ask</div>
-            <div class="chat-input-area">
-                <button class="mic-btn" id="mic-btn" onclick="toggleMic()">🎙️</button>
-                <input type="text" id="ai-text-input" class="ai-input" placeholder="Type here..." onkeyup="checkAIEnter(event)">
-                <button class="send-btn" onclick="sendAIText()">📤</button>
-            </div>
         </div>
     </div>
 
@@ -555,6 +526,7 @@
 </div>
 
 <script>
+    // --- Audio System & SpeechSynthesis (Kids Rate: 0.7) ---
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     let audioCtx;
 
@@ -585,7 +557,7 @@
         if (!('speechSynthesis' in window)) return;
         stopVoice();
         const msg = new SpeechSynthesisUtterance(text);
-        msg.rate = 0.7; 
+        msg.rate = 0.7; // Slow for kids
         msg.pitch = 1.1; 
         window.speechSynthesis.speak(msg);
     }
@@ -613,169 +585,67 @@
     }
     function goHome() { showScreen('home'); }
 
-    // ⭐ AI CHAT LOGIC (FREE NO-KEY) ⭐
-    let isListening = false;
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    let recognition;
-    
-    if(SpeechRecognition){
-        recognition = new SpeechRecognition();
-        recognition.lang = 'hi-IN';
-        recognition.interimResults = false;
-        
-        recognition.onresult = async(e) => {
-            const t = e.results[0][0].transcript;
-            isListening = false;
-            resetMicUI();
-            handleUserQuery(t);
-        };
-        recognition.onerror = () => {
-            isListening = false;
-            resetMicUI();
-            document.getElementById('mic-status').innerText = "Oops! Didn't hear clearly. 😕";
-        };
-        recognition.onend = () => {
-            if(isListening) { isListening = false; resetMicUI(); }
-        };
-    }
-
-    function openAIHelper(){
-        document.getElementById('ai-text-input').value = '';
-        resetMicUI();
-        showScreen('ai-helper-screen');
-    }
-
-    function toggleMic(){
-        if(!recognition) return alert("Mic not supported! 🎙️❌");
-        if(isListening){ recognition.stop(); return; }
-        try{
-            recognition.start();
-            isListening = true;
-            document.getElementById('mic-status').innerText = "Listening... Speak now! 👂";
-            const m = document.getElementById('mic-btn');
-            m.style.transform = "scale(1.2)";
-            m.style.background = "var(--danger)";
-            m.style.color = "white";
-            m.style.boxShadow = "0 0 20px rgba(255,139,148,0.8)";
-            stopVoice();
-        }catch(e){console.log(e)}
-    }
-
-    function resetMicUI(){
-        const m = document.getElementById('mic-btn');
-        m.style.transform = "scale(1)";
-        m.style.background = "var(--accent1)";
-        m.style.color = "var(--text)";
-        m.style.boxShadow = "0 4px 10px rgba(0,0,0,0.05)";
-        document.getElementById('mic-status').innerText = "Tap Mic or Type to ask";
-    }
-
-    function checkAIEnter(e){ if(e.key === 'Enter') sendAIText(); }
-
-    function sendAIText(){
-        const inp = document.getElementById('ai-text-input');
-        const t = inp.value.trim();
-        if(t){
-            inp.value = '';
-            handleUserQuery(t);
-        }
-    }
-
-    function appendChat(role, text, id=""){
-        const c = document.getElementById('chat-container');
-        const div = document.createElement('div');
-        if(role === 'user'){
-            div.style.cssText = "background:#e1f5fe;padding:15px;border-radius:20px 20px 0 20px;border:2px solid #81d4fa;align-self:flex-end;max-width:90%;margin-top:10px;";
-            div.innerHTML = `<b style="color:#0288d1;font-size:1rem;">You:</b><br><span style="font-size:1.2rem;color:#01579b;">${text}</span>`;
-        }else{
-            div.style.cssText = "background:#f3e5f5;padding:15px;border-radius:20px 20px 20px 0;border:2px solid #ce93d8;align-self:flex-start;max-width:90%;margin-top:10px;";
-            div.innerHTML = `<b style="color:#8e24aa;font-size:1rem;">JARVIS:</b><br><span id="${id}" style="font-size:1.2rem;color:#4a148c;">${text}</span>`;
-        }
-        c.appendChild(div);
-        c.scrollTop = c.scrollHeight;
-        return id ? document.getElementById(id) : null;
-    }
-
-    async function handleUserQuery(t){
-        appendChat('user', t);
-        const aiSpanId = 'ai-msg-' + Date.now();
-        const aiSpan = appendChat('ai', 'Thinking... 🤔', aiSpanId);
-        await askFreeAI(t, aiSpan);
-    }
-
-    /* 🔥 THE ULTIMATE FREE ENGINE (Unlimited Text Length / Anti-Crash) 🔥 */
-    async function askFreeAI(q, spanEl){
-        const sysPrompt = "You are JARVIS, a magical AI Robot teacher for two sweet kids named Pari and Jiya. STRICT RULES: 1. NEVER say you are ChatGPT or OpenAI. 2. Your name is JARVIS. 3. Give very short, simple, safe answers in 1-2 lines. 4. No * symbols. 5. Reply in sweet Hindi if asked in Hindi, else easy English.";
-        
-        try {
-            const response = await fetch('https://text.pollinations.ai/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    messages: [
-                        { role: 'system', content: sysPrompt },
-                        { role: 'user', content: q }
-                    ]
-                })
-            });
-
-            if(!response.ok) throw new Error("Server Busy");
-            
-            let ans = await response.text();
-            ans = ans.replace(/\*/g,''); 
-            
-            spanEl.innerText = ans;
-            document.getElementById('chat-container').scrollTop = document.getElementById('chat-container').scrollHeight;
-            speakText(ans);
-        } catch(e) {
-            spanEl.innerText = `🚨 Error: Message load nahi hua. Wapas try karo!`; 
-            speakText("Network error aagaya hai.");
-        }
-    }
-
+    // --- NEW SEARCH TYPE LOGIC ---
     let currentSearchType = 'normal';
 
     function openSafeSearch() {
         document.getElementById('safe-search-input').value = '';
-        setSearchType('normal', document.getElementById('tab-normal')); 
+        setSearchType('normal', document.getElementById('tab-normal')); // Default to normal
         showScreen('safe-search-screen');
     }
 
     function setSearchType(type, btnElement) {
         currentSearchType = type;
+        
+        // Remove 'primary' class from all tabs, add 'secondary'
         document.querySelectorAll('.type-btn').forEach(btn => {
             btn.classList.remove('primary');
             btn.classList.add('secondary');
         });
+        
+        // Highlight clicked tab with 'primary'
         btnElement.classList.remove('secondary');
         btnElement.classList.add('primary');
     }
 
-    function checkEnterSearch(e) { if(e.key === 'Enter') performWebSearch('ddg'); }
+    function checkEnterSearch(e) {
+        // Default to DuckDuckGo when pressing enter
+        if(e.key === 'Enter') performWebSearch('ddg');
+    }
 
     function performWebSearch(engine) {
         const query = document.getElementById('safe-search-input').value.trim();
+        
         if(query) {
             const encodedQuery = encodeURIComponent(query);
             let searchUrl = '';
 
             if (engine === 'ddg') {
-                if (currentSearchType === 'normal') searchUrl = 'https://duckduckgo.com/?q=' + encodedQuery;
-                else if (currentSearchType === 'image') searchUrl = 'https://duckduckgo.com/?q=' + encodedQuery + '&iax=images&ia=images';
-                else if (currentSearchType === 'meaning') searchUrl = 'https://duckduckgo.com/?q=' + encodedQuery + '+meaning';
+                if (currentSearchType === 'normal') {
+                    searchUrl = 'https://duckduckgo.com/?q=' + encodedQuery;
+                } else if (currentSearchType === 'image') {
+                    searchUrl = 'https://duckduckgo.com/?q=' + encodedQuery + '&iax=images&ia=images';
+                } else if (currentSearchType === 'meaning') {
+                    searchUrl = 'https://duckduckgo.com/?q=' + encodedQuery + '+meaning';
+                }
             } else if (engine === 'google') {
-                if (currentSearchType === 'normal') searchUrl = 'https://www.google.com/search?q=' + encodedQuery;
-                else if (currentSearchType === 'image') searchUrl = 'https://www.google.com/search?tbm=isch&q=' + encodedQuery;
-                else if (currentSearchType === 'meaning') searchUrl = 'https://www.google.com/search?q=' + encodedQuery + '+meaning';
+                if (currentSearchType === 'normal') {
+                    searchUrl = 'https://www.google.com/search?q=' + encodedQuery;
+                } else if (currentSearchType === 'image') {
+                    searchUrl = 'https://www.google.com/search?tbm=isch&q=' + encodedQuery;
+                } else if (currentSearchType === 'meaning') {
+                    searchUrl = 'https://www.google.com/search?q=' + encodedQuery + '+meaning';
+                }
             }
+
+            // Open strictly in a new tab/window
             window.open(searchUrl, '_blank');
         } else {
             speakText("Please type something to search");
         }
     }
 
+    // --- 10+ SHAPES LEARNING SYSTEM ---
     const shapesData = [
         { id: 'triangle', en: 'Triangle', hi: 'त्रिभुज', css: 'css-triangle', emoji: '🔺' },
         { id: 'square', en: 'Square', hi: 'वर्ग', css: 'css-square', emoji: '⬛' },
@@ -790,13 +660,17 @@
     ];
     let currentShapeIdx = 0;
 
-    function openShapesScreen() { currentShapeIdx = 0; renderCurrentShape(); showScreen('shapes-screen'); }
+    function openShapesScreen() {
+        currentShapeIdx = 0; renderCurrentShape(); showScreen('shapes-screen');
+    }
+
     function changeShape(dir) {
         stopVoice(); currentShapeIdx += dir;
         if (currentShapeIdx < 0) currentShapeIdx = shapesData.length - 1;
         if (currentShapeIdx >= shapesData.length) currentShapeIdx = 0;
         renderCurrentShape();
     }
+
     function renderCurrentShape() {
         const shape = shapesData[currentShapeIdx];
         const box = document.getElementById('shape-display-box');
@@ -808,6 +682,7 @@
         `;
     }
 
+    // --- 1000+ COMPRESSED MASSIVE DICTIONARY (Smart & Lazy Loaded) ---
     const baseDictionary = {
         "apple":"सेब","banana":"केला","mango":"आम","orange":"संतरा","grape":"अंगूर","papaya":"पपीता","guava":"अमरूद","pineapple":"अनानास","watermelon":"तरबूज","pomegranate":"अनार",
         "dog":"कुत्ता","cat":"बिल्ली","cow":"गाय","horse":"घोड़ा","elephant":"हाथी","tiger":"बाघ","lion":"शेर","monkey":"बंदर","bear":"भालू","rabbit":"खरगोश","deer":"हिरण","goat":"बकरी","sheep":"भेड़","snake":"साँप","bird":"पक्षी","parrot":"तोता","peacock":"मोर","pigeon":"कबूतर","crow":"कौआ","eagle":"चील","owl":"उल्लू","sparrow":"गौरैया","swan":"हंस",
@@ -863,6 +738,7 @@
         }
     }
 
+    // --- DICTIONARY BOOK (Smart Pagination & Lazy Loading) ---
     let dictRenderLimit = 50;
     let currentFilterText = '';
 
@@ -938,6 +814,7 @@
         if(confirm(`Are you sure you want to delete "${enWord}"?`)) { delete customDictionary[enWord]; localStorage.setItem('pariCustomDict', JSON.stringify(customDictionary)); filterDictBook(); }
     }
 
+    // --- MONTHS & DAYS ---
     const monthsData = [{en:"January", hi:"जनवरी"}, {en:"February", hi:"फरवरी"}, {en:"March", hi:"मार्च"}, {en:"April", hi:"अप्रैल"}, {en:"May", hi:"मई"}, {en:"June", hi:"जून"}, {en:"July", hi:"जुलाई"}, {en:"August", hi:"अगस्त"}, {en:"September", hi:"सितंबर"}, {en:"October", hi:"अक्टूबर"}, {en:"November", hi:"नवंबर"}, {en:"December", hi:"दिसंबर"}];
     function openMonths() {
         const c = document.getElementById('months-content'); c.innerHTML = '';
@@ -952,6 +829,7 @@
         showScreen('days-screen');
     }
 
+    // --- MATH, TABLES & NUMBERS ---
     const hindiNumbersList = "एक,दो,तीन,चार,पाँच,छह,सात,आठ,नौ,दस,ग्यारह,बारह,तेरह,चौदह,पंद्रह,सोलह,सत्रह,अठारह,उन्नीस,बीस,इक्कीस,बाईस,तेईस,चौबीस,पच्चीस,छब्बीस,सत्ताईस,अट्ठाईस,उनतीस,तीस,इकतीस,बत्तीस,तैंतीस,चौंतीस,पैंतीस,छत्तीस,सैंतीस,अड़तीस,उनतालीस,चालीस,इकतालीस,बयालीस,तिरालीस,चवालीस,पैंतालीस,छियालीस,सैंतालीस,अड़तालीस,उनचास,पचास,इक्यावन,बावन,तिरपन,चौवन,पचपन,छप्पन,सत्तावन,अट्ठावन,उनसठ,साठ,इकसठ,बासठ,तिरसठ,चौंसठ,पैंसठ,छियासठ,सड़सठ,अड़सठ,उनहत्तर,सत्तर,इकहत्तर,बहत्तर,तिहत्तर,चौहत्तर,पचहत्तर,छिहत्तर,सतहत्तर,अठहत्तर,उनासी,अस्सी,इक्यासी,बयासी,तिरासी,चौरासी,पचासी,छियासी,सत्तासी,अट्ठासी,नवासी,नब्बे,इक्यानवे,बानवे,तिरानवे,चौरानवे,पचानवे,छियानवे,सत्तानवे,अट्ठानवे,निन्यानवे,सौ".split(',');
 
     function openLearn(topic) {
@@ -1007,6 +885,7 @@
         showScreen('roman-screen');
     }
 
+    // --- QUIZ & GAME GENERATOR (30 Questions, Shapes Included) ---
     function generateRandomQuestion() {
         const types = ['math', 'math', 'compare', 'tf', 'shape', 'shape'];
         const qType = types[Math.floor(Math.random() * types.length)];
@@ -1062,6 +941,7 @@
         return t.replace('=', 'equals').replace('?', 'what'); 
     }
 
+    // --- QUIZ MODE (30 Questions) ---
     const TOTAL_QUESTIONS = 30;
     let quizData = [], currentQ = 0, score = { correct:0, wrong:0 }, mistakes = [];
     function startQuiz() {
@@ -1105,6 +985,7 @@
         else { mTitle.innerText = "Let's review mistakes 📘:"; mistakes.forEach(m => mList.innerHTML += `<div class="mistake-item" style="background:#f1f2f6; padding: 10px; border-radius: 10px; margin-bottom: 10px;"><strong>${m.q}</strong><br>You answered: <span style="color:var(--danger)">${m.u} ❌</span><br>Correct answer: <span style="color:green; font-weight:bold">${m.c} ✅</span></div>`); }
     }
 
+    // --- LEADERBOARD ---
     function saveQuizScore() {
         let board = JSON.parse(localStorage.getItem('pariMathBoard') || '[]');
         board.push({ name: document.getElementById('player-name').value.trim()||'Anonymous', score: score.correct, total: TOTAL_QUESTIONS, date: new Date().toLocaleDateString() });
@@ -1122,6 +1003,7 @@
     }
     function clearLeaderboard() { if(confirm("Delete all scores?")) { localStorage.removeItem('pariMathBoard'); openLeaderboard(); } }
 
+    // --- GAME MODE ---
     let gameLives = 3, gameScore = 0, currentGameQ = null;
     function startGameMode() { gameLives = 3; gameScore = 0; updateGameStats(); showScreen('game-mode'); nextGameQuestion(); }
     function updateGameStats() { document.getElementById('game-lives').innerText = '❤️'.repeat(gameLives); document.getElementById('game-score').innerText = gameScore; }
@@ -1145,6 +1027,7 @@
     }
     function endGameMode() { document.getElementById('final-game-score').innerText = gameScore; showScreen('game-over'); }
 
+    // --- CALCULATOR ---
     let calcCurrent = '0';
     function openCalculator() { calcCurrent = '0'; updateCalcDisplay(); showScreen('calculator'); }
     function updateCalcDisplay() { document.getElementById('calc-display').innerText = calcCurrent; }
@@ -1159,6 +1042,7 @@
         catch(e) { calcCurrent = 'Error'; updateCalcDisplay(); setTimeout(calcClear, 1500); }
     }
 
+    // ⭐ NEW PWA DOWNLOAD LOGIC WITH SW REGISTRATION ⭐
     let deferredPrompt;
     const downloadAppBtn = document.getElementById('downloadAppBtn');
 
@@ -1173,7 +1057,7 @@
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
-        downloadAppBtn.style.display = 'block'; 
+        downloadAppBtn.style.display = 'block'; // Button sirf tab dikhega jab browser install allow karega
     });
 
     downloadAppBtn.addEventListener('click', async () => {
