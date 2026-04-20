@@ -373,7 +373,7 @@
         history.scrollTop = history.scrollHeight;
 
         try {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`;
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_KEY}`;
             const promptInstruction = `You are a friendly AI Teacher for kids named Pari & Jiya. Answer this question VERY simply, in 2 or 3 short sentences. Use emojis. Do not use complex words. The question is: ${userText}`;
 
             const response = await fetch(url, {
