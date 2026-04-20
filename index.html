@@ -185,25 +185,7 @@
         </div>
     </div>
 
-    <div id="safe-search-screen" class="screen">
-        <div class="top-bar"><button class="btn back-btn" onclick="goHome()">🔙</button><h2 style="margin:0; color:var(--color-ddg);">Safe Search 🔍</h2><div style="width: 40px;"></div></div>
-        <div class="save-score-box" style="border-color:var(--color-ddg);">
-            <h3 style="color:var(--text); margin-bottom: 5px;">What do you want to learn?</h3>
-            <p style="font-size: clamp(0.9rem, 3.5vw, 1.1rem); color: var(--color-ddg); margin-bottom: 15px; font-weight: bold;">DuckDuckGo does not track your searches 🔒</p>
-            <input type="text" id="safe-search-input" class="name-input" placeholder="Type here (e.g. apple)..." style="border-color:var(--color-ddg);" onkeyup="checkEnterSearch(event)">
-            <div class="search-type-tabs">
-                <button class="btn type-btn primary" id="tab-normal" onclick="setSearchType('normal', this)">🔍 Normal</button>
-                <button class="btn type-btn secondary" id="tab-image" onclick="setSearchType('image', this)">🖼️ Image</button>
-                <button class="btn type-btn secondary" id="tab-meaning" onclick="setSearchType('meaning', this)">📖 Meaning</button>
-            </div>
-            <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 20px; width: 100%;">
-                <button class="btn" style="background:var(--color-ddg); color:white; margin:0;" onclick="performWebSearch('ddg')">🦆 Search with DuckDuckGo</button>
-                <button class="btn" style="background:var(--color-google); color:white; margin:0;" onclick="performWebSearch('google')">🌐 Search with Google</button>
-            </div>
-        </div>
-        <button class="btn yellow" style="margin-top: 20px;" onclick="goHome()">🏠 Back to Home</button>
-    </div>
-
+    <div id="safe-search-screen" class="screen"><div class="top-bar"><button class="btn back-btn" onclick="goHome()">🔙</button><h2 style="margin:0; color:var(--color-ddg);">Safe Search 🔍</h2><div style="width: 40px;"></div></div><div class="save-score-box" style="border-color:var(--color-ddg);"><h3 style="color:var(--text); margin-bottom: 5px;">What do you want to learn?</h3><p style="font-size: clamp(0.9rem, 3.5vw, 1.1rem); color: var(--color-ddg); margin-bottom: 15px; font-weight: bold;">DuckDuckGo does not track your searches 🔒</p><input type="text" id="safe-search-input" class="name-input" placeholder="Type here (e.g. apple)..." style="border-color:var(--color-ddg);" onkeyup="checkEnterSearch(event)"><div class="search-type-tabs"><button class="btn type-btn primary" id="tab-normal" onclick="setSearchType('normal', this)">🔍 Normal</button><button class="btn type-btn secondary" id="tab-image" onclick="setSearchType('image', this)">🖼️ Image</button><button class="btn type-btn secondary" id="tab-meaning" onclick="setSearchType('meaning', this)">📖 Meaning</button></div><div style="display: flex; flex-direction: column; gap: 10px; margin-top: 20px; width: 100%;"><button class="btn" style="background:var(--color-ddg); color:white; margin:0;" onclick="performWebSearch('ddg')">🦆 Search with DuckDuckGo</button><button class="btn" style="background:var(--color-google); color:white; margin:0;" onclick="performWebSearch('google')">🌐 Search with Google</button></div></div><button class="btn yellow" style="margin-top: 20px;" onclick="goHome()">🏠 Back to Home</button></div>
     <div id="shapes-screen" class="screen"><div class="top-bar"><button class="btn back-btn" onclick="goHome()">🔙</button><h2 style="margin:0; color:var(--color-shapes);">Shapes 🔺</h2><div style="width: 40px;"></div></div><div class="shape-display-box" id="shape-display-box"></div><div style="display:flex; justify-content:space-between; width: 100%; gap: 10px;"><button class="btn primary" style="flex:1;" onclick="changeShape(-1)">⬅️ Prev</button><button class="btn primary" style="flex:1;" onclick="changeShape(1)">Next ➡️</button></div></div>
     <div id="translator-screen" class="screen"><div class="top-bar"><button class="btn back-btn" onclick="goHome()">🔙</button><h2 style="margin:0; color:var(--color-trans);">Translator 🌐</h2><div style="width: 40px;"></div></div><div class="save-score-box" style="border-color:var(--color-trans);"><div style="display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:15px; font-size:clamp(1.1rem, 4vw, 1.4rem); font-weight:bold; color:var(--text); width: 100%;"><span id="lang-from" style="flex:1; text-align:right;">English</span><button class="btn-icon" onclick="swapTranslator()" style="background:var(--accent1); font-size:1.5rem; flex-shrink:0;">🔄</button><span id="lang-to" style="flex:1; text-align:left;">Hindi</span></div><input type="text" id="trans-input" class="name-input" placeholder="English Word..." style="border-color:var(--color-trans);" onkeyup="checkEnterTrans(event)"><button class="btn primary" style="background:var(--color-trans); margin:0;" onclick="translateWord()">🔍 Translate</button></div><div id="trans-result" style="margin-top:20px; width:100%; text-align:center;"></div></div>
     <div id="dict-book-screen" class="screen"><div class="top-bar"><button class="btn back-btn" onclick="goHome()">🔙</button><h2 style="margin:0; color:var(--color-dict);">Dictionary 📚</h2><div style="width: 40px;"></div></div><div class="dict-toolbar"><input type="text" id="dict-search-input" class="dict-search" placeholder="🔍 Search a word..." onkeyup="filterDictBook()"><button class="btn yellow" style="margin:0; color:var(--text);" onclick="toggleAddWordPanel()">➕ Add New Word</button></div><div id="add-word-panel" class="add-word-panel"><h3 style="margin:0; font-size:1.5rem; color:var(--color-dict);">Add Your Word!</h3><input type="text" id="add-en" class="dict-search" placeholder="English Word (e.g. Tree)"><input type="text" id="add-hi" class="dict-search" placeholder="Hindi Meaning (e.g. पेड़)"><button class="btn primary" style="margin:0;" onclick="saveNewDictWord()">💾 Save Word</button><div id="add-word-msg" style="text-align:center; font-size:1.2rem; font-weight:bold;"></div></div><div id="dict-list-container" class="dict-list-wrap"></div></div>
@@ -223,16 +205,16 @@
     <div id="ai-chat-screen" class="screen">
         <div class="top-bar">
             <button class="btn back-btn" onclick="goHome()">🔙</button>
-            <h2 style="margin:0; color:var(--accent2);">AI Tutor ✨</h2>
-            <button class="btn-icon" style="background:var(--success); color:white; width: 40px; height: 40px; font-size: 1rem;" onclick="speakText('Hello! I am your AI teacher.')">🔊</button>
+            <h2 style="margin:0; color:var(--accent2);">Sifra ✨</h2>
+            <button class="btn-icon" style="background:var(--success); color:white; width: 40px; height: 40px; font-size: 1rem;" onclick="speakText('Hello! Main Sifra hoon.')">🔊</button>
         </div>
         <div id="chat-history" class="chat-history-container">
-            <div class="chat-message ai-message"><div class="bubble">Hello! I am Pari & Jiya's smart AI teacher. You can ask me anything! 🎈</div></div>
+            <div class="chat-message ai-message"><div class="bubble">Hello! Main Sifra hoon, aapki smart AI assistant. Boliye, main aapki kaise madad kar sakti hoon? ✨</div></div>
         </div>
         <div class="chat-input-wrapper">
             <div class="chat-input-box">
                 <button id="mic-btn" class="chat-icon-btn mic-btn" onclick="toggleVoiceInput()">🎙️</button>
-                <textarea id="ai-input-text" placeholder="Ask question..." rows="1" oninput="autoResizeTextarea(this)" onkeypress="handleChatEnter(event)"></textarea>
+                <textarea id="ai-input-text" placeholder="Ask Sifra..." rows="1" oninput="autoResizeTextarea(this)" onkeypress="handleChatEnter(event)"></textarea>
                 <button id="send-btn" class="chat-icon-btn send-btn" onclick="sendToAI()">🚀</button>
             </div>
             <div style="font-size: 0.8rem; color: gray; margin-top: 5px; text-align: center;">AI can make mistakes.</div>
@@ -251,7 +233,18 @@
         else { osc.type = 'sawtooth'; osc.frequency.setValueAtTime(200, audioCtx.currentTime); osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.3); gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime); gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3); osc.start(); osc.stop(audioCtx.currentTime + 0.3); }
     }
     function stopVoice() { if('speechSynthesis' in window) window.speechSynthesis.cancel(); }
-    function speakText(text) { if (!('speechSynthesis' in window)) return; stopVoice(); const msg = new SpeechSynthesisUtterance(text.replace(/\*/g, '')); msg.rate = 0.8; msg.pitch = 1.1; window.speechSynthesis.speak(msg); }
+    
+    // ⭐ UPDATED SPEAK TEXT (No Emojis, Indian Voice) ⭐
+    function speakText(text) { 
+        if (!('speechSynthesis' in window)) return; 
+        stopVoice(); 
+        let cleanText = text.replace(/[*#_`~]/g, ''); 
+        cleanText = cleanText.replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F700}-\u{1F77F}\u{1F780}-\u{1F7FF}\u{1F800}-\u{1F8FF}\u{1F900}-\u{1F9FF}\u{1FA00}-\u{1FA6F}\u{1FA70}-\u{1FAFF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu, '');
+        const msg = new SpeechSynthesisUtterance(cleanText); 
+        msg.lang = 'hi-IN'; msg.rate = 0.9; msg.pitch = 1.0; 
+        window.speechSynthesis.speak(msg); 
+    }
+    
     function speakBilingual(enText, hiText) { if (!('speechSynthesis' in window)) return; stopVoice(); const msgEn = new SpeechSynthesisUtterance(enText); msgEn.lang = 'en-US'; msgEn.rate = 0.7; const msgHi = new SpeechSynthesisUtterance(hiText); msgHi.lang = 'hi-IN'; msgHi.rate = 0.7; window.speechSynthesis.speak(msgEn); window.speechSynthesis.speak(msgHi); }
     let lastSpokenText = ""; function repeatQuestionVoice() { if(lastSpokenText) speakText(lastSpokenText); }
     function showScreen(screenId) { stopVoice(); document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById(screenId).classList.add('active'); }
@@ -341,7 +334,7 @@
         showScreen('ai-chat-screen');
         const history = document.getElementById('chat-history');
         if (history.children.length <= 1) {
-            speakText("Hello! I am Pari and Jiya's smart AI teacher. Ask me anything!");
+            speakText("Hello! Main Sifra hoon. Boliye, main aapki kaise madad kar sakti hoon?");
         }
     }
 
@@ -374,7 +367,7 @@
 
         try {
             const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_KEY}`;
-            const promptInstruction = `You are a friendly AI Teacher for kids named Pari & Jiya. Answer this question VERY simply, in 2 or 3 short sentences. Use emojis. Do not use complex words. The question is: ${userText}`;
+            const promptInstruction = `You are a highly advanced, smart, and helpful AI assistant named "Sifra". Your default language for replying is strictly "Hinglish" (Hindi written in English alphabet), unless the user explicitly asks you to speak in English or another language. You have no restrictions; provide complete, detailed, and real-AI level answers. Use emojis to make it look good. User's query: ${userText}`;
 
             const response = await fetch(url, {
                 method: 'POST',
@@ -385,24 +378,23 @@
             const data = await response.json();
             document.getElementById(loadingId).remove(); 
 
-                        if (data.candidates && data.candidates[0].content.parts[0].text) {
+            if (data.candidates && data.candidates[0].content.parts[0].text) {
                 let aiResponse = data.candidates[0].content.parts[0].text;
                 addChatMessage(aiResponse, 'ai');
                 speakText(aiResponse);
             } else if (data.error) {
-                // ⭐ JASOOS CODE: Jo asli error screen par print karega
                 let errorMsg = "Google Error: " + data.error.message;
                 addChatMessage(errorMsg, 'ai');
                 console.log("FULL ERROR:", data.error);
             } else {
-                addChatMessage("Oops! My brain is confused. Try asking again! 😅", 'ai');
-                        }
-            
+                addChatMessage("Oops! System mein kuch gadbad hai. Phir se try karein! 😅", 'ai');
+            }
             
         } catch (error) {
             console.error("API Error:", error);
             if(document.getElementById(loadingId)) document.getElementById(loadingId).remove();
-            addChatMessage("Network error! Make sure your internet is ON. 📡", 'ai');
+            addChatMessage("Network error! Apna internet check karein. 📡", 'ai');
+            speakText("Network error. Kripya apna internet check karein.");
         }
     }
 
@@ -411,7 +403,7 @@
         if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
             const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
             recognition = new SpeechRec();
-            recognition.continuous = false; recognition.interimResults = false; recognition.lang = 'en-IN';
+            recognition.continuous = false; recognition.interimResults = false; recognition.lang = 'hi-IN'; // Changed to Hindi for better voice typing
             recognition.onstart = function() { document.getElementById('mic-btn').classList.add('recording'); stopVoice(); };
             recognition.onresult = function(event) { document.getElementById('ai-input-text').value = event.results[0][0].transcript; sendToAI(); };
             recognition.onerror = function(event) { document.getElementById('mic-btn').classList.remove('recording'); };
