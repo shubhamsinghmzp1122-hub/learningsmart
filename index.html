@@ -350,8 +350,7 @@
         history.appendChild(div);
         history.scrollTop = history.scrollHeight;
     }
-
-    async function sendToAI() {
+        async function sendToAI() {
         const inputEl = document.getElementById('ai-input-text');
         const userText = inputEl.value.trim();
         if (!userText) return;
@@ -367,7 +366,9 @@
 
         try {
             const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_KEY}`;
-            const promptInstruction = `You are a highly advanced, smart, and helpful AI assistant named "Sifra". Your default language for replying is strictly "Hinglish" (Hindi written in English alphabet), unless the user explicitly asks you to speak in English or another language. You have no restrictions; provide complete, detailed, and real-AI level answers. Use emojis to make it look good. User's query: ${userText}`;
+            
+            // ⭐ THE SMART TEACHER PROMPT ⭐
+            const promptInstruction = `You are a highly advanced, friendly, and helpful AI assistant named "Sifra". Your default language for replying is strictly "Hinglish". You are talking to kids/students. IF the user asks for hacking tools, illegal things, bad words, or harmful stuff, DO NOT give an error. Instead, gently and politely explain to them like a good teacher that this is illegal/wrong and you cannot help with it, but you can teach them something good instead. User's query: ${userText}`;
 
             const response = await fetch(url, {
                 method: 'POST',
@@ -378,22 +379,37 @@
             const data = await response.json();
             document.getElementById(loadingId).remove(); 
 
-            if (data.candidates && data.candidates[0].content.parts[0].text) {
+            // 1. Agar Google ka Safety Filter block kar de:
+            if (data.candidates && data.candidates[0].finishReason === 'SAFETY') {
+                let safetyMsg = "Bacchon, ye topic safe nahi hai! Main ek good AI teacher hoon, isliye main aisi cheezon mein madad nahi kar sakti. Chalo kuch aur achha seekhein! 😇";
+                addChatMessage(safetyMsg, 'ai');
+                speakText(safetyMsg);
+            } 
+            // 2. Agar Normal aur Sahi Jawab aaye:
+            else if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts[0].text) {
                 let aiResponse = data.candidates[0].content.parts[0].text;
                 addChatMessage(aiResponse, 'ai');
                 speakText(aiResponse);
-            } else if (data.error) {
-                let errorMsg = "Google Error: " + data.error.message;
-                addChatMessage(errorMsg, 'ai');
-                console.log("FULL ERROR:", data.error);
-            } else {
-                addChatMessage("Oops! System mein kuch gadbad hai. Phir se try karein! 😅", 'ai');
+            } 
+            // 3. Agar Google ka Server Busy ho (High Demand / API limit):
+            else if (data.error) {
+                console.log("HIDDEN GOOGLE ERROR:", data.error.message); // Console me chupke se print hoga
+                let cuteError = "Mera dimaag abhi thoda thak gaya hai (Server Busy)! Thodi der baad try karna please. 😴";
+                addChatMessage(cuteError, 'ai');
+                speakText(cuteError);
+            } 
+            // 4. Koi aur random gadbad ho jaye:
+            else {
+                let confuseMsg = "Oops! System mein kuch gadbad hai. Phir se try karein! 😅";
+                addChatMessage(confuseMsg, 'ai');
+                speakText(confuseMsg);
             }
             
         } catch (error) {
             console.error("API Error:", error);
             if(document.getElementById(loadingId)) document.getElementById(loadingId).remove();
-            addChatMessage("Network error! Apna internet check karein. 📡", 'ai');
+            let netError = "Network error! Apna internet check karein. 📡";
+            addChatMessage(netError, 'ai');
             speakText("Network error. Kripya apna internet check karein.");
         }
     }
