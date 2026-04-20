@@ -434,7 +434,7 @@
             geminiErrorMsg = "Gemini Network Error";
         }
 
-        // ⭐ ENGINE 2: FALLBACK TO OPENROUTER IF GEMINI FAILS
+        // ⭐ ENGINE 2: FALLBACK TO OPENROUTER (Naya Llama 3.3 Model) IF GEMINI FAILS
         if (!isSuccess) {
             console.log("Switching to OpenRouter Fallback Engine...");
             try {
@@ -442,13 +442,14 @@
                 const orResponse = await fetch(orUrl, {
                     method: 'POST',
                     headers: {
-                        "Authorization": `Bearer ${OPENROUTER_KEY}`, // ⭐ YAHAN TERI ASLI KEY HONI CHAHIYE
-                        "HTTP-Referer": "https://pari-jiya-app.com", // OpenRouter requires this for free models
+                        "Authorization": `Bearer ${OPENROUTER_KEY}`, // Yahan teri key automatically aa jayegi
+                        "HTTP-Referer": "https://pari-jiya-app.com", 
                         "X-Title": "Learning App",
                         "Content-Type": "application/json"
                     },
                     body: JSON.stringify({
-                        "model": "meta-llama/llama-3-8b-instruct:free", 
+                        // ⭐ THE FIX: Naya aur sabse khatarnak free model
+                        "model": "meta-llama/llama-3.3-70b-instruct:free", 
                         "messages": [
                             {"role": "system", "content": promptInstruction},
                             {"role": "user", "content": userText}
@@ -482,7 +483,7 @@
             addChatMessage(finalAiResponse, 'ai');
             speakText(finalAiResponse);
         } else {
-            // ⭐ MAHA-JASOOS: AB ASLI ERROR SCREEN PAR DIKHEGA
+            // ⭐ MAHA-JASOOS ERROR
             let debugError = `🚨 <b>Error Report:</b><br><br><b>Gemini:</b> ${geminiErrorMsg}<br><br><b>OpenRouter:</b> ${openRouterErrorMsg}<br><br>Bhai dono API fail! Sahi key lagao! 😅`;
             addChatMessage(debugError, 'ai');
             speakText("Dono server fail ho gaye hain.");
