@@ -378,8 +378,8 @@
         div.innerHTML = `<div class="bubble">${formattedText}</div>`;
         history.appendChild(div);
         history.scrollTop = history.scrollHeight;
-    }
-        async function sendToAI() {
+        
+    }       async function sendToAI() {
         const inputEl = document.getElementById('ai-input-text');
         const userText = inputEl.value.trim();
         if (!userText) return;
@@ -393,56 +393,90 @@
         history.innerHTML += `<div id="${loadingId}" class="chat-message ai-message"><div class="bubble">Thinking... 🤔</div></div>`;
         history.scrollTop = history.scrollHeight;
 
-        try {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_KEY}`;
-            
-            // ⭐ THE SMART TEACHER PROMPT ⭐
-            const promptInstruction = `You are a highly advanced, friendly, and helpful AI assistant named "Sifra". Your default language for replying is strictly "Hinglish". You are talking to kids/students. IF the user asks for hacking tools, illegal things, bad words, or harmful stuff, DO NOT give an error. Instead, gently and politely explain to them like a good teacher that this is illegal/wrong and you cannot help with it, but you can teach them something good instead. User's query: ${userText}`;
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_KEY}`;
+        
+        // ⭐ THE SMART TEACHER PROMPT ⭐
+        const promptInstruction = `You are a highly advanced, friendly, and helpful AI assistant named "Sifra". Your default language for replying is strictly "Hinglish". You are talking to kids/students. IF the user asks for hacking tools, illegal things, bad words, or harmful stuff, DO NOT give an error. Instead, gently and politely explain to them like a good teacher that this is illegal/wrong and you cannot help with it, but you can teach them something good instead. User's query: ${userText}`;
 
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ contents: [{ parts: [{ text: promptInstruction }] }] })
-            });
+        let maxRetries = 2; // AI andar hi andar 3 baar try karegi (1 first time + 2 retries)
+        let data = null;
+        let networkError = false;
 
-            const data = await response.json();
-            document.getElementById(loadingId).remove(); 
+        // ⭐ AUTO-RETRY LOOP SHURU ⭐
+        for (let i = 0; i <= maxRetries; i++) {
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents: [{ parts: [{ text: promptInstruction }] }] })
+                });
 
-            // 1. Agar Google ka Safety Filter block kar de:
-            if (data.candidates && data.candidates[0].finishReason === 'SAFETY') {
-                let safetyMsg = "Bacchon, ye topic safe nahi hai! Main ek good AI teacher hoon, isliye main aisi cheezon mein madad nahi kar sakti. Chalo kuch aur achha seekhein! 😇";
-                addChatMessage(safetyMsg, 'ai');
-                speakText(safetyMsg);
-            } 
-            // 2. Agar Normal aur Sahi Jawab aaye:
-            else if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts[0].text) {
-                let aiResponse = data.candidates[0].content.parts[0].text;
-                addChatMessage(aiResponse, 'ai');
-                speakText(aiResponse);
-            } 
-            // 3. Agar Google ka Server Busy ho (High Demand / API limit):
-            else if (data.error) {
-                console.log("HIDDEN GOOGLE ERROR:", data.error.message); // Console me chupke se print hoga
-                let cuteError = "Mera dimaag abhi thoda thak gaya hai (Server Busy)! Thodi der baad try karna please. 😴";
-                addChatMessage(cuteError, 'ai');
-                speakText(cuteError);
-            } 
-            // 4. Koi aur random gadbad ho jaye:
-            else {
-                let confuseMsg = "Oops! System mein kuch gadbad hai. Phir se try karein! 😅";
-                addChatMessage(confuseMsg, 'ai');
-                speakText(confuseMsg);
+                data = await response.json();
+                
+                // Agar High Demand ya Server overload ka error aaye, toh wapas try karo
+                if (data.error && (data.error.code === 503 || data.error.code === 429 || data.error.message.toLowerCase().includes("high demand"))) {
+                    if (i < maxRetries) {
+                        console.log(`Server busy, retrying silently... Attempt ${i + 1}`);
+                        await new Promise(resolve => setTimeout(resolve, 2000)); // 2 second ruko
+                        continue; // Wapas loop mein jao aur try karo
+                    }
+                }
+                break; // Agar answer aa gaya ya normal error hai toh loop tod do
+            } catch (err) {
+                console.error("API Error on attempt " + (i+1) + ":", err);
+                if (i === maxRetries) {
+                    networkError = true;
+                    break;
+                }
+                await new Promise(resolve => setTimeout(resolve, 2000)); // Network drop hone pe bhi try karega
             }
-            
-        } catch (error) {
-            console.error("API Error:", error);
-            if(document.getElementById(loadingId)) document.getElementById(loadingId).remove();
+        }
+        // ⭐ AUTO-RETRY LOOP KHATAM ⭐
+
+        if(document.getElementById(loadingId)) document.getElementById(loadingId).remove(); 
+
+        if (networkError) {
             let netError = "Network error! Apna internet check karein. 📡";
             addChatMessage(netError, 'ai');
             speakText("Network error. Kripya apna internet check karein.");
+            return;
+        }
+
+        if (!data) {
+            let confuseMsg = "Oops! System mein kuch gadbad hai. Phir se try karein! 😅";
+            addChatMessage(confuseMsg, 'ai');
+            speakText(confuseMsg);
+            return;
+        }
+
+        // 1. Agar Google ka Safety Filter block kar de:
+        if (data.candidates && data.candidates[0].finishReason === 'SAFETY') {
+            let safetyMsg = "Bacchon, ye topic safe nahi hai! Main ek good AI teacher hoon, isliye main aisi cheezon mein madad nahi kar sakti. Chalo kuch aur achha seekhein! 😇";
+            addChatMessage(safetyMsg, 'ai');
+            speakText(safetyMsg);
+        } 
+        // 2. Agar Normal aur Sahi Jawab aaye:
+        else if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts[0].text) {
+            let aiResponse = data.candidates[0].content.parts[0].text;
+            addChatMessage(aiResponse, 'ai');
+            speakText(aiResponse);
+        } 
+        // 3. Agar Google ka Server Busy ho (3 baar try karne ke baad bhi):
+        else if (data.error) {
+            console.log("HIDDEN GOOGLE ERROR:", data.error.message); // Console me chupke se print hoga
+            let cuteError = "Mera dimaag abhi thoda thak gaya hai (Server Busy)! Thodi der baad try karna please. 😴";
+            addChatMessage(cuteError, 'ai');
+            speakText(cuteError);
+        } 
+        // 4. Koi aur random gadbad ho jaye:
+        else {
+            let confuseMsg = "Oops! System mein kuch gadbad hai. Phir se try karein! 😅";
+            addChatMessage(confuseMsg, 'ai');
+            speakText(confuseMsg);
         }
     }
-
+    
+        
     let recognition;
     function setupVoice() {
         if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
