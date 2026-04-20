@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Pari ❤️ Jiya Learning App</title>
+    <title>Learning Smart App</title>
     
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#FF6B6B">
@@ -137,7 +137,7 @@
 <div id="app">
 
     <div id="home" class="screen active">
-        <h1>🎉 Pari ❤️ Jiya Learning App 📚</h1>
+        <h1>🎉 Learning Smart App 📚</h1>
         <p style="font-size: clamp(1rem, 3.5vw, 1.2rem); margin-bottom: 15px; color: gray;">Let's learn and play!</p>
         
         <button id="downloadAppBtn" class="btn" style="background: linear-gradient(90deg, #FF6B6B, #4ECDC4); border: 2px solid #fff; box-shadow: 0 0 15px rgba(255, 107, 107, 0.5); display: none; font-weight: bold; margin-bottom: 15px; animation: bounce 2s infinite;">
@@ -167,8 +167,8 @@
         <button class="btn" style="background:#ff9f43;" onclick="startGameMode()">🎮 Play Game Mode</button>
         
         <div style="display:flex; width:100%; gap:10px;">
-            <button class="btn accent" style="flex:1;" onclick="openCalculator()">🧮 Calc</button>
-            <button class="btn" style="background:var(--color-gold); flex:1; color:white;" onclick="openLeaderboard()">🏆 Leaders</button>
+            <button class="btn accent" style="flex:1;" onclick="openCalculator()">🧮 Calculator</button>
+            <button class="btn" style="background:var(--color-gold); flex:1; color:white;" onclick="openLeaderboard()">🏆 Leaderboard</button>
         </div>
     </div>
 
@@ -182,6 +182,19 @@
                 3. Enjoy learning safely! 🎈
             </p>
             <button onclick="document.getElementById('installModal').style.display='none';" class="btn primary" style="margin: 0;">Okay!</button>
+        </div>
+    </div>
+
+    <div id="clearConfirmModal" class="pwa-modal-overlay">
+        <div class="pwa-confirm-box" style="border-color: var(--danger); border-style: solid;">
+            <h2 style="color: var(--danger); margin-bottom: 10px;">Clear Leaderboard? 🗑️</h2>
+            <p style="font-size: 1.1rem; color: var(--text); line-height: 1.5; margin-bottom: 20px;">
+                Are you sure you want to permanently delete all scores?
+            </p>
+            <div style="display:flex; gap:10px; width: 100%;">
+                <button onclick="executeClearBoard()" class="btn" style="background: var(--danger); margin: 0; flex: 1;">Delete</button>
+                <button onclick="closeClearModal()" class="btn secondary" style="margin: 0; flex: 1;">Cancel</button>
+            </div>
         </div>
     </div>
 
@@ -206,10 +219,10 @@
         <div class="top-bar">
             <button class="btn back-btn" onclick="goHome()">🔙</button>
             <h2 style="margin:0; color:var(--accent2);">Sifra ✨</h2>
-            <button class="btn-icon" style="background:var(--success); color:white; width: 40px; height: 40px; font-size: 1rem;" onclick="speakText('Hello! Main Sifra hoon.')">🔊</button>
+            <button class="btn-icon" style="background:var(--success); color:white; width: 40px; height: 40px; font-size: 1rem;" onclick="speakText('Hello! I am Sifra.')">🔊</button>
         </div>
         <div id="chat-history" class="chat-history-container">
-            <div class="chat-message ai-message"><div class="bubble">Hello! Main Sifra hoon, aapki smart AI assistant. Boliye, main aapki kaise madad kar sakti hoon? ✨</div></div>
+            <div class="chat-message ai-message"><div class="bubble">Hello! I am Sifra, your smart AI assistant. How can I help you today? ✨</div></div>
         </div>
         <div class="chat-input-wrapper">
             <div class="chat-input-box">
@@ -217,7 +230,7 @@
                 <textarea id="ai-input-text" placeholder="Ask Sifra..." rows="1" oninput="autoResizeTextarea(this)" onkeypress="handleChatEnter(event)"></textarea>
                 <button id="send-btn" class="chat-icon-btn send-btn" onclick="sendToAI()">🚀</button>
             </div>
-            <div style="font-size: 0.8rem; color: gray; margin-top: 5px; text-align: center;">AI can make mistakes.</div>
+            <div style="font-size: 0.8rem; color: gray; margin-top: 5px; text-align: center;">AI can make mistakes. Please verify important information.</div>
         </div>
     </div>
 
@@ -234,7 +247,7 @@
     }
     function stopVoice() { if('speechSynthesis' in window) window.speechSynthesis.cancel(); }
     
-    // ⭐ UPDATED SPEAK TEXT (No Emojis, Indian Voice) ⭐
+    // ⭐ SPEAK TEXT FUNCTION ⭐
     function speakText(text) { 
         if (!('speechSynthesis' in window)) return; 
         stopVoice(); 
@@ -261,7 +274,7 @@
             if (engine === 'ddg') { if (currentSearchType === 'normal') searchUrl = 'https://duckduckgo.com/?q=' + encodedQuery; else if (currentSearchType === 'image') searchUrl = 'https://duckduckgo.com/?q=' + encodedQuery + '&iax=images&ia=images'; else if (currentSearchType === 'meaning') searchUrl = 'https://duckduckgo.com/?q=' + encodedQuery + '+meaning'; } 
             else if (engine === 'google') { if (currentSearchType === 'normal') searchUrl = 'https://www.google.com/search?q=' + encodedQuery; else if (currentSearchType === 'image') searchUrl = 'https://www.google.com/search?tbm=isch&q=' + encodedQuery; else if (currentSearchType === 'meaning') searchUrl = 'https://www.google.com/search?q=' + encodedQuery + '+meaning'; }
             window.open(searchUrl, '_blank');
-        } else speakText("Please type something to search");
+        } else speakText("Please type something to search.");
     }
 
     const shapesData = [ { id: 'triangle', en: 'Triangle', hi: 'त्रिभुज', css: 'css-triangle', emoji: '🔺' }, { id: 'square', en: 'Square', hi: 'वर्ग', css: 'css-square', emoji: '⬛' }, { id: 'circle', en: 'Circle', hi: 'वृत्त', css: 'css-circle', emoji: '⚪' }, { id: 'line', en: 'Line', hi: 'रेखा', css: 'css-line', emoji: '➖' }, { id: 'pentagon', en: 'Pentagon', hi: 'पंचभुज', css: 'css-pentagon', emoji: '⬟' }, { id: 'hexagon', en: 'Hexagon', hi: 'षट्भुज', css: 'css-hexagon', emoji: '⬡' }, { id: 'octagon', en: 'Octagon', hi: 'अष्टभुज', css: 'css-octagon', emoji: '🛑' }, { id: 'oval', en: 'Oval', hi: 'अंडाकार', css: 'css-oval', emoji: '🥚' }, { id: 'rectangle', en: 'Rectangle', hi: 'आयत', css: 'css-rectangle', emoji: '▭' }, { id: 'star', en: 'Star', hi: 'तारा', css: 'css-star', emoji: '⭐' } ];
@@ -271,22 +284,22 @@
     function renderCurrentShape() { const shape = shapesData[currentShapeIdx]; const box = document.getElementById('shape-display-box'); box.innerHTML = `<div class="css-shape ${shape.css}"></div><div style="font-size:clamp(1.8rem, 8vw, 2.5rem); font-weight:bold; color:var(--primary); text-align:center;">${shape.en} ${shape.emoji}</div><div style="font-size:clamp(1.4rem, 6vw, 1.8rem); color:var(--text); text-align:center;">${shape.hi}</div><button class="btn accent" style="font-size:clamp(1.2rem, 5vw, 1.5rem); margin-top:10px;" onclick="speakBilingual('${shape.en} means', '${shape.hi}')">🔊 Speak</button>`; }
 
     const baseDictionary = { "apple":"सेब","dog":"कुत्ता","cat":"बिल्ली","book":"किताब","water":"पानी" };
-    let customDictionary = JSON.parse(localStorage.getItem('pariCustomDict') || '{}');
+    let customDictionary = JSON.parse(localStorage.getItem('appCustomDict') || '{}');
     let transMode = 'en2hi';
 
     function openTranslator() { document.getElementById('trans-input').value = ''; document.getElementById('trans-result').innerHTML = ''; showScreen('translator-screen'); }
-    function swapTranslator() { transMode = transMode === 'en2hi' ? 'hi2en' : 'en2hi'; document.getElementById('lang-from').innerText = transMode === 'en2hi' ? 'English' : 'Hindi'; document.getElementById('lang-to').innerText = transMode === 'en2hi' ? 'Hindi' : 'English'; document.getElementById('trans-input').placeholder = transMode === 'en2hi' ? 'English Word...' : 'हिंदी शब्द...'; document.getElementById('trans-input').value = ''; document.getElementById('trans-result').innerHTML = ''; speakText(transMode === 'en2hi' ? 'English to Hindi' : 'Hindi to English'); }
+    function swapTranslator() { transMode = transMode === 'en2hi' ? 'hi2en' : 'en2hi'; document.getElementById('lang-from').innerText = transMode === 'en2hi' ? 'English' : 'Hindi'; document.getElementById('lang-to').innerText = transMode === 'en2hi' ? 'Hindi' : 'English'; document.getElementById('trans-input').placeholder = transMode === 'en2hi' ? 'English Word...' : 'Hindi Word...'; document.getElementById('trans-input').value = ''; document.getElementById('trans-result').innerHTML = ''; speakText(transMode === 'en2hi' ? 'English to Hindi' : 'Hindi to English'); }
     function checkEnterTrans(e) { if(e.key === 'Enter') translateWord(); }
     function translateWord() { const input = document.getElementById('trans-input').value.trim().toLowerCase(); const res = document.getElementById('trans-result'); if(!input) return; const mergedDict = { ...baseDictionary, ...customDictionary }; let meaning = null, orig = input; if (transMode === 'en2hi') { meaning = mergedDict[input]; } else { for(let key in mergedDict) { if (mergedDict[key] === input) { meaning = key; break; } } } if(meaning) { const en = transMode === 'en2hi' ? orig : meaning, hi = transMode === 'en2hi' ? meaning : orig; const displayOrig = orig.charAt(0).toUpperCase() + orig.slice(1); res.innerHTML = `<div class="list-item center" style="flex-direction:column; gap:10px; border-color:var(--color-trans);"><div style="font-size:clamp(1.8rem, 6vw, 2.5rem); color:var(--text);">${displayOrig}</div><div style="font-size:clamp(1.5rem, 5vw, 2rem); color:var(--primary);">${meaning}</div><button class="btn accent" style="margin-top:15px; background:var(--color-trans);" onclick="speakBilingual('${en}', '${hi}')">🔊 Speak Translation</button></div>`; speakBilingual(en, hi); } else { res.innerHTML = `<div style="font-size: 1.8rem; color: var(--danger); font-weight:bold;">Word not found ❌</div>`; speakText("Word not found."); } }
 
     let dictRenderLimit = 50; let currentFilterText = '';
     function openDictionaryBook() { document.getElementById('dict-search-input').value = ''; document.getElementById('add-word-panel').classList.remove('active'); document.getElementById('add-word-msg').innerText = ''; renderDictBook('', true); showScreen('dict-book-screen'); }
-    function renderDictBook(filterText = '', resetLimit = true) { if (resetLimit) { dictRenderLimit = 50; currentFilterText = filterText.toLowerCase().trim(); } const listContainer = document.getElementById('dict-list-container'); const mergedDict = { ...baseDictionary, ...customDictionary }; const keys = Object.keys(mergedDict).sort(); let matchedKeys = keys.filter(enWord => enWord.includes(currentFilterText) || mergedDict[enWord].includes(currentFilterText)); let htmlBuffer = ''; const keysToRender = matchedKeys.slice(0, dictRenderLimit); keysToRender.forEach(enWord => { const hiWord = mergedDict[enWord]; const isCustom = customDictionary.hasOwnProperty(enWord); let actionsHtml = `<button class="btn-icon btn-speak" onclick="speakBilingual('${enWord}', '${hiWord}')">🔊</button>`; if (isCustom) actionsHtml += `<button class="btn-icon btn-del" onclick="deleteCustomWord('${enWord}')">🗑️</button>`; htmlBuffer += `<div class="dict-word-card"><div class="dict-word-text"><span class="dict-en">${enWord}</span><span class="dict-hi">${hiWord}</span></div><div class="dict-actions">${actionsHtml}</div></div>`; }); let topText = `<div style="text-align:center; color:gray; font-size:clamp(1rem, 3vw, 1.2rem); margin-bottom:10px;">Showing ${keysToRender.length} of ${matchedKeys.length} words</div>`; if (matchedKeys.length === 0) htmlBuffer = `<div style="text-align:center; font-size:1.5rem; color:var(--danger); padding:20px; font-weight:bold;">No words found. 😕<br>Try adding it!</div>`; else if (matchedKeys.length > dictRenderLimit) htmlBuffer += `<button class="btn yellow" style="margin: 15px auto;" onclick="loadMoreDictWords()">Load More Words ⬇️</button>`; listContainer.innerHTML = topText + htmlBuffer; }
+    function renderDictBook(filterText = '', resetLimit = true) { if (resetLimit) { dictRenderLimit = 50; currentFilterText = filterText.toLowerCase().trim(); } const listContainer = document.getElementById('dict-list-container'); const mergedDict = { ...baseDictionary, ...customDictionary }; const keys = Object.keys(mergedDict).sort(); let matchedKeys = keys.filter(enWord => enWord.includes(currentFilterText) || mergedDict[enWord].includes(currentFilterText)); let htmlBuffer = ''; const keysToRender = matchedKeys.slice(0, dictRenderLimit); keysToRender.forEach(enWord => { const hiWord = mergedDict[enWord]; const isCustom = customDictionary.hasOwnProperty(enWord); let actionsHtml = `<button class="btn-icon btn-speak" onclick="speakBilingual('${enWord}', '${hiWord}')">🔊</button>`; if (isCustom) actionsHtml += `<button class="btn-icon btn-del" onclick="deleteCustomWord('${enWord}')">🗑️</button>`; htmlBuffer += `<div class="dict-word-card"><div class="dict-word-text"><span class="dict-en">${enWord}</span><span class="dict-hi">${hiWord}</span></div><div class="dict-actions">${actionsHtml}</div></div>`; }); let topText = `<div style="text-align:center; color:gray; font-size:clamp(1rem, 3vw, 1.2rem); margin-bottom:10px;">Showing ${keysToRender.length} of ${matchedKeys.length} words</div>`; if (matchedKeys.length === 0) htmlBuffer = `<div style="text-align:center; font-size:1.5rem; color:var(--danger); padding:20px; font-weight:bold;">No words found. Try adding it!</div>`; else if (matchedKeys.length > dictRenderLimit) htmlBuffer += `<button class="btn yellow" style="margin: 15px auto;" onclick="loadMoreDictWords()">Load More Words ⬇️</button>`; listContainer.innerHTML = topText + htmlBuffer; }
     function loadMoreDictWords() { dictRenderLimit += 50; renderDictBook(currentFilterText, false); }
     function filterDictBook() { renderDictBook(document.getElementById('dict-search-input').value, true); }
     function toggleAddWordPanel() { document.getElementById('add-word-panel').classList.toggle('active'); document.getElementById('add-word-msg').innerText = ''; }
-    function saveNewDictWord() { const enInput = document.getElementById('add-en').value.trim().toLowerCase(), hiInput = document.getElementById('add-hi').value.trim(), msgEl = document.getElementById('add-word-msg'); if (!enInput || !hiInput) { msgEl.innerText = "Please fill both fields! ❌"; msgEl.style.color = "var(--danger)"; return; } if (baseDictionary[enInput] || customDictionary[enInput]) { msgEl.innerText = "Word already added! ⚠️"; msgEl.style.color = "#e67e22"; return; } customDictionary[enInput] = hiInput; localStorage.setItem('pariCustomDict', JSON.stringify(customDictionary)); msgEl.innerText = "Saved Successfully ✅"; msgEl.style.color = "var(--success)"; document.getElementById('add-en').value = ''; document.getElementById('add-hi').value = ''; filterDictBook(); }
-    function deleteCustomWord(enWord) { if(confirm(`Are you sure you want to delete "${enWord}"?`)) { delete customDictionary[enWord]; localStorage.setItem('pariCustomDict', JSON.stringify(customDictionary)); filterDictBook(); } }
+    function saveNewDictWord() { const enInput = document.getElementById('add-en').value.trim().toLowerCase(), hiInput = document.getElementById('add-hi').value.trim(), msgEl = document.getElementById('add-word-msg'); if (!enInput || !hiInput) { msgEl.innerText = "Please fill both fields!"; msgEl.style.color = "var(--danger)"; return; } if (baseDictionary[enInput] || customDictionary[enInput]) { msgEl.innerText = "Word already added!"; msgEl.style.color = "#e67e22"; return; } customDictionary[enInput] = hiInput; localStorage.setItem('appCustomDict', JSON.stringify(customDictionary)); msgEl.innerText = "Saved Successfully!"; msgEl.style.color = "var(--success)"; document.getElementById('add-en').value = ''; document.getElementById('add-hi').value = ''; filterDictBook(); }
+    function deleteCustomWord(enWord) { if(confirm(`Are you sure you want to delete "${enWord}"?`)) { delete customDictionary[enWord]; localStorage.setItem('appCustomDict', JSON.stringify(customDictionary)); filterDictBook(); } }
 
     const monthsData = [{en:"January", hi:"जनवरी"}, {en:"February", hi:"फरवरी"}, {en:"March", hi:"मार्च"}, {en:"April", hi:"अप्रैल"}, {en:"May", hi:"मई"}, {en:"June", hi:"जून"}, {en:"July", hi:"जुलाई"}, {en:"August", hi:"अगस्त"}, {en:"September", hi:"सितंबर"}, {en:"October", hi:"अक्टूबर"}, {en:"November", hi:"नवंबर"}, {en:"December", hi:"दिसंबर"}];
     function openMonths() { const c = document.getElementById('months-content'); c.innerHTML = ''; monthsData.forEach(m => { c.innerHTML += `<div class="list-item"><div style="text-align:left;"><span style="color:var(--primary); font-size: clamp(1.3rem, 5vw, 1.6rem);">${m.en}</span><br><span style="color:var(--text); font-size: clamp(1.1rem, 4vw, 1.3rem);">${m.hi}</span></div><button class="btn-icon btn-speak" onclick="speakBilingual('${m.en} means', '${m.hi}')">🔊</button></div>`; }); showScreen('months-screen'); }
@@ -311,9 +324,18 @@
     function handleAnswer(sel, btn) { document.querySelectorAll('.option-btn').forEach(b => b.disabled = true); const q = quizData[currentQ], isCorrect = (sel == q.answer), qBox = document.getElementById('quiz-question'); playSound(isCorrect); if(isCorrect){ btn.style.background = 'var(--success)'; score.correct++; qBox.classList.add('bounce'); } else { btn.style.background = 'var(--danger)'; score.wrong++; qBox.classList.add('shake'); document.querySelectorAll('.option-btn').forEach(b => { if(b.dataset.val == q.answer) b.style.background = 'var(--success)'; }); } setTimeout(() => { currentQ++; renderQuestion(); }, 1500); }
     function endQuiz() { showScreen('results'); document.getElementById('res-correct').innerText = score.correct; document.getElementById('res-wrong').innerText = score.wrong; }
 
-    function saveQuizScore() { let board = JSON.parse(localStorage.getItem('pariMathBoard') || '[]'); board.push({ name: document.getElementById('player-name').value.trim()||'Anonymous', score: score.correct, total: TOTAL_QUESTIONS, date: new Date().toLocaleDateString() }); board.sort((a,b) => b.score - a.score); localStorage.setItem('pariMathBoard', JSON.stringify(board.slice(0,10))); document.getElementById('save-score-box').style.display = 'none'; openLeaderboard(); }
-    function openLeaderboard() { showScreen('leaderboard'); const tbody = document.getElementById('leaderboard-body'); tbody.innerHTML = ''; let board = JSON.parse(localStorage.getItem('pariMathBoard') || '[]'); board.forEach((b, i) => { tbody.innerHTML += `<tr><td>${i<3?['🥇','🥈','🥉'][i]:`#${i+1}`}</td><td><b>${b.name}</b></td><td style="color:var(--success); font-weight:bold;">${b.score}/${b.total||30}</td><td>${b.date}</td></tr>`; }); }
-    function clearLeaderboard() { if(confirm("Delete all scores?")) { localStorage.removeItem('pariMathBoard'); openLeaderboard(); } }
+    function saveQuizScore() { let board = JSON.parse(localStorage.getItem('appMathBoard') || '[]'); board.push({ name: document.getElementById('player-name').value.trim()||'Anonymous', score: score.correct, total: TOTAL_QUESTIONS, date: new Date().toLocaleDateString() }); board.sort((a,b) => b.score - a.score); localStorage.setItem('appMathBoard', JSON.stringify(board.slice(0,10))); document.getElementById('save-score-box').style.display = 'none'; openLeaderboard(); }
+    function openLeaderboard() { showScreen('leaderboard'); const tbody = document.getElementById('leaderboard-body'); tbody.innerHTML = ''; let board = JSON.parse(localStorage.getItem('appMathBoard') || '[]'); board.forEach((b, i) => { tbody.innerHTML += `<tr><td>${i<3?['🥇','🥈','🥉'][i]:`#${i+1}`}</td><td><b>${b.name}</b></td><td style="color:var(--success); font-weight:bold;">${b.score}/${b.total||30}</td><td>${b.date}</td></tr>`; }); }
+    
+    // ⭐ CUSTOM MODAL LOGIC FOR LEADERBOARD ⭐
+    function clearLeaderboard() { document.getElementById('clearConfirmModal').style.display = 'flex'; }
+    function closeClearModal() { document.getElementById('clearConfirmModal').style.display = 'none'; }
+    function executeClearBoard() {
+        localStorage.removeItem('appMathBoard');
+        closeClearModal();
+        openLeaderboard();
+        speakText("The leaderboard has been successfully cleared.");
+    }
 
     let gameLives = 3, gameScore = 0, currentGameQ = null;
     function startGameMode() { gameLives = 3; gameScore = 0; updateGameStats(); showScreen('game-mode'); nextGameQuestion(); }
@@ -334,7 +356,7 @@
         showScreen('ai-chat-screen');
         const history = document.getElementById('chat-history');
         if (history.children.length <= 1) {
-            speakText("Hello! Main Sifra hoon. Boliye, main aapki kaise madad kar sakti hoon?");
+            speakText("Hello! I am Sifra. How can I help you today?");
         }
     }
 
@@ -350,7 +372,8 @@
         history.appendChild(div);
         history.scrollTop = history.scrollHeight;
     }
-        async function sendToAI() {
+        
+    async function sendToAI() {
         const inputEl = document.getElementById('ai-input-text');
         const userText = inputEl.value.trim();
         if (!userText) return;
@@ -367,8 +390,8 @@
         try {
             const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_KEY}`;
             
-            // ⭐ THE SMART TEACHER PROMPT ⭐
-            const promptInstruction = `You are a highly advanced, friendly, and helpful AI assistant named "Sifra". Your default language for replying is strictly "Hinglish". You are talking to kids/students. IF the user asks for hacking tools, illegal things, bad words, or harmful stuff, DO NOT give an error. Instead, gently and politely explain to them like a good teacher that this is illegal/wrong and you cannot help with it, but you can teach them something good instead. User's query: ${userText}`;
+            // ⭐ THE SMART PROFESSIONAL TEACHER PROMPT ⭐
+            const promptInstruction = `You are a highly advanced, professional, and helpful educational AI assistant named "Sifra". Your default language is professional English or Hindi based on the user's input. You are interacting with students. If the user asks for hacking tools, illegal activities, profanity, or harmful content, politely and professionally explain that you cannot assist with such topics as they are unsafe or illegal, and offer to teach them a useful educational concept instead. User's query: ${userText}`;
 
             const response = await fetch(url, {
                 method: 'POST',
@@ -379,28 +402,24 @@
             const data = await response.json();
             document.getElementById(loadingId).remove(); 
 
-            // 1. Agar Google ka Safety Filter block kar de:
             if (data.candidates && data.candidates[0].finishReason === 'SAFETY') {
-                let safetyMsg = "Bacchon, ye topic safe nahi hai! Main ek good AI teacher hoon, isliye main aisi cheezon mein madad nahi kar sakti. Chalo kuch aur achha seekhein! 😇";
+                let safetyMsg = "This topic is not appropriate for our learning environment. As an educational assistant, I cannot assist with this subject. Please feel free to ask me an educational question instead.";
                 addChatMessage(safetyMsg, 'ai');
                 speakText(safetyMsg);
             } 
-            // 2. Agar Normal aur Sahi Jawab aaye:
             else if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts[0].text) {
                 let aiResponse = data.candidates[0].content.parts[0].text;
                 addChatMessage(aiResponse, 'ai');
                 speakText(aiResponse);
             } 
-            // 3. Agar Google ka Server Busy ho (High Demand / API limit):
             else if (data.error) {
-                console.log("HIDDEN GOOGLE ERROR:", data.error.message); // Console me chupke se print hoga
-                let cuteError = "Mera dimaag abhi thoda thak gaya hai (Server Busy)! Thodi der baad try karna please. 😴";
+                console.log("HIDDEN GOOGLE ERROR:", data.error.message);
+                let cuteError = "The servers are currently experiencing high traffic. Please try your request again in a few moments.";
                 addChatMessage(cuteError, 'ai');
                 speakText(cuteError);
             } 
-            // 4. Koi aur random gadbad ho jaye:
             else {
-                let confuseMsg = "Oops! System mein kuch gadbad hai. Phir se try karein! 😅";
+                let confuseMsg = "An unexpected system error has occurred. Please try again later.";
                 addChatMessage(confuseMsg, 'ai');
                 speakText(confuseMsg);
             }
@@ -408,9 +427,9 @@
         } catch (error) {
             console.error("API Error:", error);
             if(document.getElementById(loadingId)) document.getElementById(loadingId).remove();
-            let netError = "Network error! Apna internet check karein. 📡";
+            let netError = "A network error has occurred. Please verify your internet connection.";
             addChatMessage(netError, 'ai');
-            speakText("Network error. Kripya apna internet check karein.");
+            speakText(netError);
         }
     }
 
@@ -419,7 +438,7 @@
         if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
             const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
             recognition = new SpeechRec();
-            recognition.continuous = false; recognition.interimResults = false; recognition.lang = 'hi-IN'; // Changed to Hindi for better voice typing
+            recognition.continuous = false; recognition.interimResults = false; recognition.lang = 'hi-IN';
             recognition.onstart = function() { document.getElementById('mic-btn').classList.add('recording'); stopVoice(); };
             recognition.onresult = function(event) { document.getElementById('ai-input-text').value = event.results[0][0].transcript; sendToAI(); };
             recognition.onerror = function(event) { document.getElementById('mic-btn').classList.remove('recording'); };
@@ -429,7 +448,7 @@
     setupVoice();
 
     function toggleVoiceInput() {
-        if (!recognition) { alert("Voice search is not supported in this browser. Try Chrome! 🌐"); return; }
+        if (!recognition) { alert("Voice search is not supported in this browser. Try Chrome!"); return; }
         const micBtn = document.getElementById('mic-btn');
         if (micBtn.classList.contains('recording')) recognition.stop(); else recognition.start();
     }
