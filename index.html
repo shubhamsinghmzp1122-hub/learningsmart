@@ -159,11 +159,7 @@
             <button class="btn" style="background:var(--color-dict); color:white; grid-column: 1 / -1;" onclick="openDictionaryBook()">📚 Dictionary Book</button>
             <button class="btn" style="background:var(--color-trans); color:white; grid-column: 1 / -1;" onclick="openTranslator()">🌐 Translator (En ↔ Hi)</button>
 
-                <div style="display: flex; gap: 10px; margin-bottom: 15px; padding: 0 15px;">
-        <button class="btn accent" style="flex: 1; font-size: 1rem; padding: 15px 5px;" onclick="openSafari()">🦁 Safari</button>
-        <button class="btn yellow" style="flex: 1; font-size: 1rem; padding: 15px 5px;" onclick="openSafariSearch()">🔍 Find Animal</button>
-                </div>
-            
+            <button class="btn accent" onclick="openSafari()">🦁 Safari & Fruits</button>
             
             <button class="btn" style="background:var(--accent2); color:white; grid-column: 1 / -1; box-shadow: 0 0 10px rgba(132, 94, 194, 0.5);" onclick="openAiChat()">🤖 Smart AI Tutor</button>
         </div>
@@ -282,26 +278,28 @@
         </div>
         </div>
 
-    <div id="safari-screen" class="screen">
-    <div class="top-bar">
-        <button class="btn back-btn" onclick="goHome()">🔙</button>
-        <h2 style="margin:0;">Safari 🦁</h2>
-        <div style="width: 40px;"></div>
-    </div>
-    
-    <div style="padding: 10px 15px;">
-        <input type="text" id="safari-search-box" placeholder="🔍 Type animal, bird, fruit..." onkeyup="filterSafari()" style="width: 100%; padding: 12px; border-radius: 12px; border: 2px solid var(--primary); font-size: 1.1rem; outline: none; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-    </div>
+        // Add new Custom Safari Item (Fixed for Kids - No Emoji Needed)
+    function addNewSafariItem(suggestedName) {
+        let enName = prompt("English Name (e.g., Dragon):", suggestedName) || "";
+        if(!enName) return; // Agar cancel kiya toh wapas
+        
+        let hiName = prompt("Hindi Name (e.g., ड्रैगन):", "") || enName;
+        
+        // ⭐ MAGIC: Baccho se emoji nahi mangenge. App khud default lagayega! ⭐
+        let newItem = {
+            en: enName,
+            hi: hiName,
+            emoji: '🐾', // Ye automatically lag jayega!
+            type: currentSafariCategory
+        };
 
-    <div style="display:flex; gap:10px; justify-content:center; margin: 5px 15px 15px 15px;">
-        <button class="btn primary" style="flex:1; font-size:1rem; padding:10px;" onclick="renderSafari('animal')">Animals 🐘</button>
-        <button class="btn yellow" style="flex:1; font-size:1rem; padding:10px;" onclick="renderSafari('bird')">Birds 🦜</button>
-        <button class="btn accent" style="flex:1; font-size:1rem; padding:10px;" onclick="renderSafari('fruit')">Fruits 🍎</button>
-    </div>
-
-    <div id="safari-content" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 0 15px 20px 15px; overflow-y: auto; max-height: 65vh;">
-        </div>
-    </div>
+        customSafariData.push(newItem);
+        localStorage.setItem('pariCustomSafari', JSON.stringify(customSafariData));
+        
+        document.getElementById('safari-search-box').value = '';
+        renderSafari(currentSafariCategory);
+        speakText(enName + " added successfully!");
+    }
     
 
 </div>
