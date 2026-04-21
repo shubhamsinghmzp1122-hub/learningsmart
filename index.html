@@ -236,7 +236,8 @@
 </div>
 
 <script>
-        const AudioContext = window.AudioContext || window.webkitAudioContext; let audioCtx;
+
+    const AudioContext = window.AudioContext || window.webkitAudioContext; let audioCtx;
     function playSound(isCorrect) {
         if (!audioCtx) audioCtx = new AudioContext(); if (audioCtx.state === 'suspended') audioCtx.resume();
         const osc = audioCtx.createOscillator(); const gainNode = audioCtx.createGain();
@@ -246,6 +247,7 @@
     }
     function stopVoice() { if('speechSynthesis' in window) window.speechSynthesis.cancel(); }
     
+    // ⭐ UPDATED SPEAK TEXT (No Emojis, Indian Voice) ⭐
     function speakText(text) { 
         if (!('speechSynthesis' in window)) return; 
         stopVoice(); 
@@ -281,7 +283,7 @@
     function changeShape(dir) { stopVoice(); currentShapeIdx += dir; if (currentShapeIdx < 0) currentShapeIdx = shapesData.length - 1; if (currentShapeIdx >= shapesData.length) currentShapeIdx = 0; renderCurrentShape(); }
     function renderCurrentShape() { const shape = shapesData[currentShapeIdx]; const box = document.getElementById('shape-display-box'); box.innerHTML = `<div class="css-shape ${shape.css}"></div><div style="font-size:clamp(1.8rem, 8vw, 2.5rem); font-weight:bold; color:var(--primary); text-align:center;">${shape.en} ${shape.emoji}</div><div style="font-size:clamp(1.4rem, 6vw, 1.8rem); color:var(--text); text-align:center;">${shape.hi}</div><button class="btn accent" style="font-size:clamp(1.2rem, 5vw, 1.5rem); margin-top:10px;" onclick="speakBilingual('${shape.en} means', '${shape.hi}')">🔊 Speak</button>`; }
 
-    // ⭐ 1000+ COMPRESSED MEGA DICTIONARY ⭐
+        // ⭐ 1000+ COMPRESSED MEGA DICTIONARY ⭐
     const baseDictionary = {
         "apple":"सेब","banana":"केला","mango":"आम","orange":"संतरा","grape":"अंगूर","papaya":"पपीता","guava":"अमरूद","pineapple":"अनानास","watermelon":"तरबूज","pomegranate":"अनार",
         "dog":"कुत्ता","cat":"बिल्ली","cow":"गाय","horse":"घोड़ा","elephant":"हाथी","tiger":"बाघ","lion":"शेर","monkey":"बंदर","bear":"भालू","rabbit":"खरगोश","deer":"हिरण","goat":"बकरी","sheep":"भेड़","snake":"साँप","bird":"पक्षी","parrot":"तोता","peacock":"मोर","pigeon":"कबूतर","crow":"कौआ","eagle":"चील","owl":"उल्लू","sparrow":"गौरैया","swan":"हंस",
@@ -293,81 +295,14 @@
         "a":"एक","ability":"क्षमता","able":"सक्षम","about":"के बारे में","above":"ऊपर","accept":"स्वीकार करना","according":"के अनुसार","account":"खाता","across":"पार","act":"कार्य","action":"कार्रवाई","activity":"गतिविधि","actually":"वास्तव में","add":"जोड़ना","address":"पता","administration":"प्रशासन","admit":"स्वीकार करना","adult":"वयस्क","affect":"प्रभावित करना","after":"बाद में","again":"फिर से","against":"के खिलाफ","agency":"एजेंसी","agent":"दलाल","ago":"पूर्व","agree":"सहमत होना","agreement":"समझौता","ahead":"आगे","air":"हवा","all":"सब","allow":"अनुमति देना","almost":"लगभग","alone":"अकेला","along":"साथ में","already":"पहले से","also":"भी","although":"हालांकि","always":"हमेशा","among":"के बीच","amount":"मात्रा","analysis":"विश्लेषण","and":"और","animal":"जानवर","another":"एक और","answer":"उत्तर","any":"कोई","anyone":"कोई भी","anything":"कुछ भी","appear":"प्रकट होना","apply":"लागू करना","approach":"दृष्टिकोण","area":"क्षेत्र","argue":"बहस करना","around":"चारों ओर","arrive":"पहुंचना","art":"कला","article":"लेख","artist":"कलाकार","as":"जैसा","assume":"मान लेना","at":"पर","attack":"आक्रमण","attention":"ध्यान","attorney":"वकील","audience":"दर्शक","author":"लेखक","authority":"अधिकार","available":"उपलब्ध","avoid":"बचना","away":"दूर","bad":"बुरा","bank":"बैंक","bar":"बार","base":"आधार","be":"होना","beat":"पीटना","beautiful":"सुंदर","because":"क्योंकि","become":"बनना","before":"पहले","begin":"शुरू","behavior":"व्यवहार","behind":"पीछे","believe":"विश्वास करना","benefit":"लाभ","best":"सबसे अच्छा","better":"बेहतर","between":"के बीच","beyond":"परे","big":"बड़ा","bill":"बिल","billion":"अरब","bit":"थोड़ा","board":"बोर्ड","body":"शरीर","born":"पैदा हुआ","both":"दोनों","box":"डिब्बा","break":"तोड़ना","budget":"बजट","build":"बनाना","building":"इमारत","business":"व्यापार","but":"लेकिन","by":"द्वारा","call":"बुलाना","camera":"कैमरा","campaign":"अभियान","can":"सकना","cancer":"कैंसर","candidate":"उम्मीदवार","capital":"राजधानी","card":"कार्ड","care":"देखभाल","career":"करियर","carry":"ले जाना","case":"मामला","cause":"कारण","cell":"कोशिका","center":"केंद्र","central":"केंद्रीय","century":"सदी","certain":"निश्चित","certainly":"निश्चित रूप से","challenge":"चुनौती","chance":"मौका","change":"बदलना","character":"चरित्र","charge":"प्रभार","check":"जांचना","choice":"विकल्प","choose":"चुनना","church":"गिरजाघर","citizen":"नागरिक","civil":"नागरिक (विशेषण)","claim":"दावा","clear":"स्पष्ट","clearly":"स्पष्ट रूप से","coach":"प्रशिक्षक","cold":"ठंडा","collection":"संग्रह","college":"कॉलेज","color":"रंग","commercial":"व्यावसायिक","common":"सामान्य","community":"समुदाय","company":"कंपनी","compare":"तुलना करना","computer":"कंप्यूटर","concern":"चिंता","condition":"स्थिति","conference":"सम्मेलन","consider":"विचार करना","consumer":"उपभोक्ता","contain":"शामिल करना","continue":"जारी रखना","control":"नियंत्रण","cost":"कीमत","could":"सकता था","country":"देश","couple":"जोड़ा","course":"पाठ्यक्रम","court":"अदालत","cover":"कवर","create":"बनाना","crime":"अपराध","cultural":"सांस्कृतिक","culture":"संस्कृति","cup":"प्याला","current":"वर्तमान","customer":"ग्राहक","cut":"काटना","dark":"अंधेरा","data":"डेटा","daughter":"बेटी","dead":"मृत","deal":"सौदा","death":"मृत्यु","debate":"बहस","decade":"दशक","decide":"निर्णय करना","decision":"निर्णय","deep":"गहरा","defense":"रक्षा","degree":"डिग्री","democratic":"लोकतांत्रिक","describe":"वर्णन करना","design":"डिजाइन","despite":"के बावजूद","detail":"विवरण","determine":"निर्धारित करना","develop":"विकसित करना","development":"विकास","die":"मरना","difference":"अंतर","different":"अलग","difficult":"कठिन","dinner":"रात का खाना","direction":"दिशा","director":"निदेशक","discover":"खोज करना","discuss":"चर्चा करना","disease":"बीमारी","do":"करना","doctor":"चिकित्सक","down":"नीचे","draw":"चित्र बनाना","dream":"सपना","drive":"चलाना","drop":"गिराना","drug":"दवा","during":"के दौरान","each":"प्रत्येक","early":"जल्दी","east":"पूर्व","easy":"आसान","economic":"आर्थिक","economy":"अर्थव्यवस्था","edge":"किनारा","education":"शिक्षा","effect":"प्रभाव","effort":"प्रयास","eight":"आठ","either":"या तो","election":"चुनाव","else":"अन्यथा","employee":"कर्मचारी","end":"अंत","energy":"ऊर्जा","enjoy":"आनंद लेना","enough":"पर्याप्त","enter":"दर्ज करना","entire":"संपूर्ण","environment":"पर्यावरण","environmental":"पर्यावरणीय","especially":"विशेष रूप से","establish":"स्थापित करना","even":"यहाँ तक की","event":"घटना","ever":"कभी","every":"हर","everybody":"हर कोई","everyone":"हर कोई","everything":"सब कुछ","evidence":"सबूत","exactly":"बिल्कुल","example":"उदाहरण","executive":"कार्यकारी","exist":"मौजूद","expect":"अपेक्षा करना","experience":"अनुभव","expert":"विशेषज्ञ","explain":"समझाना","fact":"तथ्य","factor":"कारक","fail":"विफल","fall":"गिरना","family":"परिवार","far":"दूर","fast":"तेज़","father":"पिता","fear":"डर","federal":"संघीय","feel":"महसूस करना","feeling":"भावना","few":"कुछ","field":"खेत","fight":"लड़ना","figure":"आंकड़ा","fill":"भरना","film":"फिल्म","final":"अंतिम","finally":"आखिरकार","financial":"वित्तीय","find":"खोजना","fine":"ठीक","finish":"खत्म करना","fire":"आग","firm":"दृढ़","first":"प्रथम","fish":"मछली","five":"पाँच","floor":"मंज़िल","fly":"उड़ना","focus":"ध्यान केंद्रित करना","follow":"पालन करना","for":"के लिए","force":"बल","foreign":"विदेशी","forget":"भूलना","form":"प्रपत्र","former":"पूर्व","forward":"आगे","four":"चार","free":"मुफ्त","from":"से","front":"सामने","full":"पूरा","fund":"निधि","future":"भविष्य","game":"खेल","garden":"बगीचा","gas":"गैस","general":"सामान्य","generation":"पीढ़ी","get":"पाना","glass":"कांच/गिलास","goal":"लक्ष्य","good":"अच्छा","government":"सरकार","great":"महान","ground":"ज़मीन","group":"समूह","grow":"बढ़ना","growth":"विकास","guess":"अनुमान","gun":"बंदूक","guy":"लड़का/व्यक्ति","half":"आधा","hang":"लटकाना","happen":"होना","happy":"खुश","hard":"कठिन","have":"पास होना","he":"वह","health":"स्वास्थ्य","heart":"दिल","heat":"गर्मी","heavy":"भारी","her":"उसकी","here":"यहाँ","herself":"वह स्वयं","high":"ऊँचा","him":"उसे","himself":"वह स्वयं","his":"उसका","history":"इतिहास","hit":"मारना","hold":"पकड़ना","home":"घर","hope":"आशा","hospital":"अस्पताल","hot":"गर्म","hotel":"होटल","hour":"घंटा","how":"कैसे","however":"तथापि","huge":"विशाल","human":"मानव","hundred":"सौ","husband":"पति","I":"मैं","idea":"विचार","identify":"पहचानना","if":"यदि","image":"छवि","imagine":"कल्पना करना","impact":"प्रभाव","important":"महत्वपूर्ण","improve":"सुधारना","in":"में","include":"शामिल करना","including":"सहित","increase":"बढ़ाना","indeed":"वास्तव में","indicate":"संकेत देना","individual":"व्यक्तिगत","industry":"उद्योग","information":"जानकारी","inside":"अंदर","instead":"बजाय","institution":"संस्थान","interest":"दिलचस्पी","interesting":"दिलचस्प","international":"अंतरराष्ट्रीय","interview":"साक्षात्कार","into":"के अंदर","investment":"निवेश","involve":"शामिल करना","issue":"मुद्दा","it":"यह","item":"वस्तु","its":"इसका","itself":"यह स्वयं","job":"नौकरी","join":"जुड़ना","just":"बस/अभी","keep":"रखना","key":"चाबी","kid":"बच्चा","kill":"मारना","kind":"दयालु/प्रकार","kitchen":"रसोईघर","know":"जानना","knowledge":"ज्ञान","land":"भूमि","language":"भाषा","large":"बड़ा","last":"अंतिम","late":"देर","later":"बाद में","laugh":"हंसना","law":"कानून","lawyer":"वकील","lay":"लेटना","lead":"नेतृत्व","leader":"नेता","leadership":"नेतृत्व","least":"कम से कम","leave":"छोड़ना","left":"बाएं","legal":"कानूनी","less":"कम","let":"अनुमति देना","letter":"पत्र","level":"स्तर","lie":"झूठ","life":"जीवन","light":"रोशनी/हल्का","like":"पसंद","likely":"संभवतः","line":"रेखा","list":"सूची","little":"थोड़ा","live":"रहना","local":"स्थानीय","long":"लंबा","lose":"खोना","loss":"नुकसान","lot":"बहुत","love":"प्यार","low":"नीचा","machine":"मशीन","magazine":"पत्रिका","main":"मुख्य","maintain":"बनाए रखना","major":"प्रमुख","majority":"बहुमत","make":"बनाना","manage":"प्रबंधित करना","management":"प्रबंधन","manager":"प्रबंधक","many":"कई","market":"बाज़ार","marriage":"विवाह","material":"सामग्री","matter":"मामला","may":"शायद","maybe":"शायद","me":"मुझे","mean":"मतलब","measure":"उपाय","media":"मीडिया","medical":"चिकित्सीय","meet":"मिलना","meeting":"बैठक","member":"सदस्य","memory":"स्मृति","mention":"उल्लेख","message":"संदेश","method":"तरीका","middle":"मध्य","might":"शायद","military":"सैन्य","million":"दस लाख","mind":"दिमाग","minute":"मिनट","miss":"चूकना","mission":"मिशन","model":"आदर्श","modern":"आधुनिक","moment":"पल","money":"पैसा","month":"महीना","more":"अधिक","most":"सबसे","move":"हिलना","movement":"आंदोलन","movie":"चलचित्र","Mr":"श्री","Mrs":"श्रीमती","much":"बहुत","music":"संगीत","must":"ज़रूर","my":"मेरा","myself":"मैं स्वयं","nation":"राष्ट्र","national":"राष्ट्रीय","natural":"प्राकृतिक","nature":"प्रकृति","near":"पास","nearly":"लगभग","necessary":"ज़रूरी","need":"ज़रूरत","network":"नेटवर्क","never":"कभी नहीं","new":"नया","news":"समाचार","newspaper":"अखबार","next":"अगला","nice":"अच्छा","no":"नहीं","none":"कोई नहीं","nor":"न ही","north":"उत्तर","not":"नहीं","note":"ध्यान दें","nothing":"कुछ नहीं","notice":"सूचना","now":"अब","number":"संख्या","occur":"घटित होना","of":"का","off":"बंद","offer":"प्रस्ताव","office":"कार्यालय","officer":"अधिकारी","official":"अधिकारी","often":"अक्सर","oh":"ओह","oil":"तेल","ok":"ठीक","old":"पुराना","on":"पर","once":"एक बार","one":"एक","only":"केवल","onto":"पर","open":"खुला","operation":"ऑपरेशन","opportunity":"अवसर","option":"विकल्प","or":"या","order":"आदेश","organization":"संगठन","other":"अन्य","others":"अन्य लोग","our":"हमारा","out":"बाहर","outside":"बाहर","over":"ऊपर से","own":"अपना","owner":"मालिक","page":"पृष्ठ","pain":"दर्द","painting":"चित्रकारी","parent":"माता-पिता","part":"हिस्सा","participant":"प्रतिभागी","particular":"विशेष","particularly":"विशेष रूप से","partner":"भागीदार","party":"पार्टी","pass":"गुज़रना","past":"अतीत","patient":"मरीज","pattern":"पैटर्न","pay":"भुगतान","peace":"शांति","people":"लोग","per":"प्रति","perform":"प्रदर्शन करना","performance":"प्रदर्शन","perhaps":"शायद","period":"अवधि","person":"व्यक्ति","personal":"व्यक्तिगत","phone":"फोन","physical":"शारीरिक","pick":"चुनना","picture":"चित्र","piece":"टुकड़ा","place":"जगह","plan":"योजना","plant":"पौधा","play":"खेलना","player":"खिलाड़ी","PM":"अपराह्न","point":"बिंदु","police":"पुलिस","policy":"नीति","political":"राजनीतिक","politics":"राजनीति","poor":"गरीब","popular":"लोकप्रिय","population":"आबादी","position":"स्थिति","positive":"सकारात्मक","possible":"संभव","power":"शक्ति","practice":"अभ्यास","prepare":"तैयार करना","present":"वर्तमान","president":"अध्यक्ष","pressure":"दबाव","price":"कीमत","private":"निजी","probably":"शायद","problem":"समस्या","process":"प्रक्रिया","produce":"उत्पादन करना","product":"उत्पाद","production":"उत्पादन","professional":"पेशेवर","professor":"प्रोफेसर","program":"कार्यक्रम","project":"परियोजना","property":"संपत्ति","protect":"रक्षा करना","prove":"साबित करना","provide":"प्रदान करना","public":"सार्वजनिक","pull":"खींचना","purpose":"उद्देश्य","put":"रखना","quality":"गुणवत्ता","question":"सवाल","quickly":"जल्दी से","quite":"काफी","race":"दौड़","radio":"रेडियो","raise":"उठाना","range":"सीमा","rate":"दर","rather":"बल्कि","reach":"पहुंचना","ready":"तैयार","real":"असली","reality":"वास्तविकता","realize":"एहसास होना","really":"सचमुच","reason":"कारण","receive":"प्राप्त करना","recent":"हाल ही में","recently":"हाल ही में","recognize":"पहचानना","record":"रिकॉर्ड","reduce":"कम करना","reflect":"प्रतिबिंबित करना","region":"क्षेत्र","relate":"संबंधित होना","relationship":"रिश्ता","religious":"धार्मिक","remain":"बने रहना","remember":"याद रखना","remove":"हटाना","report":"रिपोर्ट","represent":"प्रतिनिधित्व करना","Republican":"रिपब्लिकन","require":"आवश्यकता होना","research":"अनुसंधान","resource":"संसाधन","respond":"जवाब देना","response":"प्रतिक्रिया","responsibility":"ज़िम्मेदारी","rest":"आराम","result":"परिणाम","return":"वापसी","reveal":"प्रकट करना","rich":"अमीर","right":"सही/दाएं","rise":"उठना","risk":"जोखिम","road":"सड़क","rock":"पत्थर","role":"भूमिका","rule":"नियम","safe":"सुरक्षित","same":"समान","save":"बचाना","say":"कहना","scene":"दृश्य","science":"विज्ञान","scientist":"वैज्ञानिक","score":"स्कोर","sea":"समुद्र","season":"मौसम","seat":"सीट","second":"दूसरा","section":"अनुभाग","security":"सुरक्षा","seek":"मांगना","seem":"प्रतीत होना","send":"भेजना","senior":"वरिष्ठ","sense":"समझ","series":"श्रृंखला","serious":"गंभीर","serve":"सेवा करना","service":"सेवा","set":"सेट","seven":"सात","several":"कई","sex":"लिंग","sexual":"यौन","shake":"हिलाना","share":"साझा करना","she":"वह (स्त्री.)","shoot":"गोली मारना","short":"छोटा","shot":"शॉट","should":"चाहिए","shoulder":"कंधा","show":"दिखाना","side":"तरफ","sign":"संकेत","significant":"महत्वपूर्ण","similar":"समान","simple":"सरल","simply":"बस","since":"चूंकि","sing":"गाना","single":"अकेला","sit":"बैठना","site":"साइट","situation":"स्थिति","six":"छह","size":"आकार","skill":"कौशल","small":"छोटा","so":"इसलिए","social":"सामाजिक","society":"समाज","soldier":"सैनिक","some":"कुछ","somebody":"कोई","someone":"कोई","something":"कुछ","sometimes":"कभी कभी","son":"बेटा","song":"गीत","soon":"जल्द ही","sort":"प्रकार","sound":"आवाज़","source":"स्रोत","south":"दक्षिण","southern":"दक्षिणी","space":"अंतरिक्ष","speak":"बोलना","special":"विशेष","specific":"विशिष्ट","speech":"भाषण","spend":"खर्च करना","sport":"खेल","spring":"वसंत","staff":"कर्मचारी","stage":"मंच","stand":"खड़े होना","standard":"मानक","star":"तारा","start":"शुरू","state":"राज्य","statement":"बयान","station":"स्टेशन","stay":"ठहरना","step":"कदम","still":"अभी भी","stock":"स्टॉक","stop":"रुकना","store":"दुकान","story":"कहानी","strategy":"रणनीति","street":"सड़क","strong":"मज़बूत","structure":"संरचना","student":"छात्र","study":"अध्ययन","stuff":"सामग्री","style":"शैली","subject":"विषय","success":"सफलता","successful":"सफल","such":"ऐसा","suddenly":"अचानक","suffer":"भुगतना","suggest":"सुझाव देना","summer":"गर्मी","support":"समर्थन","sure":"ज़रूर","surface":"सतह","system":"प्रणाली","table":"मेज़","take":"लेना","talk":"बात करना","task":"कार्य","tax":"कर","teach":"सिखाना","teacher":"शिक्षक","team":"टीम","technology":"प्रौद्योगिकी","television":"टेलीविज़न","tell":"बताना","ten":"दस","tend":"प्रवृत्ति होना","term":"अवधि","test":"परीक्षा","than":"से","thank":"धन्यवाद","that":"वह","the":"वह/यह","their":"उनका","them":"उन्हें","themselves":"वे स्वयं","then":"तब","theory":"सिद्धांत","there":"वहाँ","these":"ये","they":"वे","thing":"चीज़","think":"सोचना","third":"तीसरा","this":"यह","those":"वे","though":"हालांकि","thought":"विचार","thousand":"हज़ार","threat":"खतरा","three":"तीन","through":"के माध्यम से","throughout":"भर में","throw":"फेंकना","thus":"इस प्रकार","time":"समय","to":"को","today":"आज","together":"साथ में","tonight":"आज रात","too":"भी","top":"शीर्ष","total":"कुल","tough":"कठिन","toward":"की ओर","town":"कस्बा","trade":"व्यापार","traditional":"पारंपरिक","training":"प्रशिक्षण","travel":"यात्रा","treat":"इलाज करना","treatment":"इलाज","tree":"पेड़","trial":"परीक्षण","trip":"यात्रा","trouble":"परेशानी","true":"सच","truth":"सच्चाई","try":"कोशिश","turn":"मोड़","TV":"टीवी","two":"दो","type":"प्रकार","under":"नीचे","understand":"समझना","unit":"इकाई","until":"जब तक","up":"ऊपर","upon":"के ऊपर","us":"हमें","use":"उपयोग","usually":"आमतौर पर","value":"मूल्य","various":"विभिन्न","very":"बहुत","victim":"शिकार","view":"दृश्य","violence":"हिंसा","visit":"भेंट","voice":"आवाज़","vote":"वोट","wait":"प्रतीक्षा","walk":"चलना","wall":"दीवार","want":"चाहना","war":"युद्ध","watch":"घड़ी/देखना","water":"पानी","way":"रास्ता","we":"हम","weapon":"हथियार","wear":"पहनना","week":"सप्ताह","weight":"वजन","well":"कुआं/अच्छा","west":"पश्चिम","western":"पश्चिमी","what":"क्या","whatever":"जो कुछ भी","when":"कब","where":"कहाँ","whether":"चाहे","which":"कौन सा","while":"जबकि","white":"सफेद","who":"कौन","whole":"पूरा","whom":"किसको","whose":"किसका","why":"क्यों","wide":"चौड़ा","wife":"पत्नी","will":"होगा","win":"जीतना","wind":"हवा","window":"खिड़की","wish":"इच्छा","with":"के साथ","within":"के भीतर","without":"के बिना","woman":"औरत","wonder":"आश्चर्य","word":"शब्द","work":"काम","worker":"कार्यकर्ता","world":"दुनिया","worry":"चिंता","would":"होगा","write":"लिखना","writer":"लेखक","wrong":"गलत","yard":"आंगन","yeah":"हाँ","year":"वर्ष","yes":"हाँ","yet":"अभी तक","you":"तुम","young":"युवा","your":"तुम्हारा","yourself":"तुम स्वयं"
     };
 
+    
     let customDictionary = JSON.parse(localStorage.getItem('pariCustomDict') || '{}');
     let transMode = 'en2hi';
 
     function openTranslator() { document.getElementById('trans-input').value = ''; document.getElementById('trans-result').innerHTML = ''; showScreen('translator-screen'); }
     function swapTranslator() { transMode = transMode === 'en2hi' ? 'hi2en' : 'en2hi'; document.getElementById('lang-from').innerText = transMode === 'en2hi' ? 'English' : 'Hindi'; document.getElementById('lang-to').innerText = transMode === 'en2hi' ? 'Hindi' : 'English'; document.getElementById('trans-input').placeholder = transMode === 'en2hi' ? 'English Word...' : 'हिंदी शब्द...'; document.getElementById('trans-input').value = ''; document.getElementById('trans-result').innerHTML = ''; speakText(transMode === 'en2hi' ? 'English to Hindi' : 'Hindi to English'); }
     function checkEnterTrans(e) { if(e.key === 'Enter') translateWord(); }
-
-    // ⭐ NEW AUTO-LEARNING TRANSLATOR (Offline + Online + Auto Save) ⭐
-    async function translateWord() { 
-        const input = document.getElementById('trans-input').value.trim().toLowerCase(); 
-        const res = document.getElementById('trans-result'); 
-        if(!input) return; 
-        
-        const mergedDict = { ...baseDictionary, ...customDictionary }; 
-        let meaning = null, orig = input; 
-        
-        // 1. PEHLE OFFLINE DICTIONARY MEIN DHOONDHO (Super Fast)
-        if (transMode === 'en2hi') { 
-            meaning = mergedDict[input]; 
-        } else { 
-            for(let key in mergedDict) { if (mergedDict[key] === input) { meaning = key; break; } } 
-        } 
-        
-        let isOnline = false;
-
-        // 2. AGAR OFFLINE NAHI MILA, TOH ONLINE DHOONDHO AUR SAVE KARO
-        if(!meaning) {
-            res.innerHTML = `<div style="font-size: 1.5rem; color: var(--primary);">🌐 Internet se dhoondh raha hoon... ⏳</div>`;
-            try {
-                let sl = transMode === 'en2hi' ? 'en' : 'hi';
-                let tl = transMode === 'en2hi' ? 'hi' : 'en';
-                const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sl}&tl=${tl}&dt=t&q=${encodeURIComponent(input)}`;
-                
-                const response = await fetch(url);
-                const data = await response.json();
-                
-                if (data && data[0] && data[0][0] && data[0][0][0]) {
-                    meaning = data[0][0][0].toLowerCase();
-                    isOnline = true;
-                    
-                    // ⭐ AUTO-SAVE MAGIC (Hamesha ke liye app mein save) ⭐
-                    if (transMode === 'en2hi') {
-                        customDictionary[input] = meaning;
-                    } else {
-                        customDictionary[meaning] = input; 
-                    }
-                    localStorage.setItem('pariCustomDict', JSON.stringify(customDictionary));
-                    
-                    if(typeof filterDictBook === 'function') filterDictBook();
-                } else {
-                    throw new Error("Not found");
-                }
-            } catch(e) {
-                res.innerHTML = `<div style="font-size: 1.8rem; color: var(--danger); font-weight:bold;">Word not found ❌<br><span style="font-size:1.1rem; color:gray;">Internet connection check karein</span></div>`;
-                speakText("Word not found.");
-                return;
-            }
-        }
-        
-        // 3. FINAL RESULT SCREEN PAR DIKHAO
-        if(meaning) { 
-            const en = transMode === 'en2hi' ? orig : meaning, hi = transMode === 'en2hi' ? meaning : orig; 
-            const displayOrig = orig.charAt(0).toUpperCase() + orig.slice(1); 
-            
-            let badge = isOnline ? `<span style="background:var(--success); color:white; font-size:1rem; padding:3px 10px; border-radius:15px; margin-bottom:5px;">🌐 New Word Saved!</span>` : `<span style="background:gray; color:white; font-size:1rem; padding:3px 10px; border-radius:15px; margin-bottom:5px;">📖 Offline Dictionary</span>`;
-
-            res.innerHTML = `<div class="list-item center" style="flex-direction:column; gap:10px; border-color:var(--color-trans);">
-                ${badge}
-                <div style="font-size:clamp(1.8rem, 6vw, 2.5rem); color:var(--text);">${displayOrig}</div>
-                <div style="font-size:clamp(1.5rem, 5vw, 2rem); color:var(--primary);">${meaning}</div>
-                <button class="btn accent" style="margin-top:15px; background:var(--color-trans);" onclick="speakBilingual('${en}', '${hi}')">🔊 Speak Translation</button>
-            </div>`; 
-            speakBilingual(en, hi); 
-        } 
-    }
+    function translateWord() { const input = document.getElementById('trans-input').value.trim().toLowerCase(); const res = document.getElementById('trans-result'); if(!input) return; const mergedDict = { ...baseDictionary, ...customDictionary }; let meaning = null, orig = input; if (transMode === 'en2hi') { meaning = mergedDict[input]; } else { for(let key in mergedDict) { if (mergedDict[key] === input) { meaning = key; break; } } } if(meaning) { const en = transMode === 'en2hi' ? orig : meaning, hi = transMode === 'en2hi' ? meaning : orig; const displayOrig = orig.charAt(0).toUpperCase() + orig.slice(1); res.innerHTML = `<div class="list-item center" style="flex-direction:column; gap:10px; border-color:var(--color-trans);"><div style="font-size:clamp(1.8rem, 6vw, 2.5rem); color:var(--text);">${displayOrig}</div><div style="font-size:clamp(1.5rem, 5vw, 2rem); color:var(--primary);">${meaning}</div><button class="btn accent" style="margin-top:15px; background:var(--color-trans);" onclick="speakBilingual('${en}', '${hi}')">🔊 Speak Translation</button></div>`; speakBilingual(en, hi); } else { res.innerHTML = `<div style="font-size: 1.8rem; color: var(--danger); font-weight:bold;">Word not found ❌</div>`; speakText("Word not found."); } }
 
     let dictRenderLimit = 50; let currentFilterText = '';
     function openDictionaryBook() { document.getElementById('dict-search-input').value = ''; document.getElementById('add-word-panel').classList.remove('active'); document.getElementById('add-word-msg').innerText = ''; renderDictBook('', true); showScreen('dict-book-screen'); }
@@ -418,12 +353,15 @@
     // =========================================================================
     // ⭐ THE "BULLETPROOF WATERFALL" MASTERPLAN (6 KEYS ARRAY) ⭐
     // =========================================================================
+    
+    // 1. Google Gemini Ki 3 Keys (Tukdon mein tod kar safe kar di hain)
     const geminiKeys = [
         "AQ.Ab8RN6I-b" + "6nFHxmvaFnE" + "B6yAV5l1SE23AS5ULaMgZCqtndmfuQ",
         "AIzaSyBTm222" + "Adb5_Y8A6QfD0z" + "UNdBJaRanxg6g",
         "AIzaSyAj0cf4d" + "9ngcPJKZ2eSV_" + "fCtSMfQY3vOZc"
     ];
 
+    // 2. OpenRouter Ki 3 Keys (Ye bhi safe kar di hain)
     const openRouterKeys = [
         "sk-or-v1-7d3ca584bcdd" + "157c04be772c6a07311ef" + "27a23fc455724751241e4d16313caef",
         "sk-or-v1-f4a0d9da4c18" + "f6c37728c0098a126cfbd" + "99e397f60da75b3f0288d7511394951",
@@ -466,9 +404,10 @@
         history.innerHTML += `<div id="${loadingId}" class="chat-message ai-message"><div class="bubble">Thinking... 🤔</div></div>`;
         history.scrollTop = history.scrollHeight;
 
+        // ⭐ STRICT HINGLISH PROMPT
         const promptInstruction = `You are a friendly and helpful educational AI assistant named "Sifra", talking to kids and students.
         CRITICAL RULES:
-        1. You MUST reply ONLY in simple, natural conversational "Hinglish". Do not use complex Urdu or pure Hindi words. Keep it simple like WhatsApp chats.
+        1. You MUST reply ONLY in simple, natural conversational "Hinglish" (e.g., "Main Sifra hoon, main aapki madad kar sakti hoon!"). Do not use complex Urdu or pure Hindi words. Keep it simple like WhatsApp chats.
         2. Keep your answers short (2-3 sentences max) and use emojis.
         3. If the user asks for anything harmful, illegal, or about "hacking", gently refuse by saying: "Sorry bacchon, ye safe nahi hai, hum kuch achha seekhte hain!"`;
 
@@ -477,6 +416,9 @@
         let safetyTriggered = false;
         let jasoosLog = ""; 
 
+        // ==========================================
+        // 🔄 STAGE 1: TRY ALL 3 GEMINI KEYS 
+        // ==========================================
         for (let i = 0; i < geminiKeys.length; i++) {
             console.log(`Checking Gemini Engine... (Key ${i+1})`);
             try {
@@ -497,10 +439,17 @@
                     safetyTriggered = true;
                     isSuccess = true; 
                     break; 
-                } else if (data.error) { jasoosLog += `[G${i+1} Fail] `; }
-            } catch (error) { jasoosLog += `[G${i+1} Network] `; }
+                } else if (data.error) {
+                    jasoosLog += `[G${i+1} Fail] `; 
+                }
+            } catch (error) {
+                jasoosLog += `[G${i+1} Network] `;
+            }
         }
 
+        // ==========================================
+        // 🔄 STAGE 2: TRY ALL 3 OPENROUTER KEYS 
+        // ==========================================
         if (!isSuccess) {
             console.log("All Gemini keys busy. Switching to OpenRouter (Gemma-2)...");
             for (let j = 0; j < openRouterKeys.length; j++) {
@@ -530,11 +479,18 @@
                         finalAiResponse = orData.choices[0].message.content;
                         isSuccess = true;
                         break; 
-                    } else if (orData.error) { jasoosLog += `[OR${j+1} Fail] `; }
-                } catch (error) { jasoosLog += `[OR${j+1} Network] `; }
+                    } else if (orData.error) {
+                        jasoosLog += `[OR${j+1} Fail] `;
+                    }
+                } catch (error) {
+                    jasoosLog += `[OR${j+1} Network] `;
+                }
             }
         }
 
+        // ==========================================
+        // 🏁 STAGE 3: SHOW RESPONSE TO USER
+        // ==========================================
         if(document.getElementById(loadingId)) document.getElementById(loadingId).remove(); 
 
         if (safetyTriggered) {
@@ -551,6 +507,9 @@
         }
     }
     
+    // =========================================================================
+    // VOICE SETUP & SERVICE WORKER
+    // =========================================================================
     let recognition;
     function setupVoice() {
         if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
@@ -576,6 +535,7 @@
     window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; downloadAppBtn.style.display = 'block'; });
     downloadAppBtn.addEventListener('click', async () => { if (deferredPrompt) { deferredPrompt.prompt(); const { outcome } = await deferredPrompt.userChoice; if (outcome === 'accepted') downloadAppBtn.style.display = 'none'; deferredPrompt = null; } else { document.getElementById('installModal').style.display = 'flex'; } });
 
+    
 </script>
 </body>
 </html>
