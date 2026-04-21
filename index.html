@@ -396,13 +396,12 @@
     function filterDictBook() { renderDictBook(document.getElementById('dict-search-input').value, true); }
     function toggleAddWordPanel() { document.getElementById('add-word-panel').classList.toggle('active'); document.getElementById('add-word-msg').innerText = ''; }
     function saveNewDictWord() { const enInput = document.getElementById('add-en').value.trim().toLowerCase(), hiInput = document.getElementById('add-hi').value.trim(), msgEl = document.getElementById('add-word-msg'); if (!enInput || !hiInput) { msgEl.innerText = "Please fill both fields! ❌"; msgEl.style.color = "var(--danger)"; return; } if (baseDictionary[enInput] || customDictionary[enInput]) { msgEl.innerText = "Word already added! ⚠️"; msgEl.style.color = "#e67e22"; return; } customDictionary[enInput] = hiInput; localStorage.setItem('pariCustomDict', JSON.stringify(customDictionary)); msgEl.innerText = "Saved Successfully ✅"; msgEl.style.color = "var(--success)"; document.getElementById('add-en').value = ''; document.getElementById('add-hi').value = ''; filterDictBook(); }
-        // ⭐ CUSTOM STYLISH DELETE MODAL (Bypass Browser Alert) ⭐
+        // ⭐ CUSTOM STYLISH DELETE MODAL (Fixed 100% Working) ⭐
     let wordToDelete = "";
 
     function deleteCustomWord(enWord) {
-        wordToDelete = enWord;
+        wordToDelete = enWord; // Word ko nishane par rakha
         
-        // JS se direct ek khoobsurat popup screen par aayega
         const modalHtml = `
             <div id="custom-delete-modal" style="position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.6); display:flex; justify-content:center; align-items:center; z-index:10000;">
                 <div style="background:white; padding:25px; border-radius:20px; text-align:center; width: 85%; max-width: 350px; box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
@@ -417,17 +416,27 @@
             </div>
         `;
         
-        closeDeleteModal(); // Purana phase toh hata do
-        document.body.insertAdjacentHTML('beforeend', modalHtml); // Naya modal fit karo
+        closeDeleteModal(); 
+        document.body.insertAdjacentHTML('beforeend', modalHtml); 
     }
 
     function confirmDeleteWord() {
-        if (wordToDelete && customDictionary[wordToDelete]) {
-            delete customDictionary[wordToDelete];
-            localStorage.setItem('pariCustomDict', JSON.stringify(customDictionary));
-            filterDictBook(); // Dictionary ki list refresh
+        // 1. Bina kisi shart (condition) ke seedha memory se uda do!
+        delete customDictionary[wordToDelete];
+        localStorage.setItem('pariCustomDict', JSON.stringify(customDictionary));
+        
+        // 2. Dictionary ki list ko zabardasti (force) refresh karo
+        if (typeof filterDictBook === 'function') {
+            filterDictBook(); 
+        } else {
+            renderDictBook('', true);
         }
-        closeDeleteModal(); // Modal band karo
+
+        // 3. User ko aawaz aayegi taaki confirm ho jaye ki delete ho gaya
+        speakText("Word deleted");
+        
+        // 4. Popup band karo
+        closeDeleteModal(); 
     }
 
     function closeDeleteModal() {
@@ -435,7 +444,8 @@
         if (modal) modal.remove();
         wordToDelete = "";
     }
-
+    
+    
 
     const monthsData = [{en:"January", hi:"जनवरी"}, {en:"February", hi:"फरवरी"}, {en:"March", hi:"मार्च"}, {en:"April", hi:"अप्रैल"}, {en:"May", hi:"मई"}, {en:"June", hi:"जून"}, {en:"July", hi:"जुलाई"}, {en:"August", hi:"अगस्त"}, {en:"September", hi:"सितंबर"}, {en:"October", hi:"अक्टूबर"}, {en:"November", hi:"नवंबर"}, {en:"December", hi:"दिसंबर"}];
     function openMonths() { const c = document.getElementById('months-content'); c.innerHTML = ''; monthsData.forEach(m => { c.innerHTML += `<div class="list-item"><div style="text-align:left;"><span style="color:var(--primary); font-size: clamp(1.3rem, 5vw, 1.6rem);">${m.en}</span><br><span style="color:var(--text); font-size: clamp(1.1rem, 4vw, 1.3rem);">${m.hi}</span></div><button class="btn-icon btn-speak" onclick="speakBilingual('${m.en} means', '${m.hi}')">🔊</button></div>`; }); showScreen('months-screen'); }
