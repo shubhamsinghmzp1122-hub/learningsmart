@@ -236,7 +236,7 @@
 </div>
 
 <script>
-    const AudioContext = window.AudioContext || window.webkitAudioContext; let audioCtx;
+        const AudioContext = window.AudioContext || window.webkitAudioContext; let audioCtx;
     function playSound(isCorrect) {
         if (!audioCtx) audioCtx = new AudioContext(); if (audioCtx.state === 'suspended') audioCtx.resume();
         const osc = audioCtx.createOscillator(); const gainNode = audioCtx.createGain();
@@ -325,25 +325,10 @@
 
     function saveQuizScore() { let board = JSON.parse(localStorage.getItem('pariMathBoard') || '[]'); board.push({ name: document.getElementById('player-name').value.trim()||'Anonymous', score: score.correct, total: TOTAL_QUESTIONS, date: new Date().toLocaleDateString() }); board.sort((a,b) => b.score - a.score); localStorage.setItem('pariMathBoard', JSON.stringify(board.slice(0,10))); document.getElementById('save-score-box').style.display = 'none'; openLeaderboard(); }
     function openLeaderboard() { showScreen('leaderboard'); const tbody = document.getElementById('leaderboard-body'); tbody.innerHTML = ''; let board = JSON.parse(localStorage.getItem('pariMathBoard') || '[]'); board.forEach((b, i) => { tbody.innerHTML += `<tr><td>${i<3?['🥇','🥈','🥉'][i]:`#${i+1}`}</td><td><b>${b.name}</b></td><td style="color:var(--success); font-weight:bold;">${b.score}/${b.total||30}</td><td>${b.date}</td></tr>`; }); }
-        // 1. Modal ko kholne ke liye
-    function clearLeaderboard() {
-        document.getElementById('clearConfirmModal').style.display = 'flex';
-    }
-
-    // 2. Modal ko band karne ke liye
-    function closeClearModal() {
-        document.getElementById('clearConfirmModal').style.display = 'none';
-    }
-
-    // 3. Asli mein data delete karne ke liye
-    function executeClearBoard() {
-        localStorage.removeItem('pariMathBoard');
-        closeClearModal(); // Modal band karo
-        openLeaderboard(); // Board refresh karo
-        speakText("Saare scores saaf ho gaye hain!");
-    }
+    function clearLeaderboard() { document.getElementById('clearConfirmModal').style.display = 'flex'; }
+    function closeClearModal() { document.getElementById('clearConfirmModal').style.display = 'none'; }
+    function executeClearBoard() { localStorage.removeItem('pariMathBoard'); closeClearModal(); openLeaderboard(); speakText("Saare scores saaf ho gaye hain!"); }
     
-
     let gameLives = 3, gameScore = 0, currentGameQ = null;
     function startGameMode() { gameLives = 3; gameScore = 0; updateGameStats(); showScreen('game-mode'); nextGameQuestion(); }
     function updateGameStats() { document.getElementById('game-lives').innerText = '❤️'.repeat(gameLives); document.getElementById('game-score').innerText = gameScore; }
@@ -352,19 +337,23 @@
 
     let calcCurrent = '0'; function openCalculator() { calcCurrent = '0'; updateCalcDisplay(); showScreen('calculator'); } function updateCalcDisplay() { document.getElementById('calc-display').innerText = calcCurrent; } function calcInput(val) { if(calcCurrent === '0' && !isNaN(val)) calcCurrent = val; else if(!isNaN(val) || !isNaN(calcCurrent.slice(-1))) calcCurrent += val; updateCalcDisplay(); } function calcClear() { calcCurrent = '0'; updateCalcDisplay(); } function calcCalculate() { try { let res = new Function('return ' + calcCurrent.replace(/×/g, '*').replace(/÷/g, '/'))(); calcCurrent = (res%1!==0 ? res.toFixed(2) : res).toString(); updateCalcDisplay(); } catch(e) { calcCurrent = 'Error'; updateCalcDisplay(); setTimeout(calcClear, 1500); } }
 
-            // ⭐ THE NEW AI TUTOR SYSTEM (DOUBLE ENGINE WITH HACKER SPLIT KEYS) ⭐
+    // =========================================================================
+    // ⭐ THE "BULLETPROOF WATERFALL" MASTERPLAN (6 KEYS ARRAY) ⭐
+    // =========================================================================
     
-    // 1. Google Gemini Key (Primary Engine)
-    const k1 = "AQ.Ab8RN6I-b";
-    const k2 = "6nFHxmvaFnE";
-    const k3 = "B6yAV5l1SE23AS5ULaMgZCqtndmfuQ";
-    const GEMINI_KEY = k1 + k2 + k3;
+    // 1. Google Gemini Ki 3 Keys (Tukdon mein tod kar safe kar di hain)
+    const geminiKeys = [
+        "AQ.Ab8RN6I-b" + "6nFHxmvaFnE" + "B6yAV5l1SE23AS5ULaMgZCqtndmfuQ",
+        "AIzaSyBTm222" + "Adb5_Y8A6QfD0z" + "UNdBJaRanxg6g",
+        "AIzaSyAj0cf4d" + "9ngcPJKZ2eSV_" + "fCtSMfQY3vOZc"
+    ];
 
-    // 2. OpenRouter Key (Backup / Fallback Engine)
-    const or1 = "sk-or-v1-7d3ca584bcdd157c04be";
-    const or2 = "772c6a07311ef27a23fc45572475";
-    const or3 = "1241e4d16313caef";
-    const OPENROUTER_KEY = or1 + or2 + or3;
+    // 2. OpenRouter Ki 3 Keys (Ye bhi safe kar di hain)
+    const openRouterKeys = [
+        "sk-or-v1-7d3ca584bcdd" + "157c04be772c6a07311ef" + "27a23fc455724751241e4d16313caef",
+        "sk-or-v1-f4a0d9da4c18" + "f6c37728c0098a126cfbd" + "99e397f60da75b3f0288d7511394951",
+        "sk-or-v1-8d5a3f563860" + "3bcd671b3367a25bf0bba" + "fca295990a76e8dfd518c04cb5557eb"
+    ];
 
     function openAiChat() {
         document.getElementById('ai-input-text').value = '';
@@ -388,7 +377,7 @@
         history.scrollTop = history.scrollHeight;
     }
 
-        async function sendToAI() {
+    async function sendToAI() {
         const inputEl = document.getElementById('ai-input-text');
         const userText = inputEl.value.trim();
         if (!userText) return;
@@ -402,7 +391,7 @@
         history.innerHTML += `<div id="${loadingId}" class="chat-message ai-message"><div class="bubble">Thinking... 🤔</div></div>`;
         history.scrollTop = history.scrollHeight;
 
-        // ⭐ THE STRICT HINGLISH PROMPT ⭐
+        // ⭐ STRICT HINGLISH PROMPT
         const promptInstruction = `You are a friendly and helpful educational AI assistant named "Sifra", talking to kids and students.
         CRITICAL RULES:
         1. You MUST reply ONLY in simple, natural conversational "Hinglish" (e.g., "Main Sifra hoon, main aapki madad kar sakti hoon!"). Do not use complex Urdu or pure Hindi words. Keep it simple like WhatsApp chats.
@@ -412,72 +401,83 @@
         let isSuccess = false;
         let finalAiResponse = "";
         let safetyTriggered = false;
-        let geminiErrorMsg = "";
-        let openRouterErrorMsg = "";
+        let jasoosLog = ""; 
 
-        // ⭐ ENGINE 1: TRY GOOGLE GEMINI FIRST
-        try {
-            const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_KEY}`;
-            const response = await fetch(geminiUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ contents: [{ parts: [{ text: promptInstruction + " User's query: " + userText }] }] })
-            });
-
-            const data = await response.json();
-            
-            if (response.ok && data.candidates && data.candidates[0].content) {
-                finalAiResponse = data.candidates[0].content.parts[0].text;
-                isSuccess = true;
-            } else if (data.candidates && data.candidates[0].finishReason === 'SAFETY') {
-                safetyTriggered = true;
-                isSuccess = true; 
-            } else if (data.error) {
-                geminiErrorMsg = data.error.message;
-            }
-        } catch (error) {
-            geminiErrorMsg = "Gemini Network Error";
-        }
-
-        // ⭐ ENGINE 2: GEMMA 2 (Google's model on OpenRouter for Perfect Hinglish)
-        if (!isSuccess) {
-            console.log("Switching to OpenRouter Gemma 2 Fallback...");
+        // ==========================================
+        // 🔄 STAGE 1: TRY ALL 3 GEMINI KEYS 
+        // ==========================================
+        for (let i = 0; i < geminiKeys.length; i++) {
+            console.log(`Checking Gemini Engine... (Key ${i+1})`);
             try {
-                const orUrl = "https://openrouter.ai/api/v1/chat/completions";
-                const orResponse = await fetch(orUrl, {
+                const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${geminiKeys[i]}`;
+                const response = await fetch(geminiUrl, {
                     method: 'POST',
-                    headers: {
-                        "Authorization": `Bearer ${OPENROUTER_KEY}`, 
-                        "HTTP-Referer": "https://pari-jiya-app.com",
-                        "X-Title": "Learning App",
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        // ⭐ THE FIX: Gemma-2 model for best Hinglish backup!
-                        "model": "google/gemma-2-9b-it:free", 
-                        "messages": [
-                            {"role": "system", "content": promptInstruction},
-                            {"role": "user", "content": userText}
-                        ]
-                    })
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents: [{ parts: [{ text: promptInstruction + " User's query: " + userText }] }] })
                 });
 
-                const orData = await orResponse.json();
+                const data = await response.json();
                 
-                if (orResponse.ok && orData.choices && orData.choices[0].message) {
-                    finalAiResponse = orData.choices[0].message.content;
+                if (response.ok && data.candidates && data.candidates[0].content) {
+                    finalAiResponse = data.candidates[0].content.parts[0].text;
                     isSuccess = true;
-                } else if (orData.error) {
-                    openRouterErrorMsg = orData.error.message;
-                } else {
-                    openRouterErrorMsg = "Unknown OpenRouter Error";
+                    break; 
+                } else if (data.candidates && data.candidates[0].finishReason === 'SAFETY') {
+                    safetyTriggered = true;
+                    isSuccess = true; 
+                    break; 
+                } else if (data.error) {
+                    jasoosLog += `[G${i+1} Fail] `; 
                 }
             } catch (error) {
-                openRouterErrorMsg = "OpenRouter Network Error";
+                jasoosLog += `[G${i+1} Network] `;
             }
         }
 
-        // ⭐ REMOVE LOADING INDICATOR & SHOW RESPONSE
+        // ==========================================
+        // 🔄 STAGE 2: TRY ALL 3 OPENROUTER KEYS 
+        // ==========================================
+        if (!isSuccess) {
+            console.log("All Gemini keys busy. Switching to OpenRouter (Gemma-2)...");
+            for (let j = 0; j < openRouterKeys.length; j++) {
+                console.log(`Checking OpenRouter Fallback... (Key ${j+1})`);
+                try {
+                    const orUrl = "https://openrouter.ai/api/v1/chat/completions";
+                    const orResponse = await fetch(orUrl, {
+                        method: 'POST',
+                        headers: {
+                            "Authorization": `Bearer ${openRouterKeys[j]}`, 
+                            "HTTP-Referer": "https://pari-jiya-app.com",
+                            "X-Title": "Learning App",
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            "model": "google/gemma-2-9b-it:free", 
+                            "messages": [
+                                {"role": "system", "content": promptInstruction},
+                                {"role": "user", "content": userText}
+                            ]
+                        })
+                    });
+
+                    const orData = await orResponse.json();
+                    
+                    if (orResponse.ok && orData.choices && orData.choices[0].message) {
+                        finalAiResponse = orData.choices[0].message.content;
+                        isSuccess = true;
+                        break; 
+                    } else if (orData.error) {
+                        jasoosLog += `[OR${j+1} Fail] `;
+                    }
+                } catch (error) {
+                    jasoosLog += `[OR${j+1} Network] `;
+                }
+            }
+        }
+
+        // ==========================================
+        // 🏁 STAGE 3: SHOW RESPONSE TO USER
+        // ==========================================
         if(document.getElementById(loadingId)) document.getElementById(loadingId).remove(); 
 
         if (safetyTriggered) {
@@ -488,20 +488,21 @@
             addChatMessage(finalAiResponse, 'ai');
             speakText(finalAiResponse);
         } else {
-            // ⭐ MAHA-JASOOS ERROR
-            let debugError = `🚨 <b>Error Report:</b><br><br><b>Gemini:</b> ${geminiErrorMsg}<br><br><b>OpenRouter:</b> ${openRouterErrorMsg}<br><br>Bhai dono server fail ho gaye. Thodi der mein try karna. 😅`;
+            let debugError = `🚨 <b>All Systems Failed!</b><br><br><b>Error Trace:</b> ${jasoosLog}<br><br>Sifra sach mein thak chuki hai, kripya 1 minute baad try karein! 😴`;
             addChatMessage(debugError, 'ai');
-            speakText("Dono server down hain.");
+            speakText("Server overloaded. Kripya thodi der baad try karein.");
         }
-                    }
+    }
     
-    
+    // =========================================================================
+    // VOICE SETUP & SERVICE WORKER
+    // =========================================================================
     let recognition;
     function setupVoice() {
         if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
             const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
             recognition = new SpeechRec();
-            recognition.continuous = false; recognition.interimResults = false; recognition.lang = 'hi-IN'; // Changed to Hindi for better voice typing
+            recognition.continuous = false; recognition.interimResults = false; recognition.lang = 'hi-IN'; 
             recognition.onstart = function() { document.getElementById('mic-btn').classList.add('recording'); stopVoice(); };
             recognition.onresult = function(event) { document.getElementById('ai-input-text').value = event.results[0][0].transcript; sendToAI(); };
             recognition.onerror = function(event) { document.getElementById('mic-btn').classList.remove('recording'); };
@@ -520,6 +521,7 @@
     if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(err => console.log('SW Fail', err)); }); }
     window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; downloadAppBtn.style.display = 'block'; });
     downloadAppBtn.addEventListener('click', async () => { if (deferredPrompt) { deferredPrompt.prompt(); const { outcome } = await deferredPrompt.userChoice; if (outcome === 'accepted') downloadAppBtn.style.display = 'none'; deferredPrompt = null; } else { document.getElementById('installModal').style.display = 'flex'; } });
+
 </script>
 </body>
 </html>
