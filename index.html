@@ -158,6 +158,7 @@
             <button class="btn" style="background:var(--color-roman); color:white;" onclick="openRomanNumbers()">🏛️ Roman</button>
             <button class="btn" style="background:var(--color-dict); color:white; grid-column: 1 / -1;" onclick="openDictionaryBook()">📚 Dictionary Book</button>
             <button class="btn" style="background:var(--color-trans); color:white; grid-column: 1 / -1;" onclick="openTranslator()">🌐 Translator (En ↔ Hi)</button>
+            <button class="btn accent" onclick="openSafari()">🦁 Safari & Fruits</button>
             
             <button class="btn" style="background:var(--accent2); color:white; grid-column: 1 / -1; box-shadow: 0 0 10px rgba(132, 94, 194, 0.5);" onclick="openAiChat()">🤖 Smart AI Tutor</button>
         </div>
@@ -275,6 +276,24 @@
             </div>
         </div>
         </div>
+
+    <div id="safari-screen" class="screen">
+    <div class="top-bar">
+        <button class="btn back-btn" onclick="goHome()">🔙</button>
+        <h2 style="margin:0;">Safari 🦁</h2>
+        <div style="width: 40px;"></div>
+    </div>
+    
+    <div style="display:flex; gap:10px; justify-content:center; margin: 15px;">
+        <button class="btn primary" style="flex:1; font-size:1.1rem;" onclick="renderSafari('animal')">Animals 🐘</button>
+        <button class="btn yellow" style="flex:1; font-size:1.1rem;" onclick="renderSafari('bird')">Birds 🦜</button>
+        <button class="btn accent" style="flex:1; font-size:1.1rem;" onclick="renderSafari('fruit')">Fruits 🍎</button>
+    </div>
+
+    <div id="safari-content" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 15px; padding: 15px; overflow-y: auto; max-height: 70vh;">
+    </div>
+    </div>
+    
 
 </div>
 
@@ -812,6 +831,43 @@
     window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; downloadAppBtn.style.display = 'block'; });
     downloadAppBtn.addEventListener('click', async () => { if (deferredPrompt) { deferredPrompt.prompt(); const { outcome } = await deferredPrompt.userChoice; if (outcome === 'accepted') downloadAppBtn.style.display = 'none'; deferredPrompt = null; } else { document.getElementById('installModal').style.display = 'flex'; } });
 
+        // ==========================================
+    // ⭐ ANIMAL SAFARI & FRUITS LOGIC ⭐
+    // ==========================================
+    const safariData = [
+        { en: 'Lion', hi: 'शेर', emoji: '🦁', type: 'animal' }, { en: 'Elephant', hi: 'हाथी', emoji: '🐘', type: 'animal' }, { en: 'Tiger', hi: 'बाघ', emoji: '🐅', type: 'animal' }, { en: 'Monkey', hi: 'बंदर', emoji: '🐒', type: 'animal' }, { en: 'Dog', hi: 'कुत्ता', emoji: '🐕', type: 'animal' }, { en: 'Cat', hi: 'बिल्ली', emoji: '🐈', type: 'animal' }, { en: 'Horse', hi: 'घोड़ा', emoji: '🐎', type: 'animal' }, { en: 'Cow', hi: 'गाय', emoji: '🐄', type: 'animal' }, { en: 'Rabbit', hi: 'खरगोश', emoji: '🐇', type: 'animal' }, { en: 'Bear', hi: 'भालू', emoji: '🐻', type: 'animal' },
+        { en: 'Peacock', hi: 'मोर', emoji: '🦚', type: 'bird' }, { en: 'Parrot', hi: 'तोता', emoji: '🦜', type: 'bird' }, { en: 'Pigeon', hi: 'कबूतर', emoji: '🕊️', type: 'bird' }, { en: 'Owl', hi: 'उल्लू', emoji: '🦉', type: 'bird' }, { en: 'Duck', hi: 'बत्तख', emoji: '🦆', type: 'bird' }, { en: 'Eagle', hi: 'चील', emoji: '🦅', type: 'bird' }, { en: 'Swan', hi: 'हंस', emoji: '🦢', type: 'bird' }, { en: 'Chicken', hi: 'मुर्गी', emoji: '🐔', type: 'bird' },
+        { en: 'Apple', hi: 'सेब', emoji: '🍎', type: 'fruit' }, { en: 'Banana', hi: 'केला', emoji: '🍌', type: 'fruit' }, { en: 'Mango', hi: 'आम', emoji: '🥭', type: 'fruit' }, { en: 'Grapes', hi: 'अंगूर', emoji: '🍇', type: 'fruit' }, { en: 'Watermelon', hi: 'तरबूज', emoji: '🍉', type: 'fruit' }, { en: 'Orange', hi: 'संतरा', emoji: '🍊', type: 'fruit' }, { en: 'Strawberry', hi: 'स्ट्रॉबेरी', emoji: '🍓', type: 'fruit' }, { en: 'Pineapple', hi: 'अनानास', emoji: '🍍', type: 'fruit' }
+    ];
+
+    function openSafari() {
+        showScreen('safari-screen');
+        renderSafari('animal'); 
+    }
+
+    function renderSafari(type) {
+        const container = document.getElementById('safari-content');
+        container.innerHTML = '';
+        
+        const filtered = safariData.filter(item => item.type === type);
+        
+        filtered.forEach(item => {
+            const card = document.createElement('div');
+            card.style.cssText = "background: white; border: 2px solid var(--primary); border-radius: 20px; padding: 20px 10px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.05); cursor: pointer; transition: transform 0.2s ease;";
+            
+            card.innerHTML = `<div style="font-size: 4.5rem; margin-bottom: 10px;">${item.emoji}</div>
+                              <div style="font-size: 1.4rem; font-weight: bold; color: var(--text);">${item.en}</div>
+                              <div style="font-size: 1.1rem; color: gray;">${item.hi}</div>`;
+            
+            card.onclick = () => {
+                card.style.transform = "scale(0.85)"; 
+                setTimeout(() => card.style.transform = "scale(1)", 150); 
+                speakBilingual(item.en, item.hi);
+            };
+            container.appendChild(card);
+        });
+    }
+    
 
 </script>
 </body>
