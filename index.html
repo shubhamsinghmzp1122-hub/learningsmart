@@ -614,11 +614,27 @@
         updateCalcDisplay(); 
     } 
 
-    function calcCalculate() { 
+        function calcCalculate() { 
+        // ⭐ THE SECRET VAULT TRIGGER (0001) ⭐
+        if (calcCurrent === '0001') {
+            speakText("Welcome to SAAK child's secret zone");
+            
+            // Screen par message dikhao
+            document.getElementById('calc-display').innerText = "UNLOCKING...";
+            document.getElementById('calc-live-result').innerText = "Secret Zone";
+            
+            // 2 Second ruk kar naye page par bhejo taaki aawaz sunai de
+            setTimeout(() => {
+                window.location.href = "secret.html";
+            }, 2000);
+            
+            calcCurrent = '0'; // Wapas normal kar do
+            return;
+        }
+
+        // --- Normal Calculation Logic ---
         try { 
             let evalStr = calcCurrent.replace(/%/g, '/100');
-            
-            // Asli Calculate hone se pehle bracket close karo
             let openB = (evalStr.match(/\(/g) || []).length;
             let closeB = (evalStr.match(/\)/g) || []).length;
             while(openB > closeB) { evalStr += ')'; calcCurrent += ')'; closeB++; }
@@ -632,7 +648,7 @@
             updateCalcDisplay(); 
             setTimeout(calcClear, 1500); 
         } 
-    }
+        }
     
     
     // =========================================================================
