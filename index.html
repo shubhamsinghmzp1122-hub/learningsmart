@@ -278,28 +278,21 @@
         </div>
         </div>
 
-        // Add new Custom Safari Item (Fixed for Kids - No Emoji Needed)
-    function addNewSafariItem(suggestedName) {
-        let enName = prompt("English Name (e.g., Dragon):", suggestedName) || "";
-        if(!enName) return; // Agar cancel kiya toh wapas
-        
-        let hiName = prompt("Hindi Name (e.g., ड्रैगन):", "") || enName;
-        
-        // ⭐ MAGIC: Baccho se emoji nahi mangenge. App khud default lagayega! ⭐
-        let newItem = {
-            en: enName,
-            hi: hiName,
-            emoji: '🐾', // Ye automatically lag jayega!
-            type: currentSafariCategory
-        };
-
-        customSafariData.push(newItem);
-        localStorage.setItem('pariCustomSafari', JSON.stringify(customSafariData));
-        
-        document.getElementById('safari-search-box').value = '';
-        renderSafari(currentSafariCategory);
-        speakText(enName + " added successfully!");
-    }
+        <div id="custom-safari-modal" style="position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.6); display:none; justify-content:center; align-items:center; z-index:10000;">
+        <div style="background:white; padding:25px; border-radius:20px; text-align:center; width: 85%; max-width: 350px; box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
+            <div style="font-size:3rem; margin-bottom:10px;">🐾</div>
+            <h3 style="color:var(--primary); margin-bottom:15px; font-size:1.5rem;">Add New Item</h3>
+            
+            <input type="text" id="custom-en-name" placeholder="English Name (e.g., Dragon)" style="width:100%; padding:12px; margin-bottom:10px; border-radius:12px; border:2px solid var(--primary); font-size:1rem; outline:none; box-sizing: border-box;">
+            
+            <input type="text" id="custom-hi-name" placeholder="Hindi Name (e.g., ड्रैगन)" style="width:100%; padding:12px; margin-bottom:20px; border-radius:12px; border:2px solid var(--primary); font-size:1rem; outline:none; box-sizing: border-box;">
+            
+            <div style="display:flex; gap:15px; justify-content:center;">
+                <button onclick="closeCustomAddModal()" style="flex:1; background:#f1f2f6; color:#2f3542; border:none; padding:12px; border-radius:12px; font-size:1.1rem; font-weight:bold; cursor:pointer;">Cancel</button>
+                <button onclick="saveCustomSafariItem()" style="flex:1; background:var(--primary); color:white; border:none; padding:12px; border-radius:12px; font-size:1.1rem; font-weight:bold; cursor:pointer;">Save</button>
+            </div>
+        </div>
+        </div>
     
 
 </div>
@@ -930,18 +923,33 @@
         renderSafari(null, keyword);
     }
 
-    // Add new Custom Safari Item
+        // ⭐ ADVANCED CUSTOM ADD ITEM LOGIC ⭐
+    
     function addNewSafariItem(suggestedName) {
-        let enName = prompt("English Name (e.g., Dragon):", suggestedName) || "";
-        if(!enName) return;
-        
-        let hiName = prompt("Hindi Name (e.g., ड्रैगन):", "") || enName;
-        let emoji = prompt("Enter an Emoji for this (e.g., 🐉):", "❓") || "❓";
-        
+        // Modal kholo aur pehle se likha hua naam (agar hai) daal do
+        document.getElementById('custom-en-name').value = suggestedName || '';
+        document.getElementById('custom-hi-name').value = '';
+        document.getElementById('custom-safari-modal').style.display = 'flex';
+    }
+
+    function closeCustomAddModal() {
+        // Modal band karo
+        document.getElementById('custom-safari-modal').style.display = 'none';
+    }
+
+    function saveCustomSafariItem() {
+        let enName = document.getElementById('custom-en-name').value.trim();
+        let hiName = document.getElementById('custom-hi-name').value.trim() || enName;
+
+        if(!enName) {
+            speakText("Please enter a name first.");
+            return;
+        }
+
         let newItem = {
             en: enName,
             hi: hiName,
-            emoji: emoji,
+            emoji: '🐾', // Default icon for kids
             type: currentSafariCategory
         };
 
@@ -950,7 +958,8 @@
         
         document.getElementById('safari-search-box').value = '';
         renderSafari(currentSafariCategory);
-        speakText(enName + " added successfully!");
+        closeCustomAddModal(); // Save hone ke baad modal band
+        speakText(enName + " saved!");
     }
     
 
