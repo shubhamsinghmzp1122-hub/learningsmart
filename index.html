@@ -300,137 +300,7 @@
             
             <button onclick="clearCanvas()" class="btn yellow" style="font-size: 1rem; padding: 10px 20px; flex-grow: 1;">🗑️ Clear Slate</button>
         </div>
-    </div>
-
-    <div id="memory-screen" class="screen">
-    <div class="top-bar">
-        <button class="btn back-btn" onclick="goHome()">🔙</button>
-        <h2 style="margin:0; color:#ff7f50;">Memory Game 🃏</h2>
-        <div style="width: 40px;"></div>
-    </div>
-    
-    <div style="text-align: center; margin-bottom: 15px; font-size: 1.2rem; color: gray; font-weight: bold;">
-        Match all the pairs! 🧠
-    </div>
-
-    <div id="memory-board" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; max-width: 350px; margin: 0 auto;">
-        </div>
-
-    <button class="btn primary" style="margin-top: 25px; width: 80%; max-width: 300px;" onclick="startMemoryGame()">🔄 Restart Game</button>
-</div>
-
-<style>
-    /* Memory Game Cards CSS */
-    .memory-card {
-        background: var(--color-google);
-        height: 90px;
-        border-radius: 15px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 0; /* Emoji chupane ke liye */
-        cursor: pointer;
-        transition: all 0.3s ease;
-        box-shadow: 0 6px 0 rgba(0,0,0,0.2);
-        user-select: none;
-    }
-    
-    /* Jab Card Palte */
-    .memory-card.flipped {
-        background: white;
-        font-size: 3rem; /* Emoji dikhane ke liye */
-        box-shadow: 0 2px 0 rgba(0,0,0,0.1);
-        transform: translateY(4px);
-        border: 3px solid var(--color-google);
-    }
-    
-    /* Jab Match Ho Jaye */
-    .memory-card.matched {
-        background: #dff9fb;
-        font-size: 3rem;
-        border: 3px solid var(--success);
-        animation: bounce 0.5s;
-        box-shadow: 0 2px 0 rgba(0,0,0,0.1);
-        transform: translateY(4px);
-    }
-</style>
-
-<script>
-    // ==========================================
-    // ⭐ MEMORY GAME LOGIC ⭐
-    // ==========================================
-    let flippedCards = [];
-    let matchedPairs = 0;
-    const memoryEmojis = ['🐶', '🐱', '🐭', '🦊', '🐰', '🐼']; // 6 janwar = 12 cards
-
-    function openMemoryGame() {
-        showScreen('memory-screen');
-        startMemoryGame();
-    }
-
-    function startMemoryGame() {
-        const board = document.getElementById('memory-board');
-        board.innerHTML = '';
-        flippedCards = [];
-        matchedPairs = 0;
-
-        // Cards ko double karo (taaki pairs bane) aur shuffle (mix) karo
-        let deck = [...memoryEmojis, ...memoryEmojis];
-        deck.sort(() => Math.random() - 0.5);
-
-        // Board par cards lagao
-        deck.forEach((emoji) => {
-            const card = document.createElement('div');
-            card.className = 'memory-card';
-            card.dataset.emoji = emoji;
-            card.innerText = emoji; 
-            card.onclick = () => flipMemoryCard(card);
-            board.appendChild(card);
-        });
-        speakText("Find the matching pairs!");
-    }
-
-    function flipMemoryCard(card) {
-        // Agar 2 cards pehle se khule hain, ya wahi card dobara click ho, toh kuch mat karo
-        if (flippedCards.length >= 2 || card.classList.contains('flipped') || card.classList.contains('matched')) return;
-
-        card.classList.add('flipped');
-        flippedCards.push(card);
-
-        if (flippedCards.length === 2) {
-            setTimeout(checkMemoryMatch, 800); // 0.8 sec wait karke check karo
-        }
-    }
-
-    function checkMemoryMatch() {
-        const [card1, card2] = flippedCards;
-
-        if (card1.dataset.emoji === card2.dataset.emoji) {
-            // Match ho gaya!
-            card1.classList.remove('flipped');
-            card2.classList.remove('flipped');
-            card1.classList.add('matched');
-            card2.classList.add('matched');
-            matchedPairs++;
-            
-            playSound(true); // Happy sound
-
-            if (matchedPairs === memoryEmojis.length) {
-                setTimeout(() => {
-                    speakText("Superb! You won the game!");
-                }, 500);
-            }
-        } else {
-            // Match nahi hua, wapas palat do
-            card1.classList.remove('flipped');
-            card2.classList.remove('flipped');
-            playSound(false); // Wrong sound
-        }
-        
-        flippedCards = []; // Array khaali karo agle turn ke liye
-    }
-</script>
-         
+    </div>         
          
 </div>
 
@@ -623,6 +493,134 @@
     }
 </script>
 
+<div id="memory-screen" class="screen">
+    <div class="top-bar">
+        <button class="btn back-btn" onclick="goHome()">🔙</button>
+        <h2 style="margin:0; color:#ff7f50;">Memory Game 🃏</h2>
+        <div style="width: 40px;"></div>
+    </div>
+    
+    <div style="text-align: center; margin-bottom: 15px; font-size: 1.2rem; color: gray; font-weight: bold;">
+        Match all the pairs! 🧠
+    </div>
+
+    <div id="memory-board" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; max-width: 350px; margin: 0 auto;">
+        </div>
+
+    <button class="btn primary" style="margin-top: 25px; width: 80%; max-width: 300px;" onclick="startMemoryGame()">🔄 Restart Game</button>
+</div>
+
+<style>
+    /* Memory Game Cards CSS */
+    .memory-card {
+        background: var(--color-google);
+        height: 90px;
+        border-radius: 15px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 0; /* Emoji chupane ke liye */
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 6px 0 rgba(0,0,0,0.2);
+        user-select: none;
+    }
+    
+    /* Jab Card Palte */
+    .memory-card.flipped {
+        background: white;
+        font-size: 3rem; /* Emoji dikhane ke liye */
+        box-shadow: 0 2px 0 rgba(0,0,0,0.1);
+        transform: translateY(4px);
+        border: 3px solid var(--color-google);
+    }
+    
+    /* Jab Match Ho Jaye */
+    .memory-card.matched {
+        background: #dff9fb;
+        font-size: 3rem;
+        border: 3px solid var(--success);
+        animation: bounce 0.5s;
+        box-shadow: 0 2px 0 rgba(0,0,0,0.1);
+        transform: translateY(4px);
+    }
+</style>
+
+<script>
+    // ==========================================
+    // ⭐ MEMORY GAME LOGIC ⭐
+    // ==========================================
+    let flippedCards = [];
+    let matchedPairs = 0;
+    const memoryEmojis = ['🐶', '🐱', '🐭', '🦊', '🐰', '🐼']; // 6 janwar = 12 cards
+
+    function openMemoryGame() {
+        showScreen('memory-screen');
+        startMemoryGame();
+    }
+
+    function startMemoryGame() {
+        const board = document.getElementById('memory-board');
+        board.innerHTML = '';
+        flippedCards = [];
+        matchedPairs = 0;
+
+        // Cards ko double karo (taaki pairs bane) aur shuffle (mix) karo
+        let deck = [...memoryEmojis, ...memoryEmojis];
+        deck.sort(() => Math.random() - 0.5);
+
+        // Board par cards lagao
+        deck.forEach((emoji) => {
+            const card = document.createElement('div');
+            card.className = 'memory-card';
+            card.dataset.emoji = emoji;
+            card.innerText = emoji; 
+            card.onclick = () => flipMemoryCard(card);
+            board.appendChild(card);
+        });
+        speakText("Find the matching pairs!");
+    }
+
+    function flipMemoryCard(card) {
+        // Agar 2 cards pehle se khule hain, ya wahi card dobara click ho, toh kuch mat karo
+        if (flippedCards.length >= 2 || card.classList.contains('flipped') || card.classList.contains('matched')) return;
+
+        card.classList.add('flipped');
+        flippedCards.push(card);
+
+        if (flippedCards.length === 2) {
+            setTimeout(checkMemoryMatch, 800); // 0.8 sec wait karke check karo
+        }
+    }
+
+    function checkMemoryMatch() {
+        const [card1, card2] = flippedCards;
+
+        if (card1.dataset.emoji === card2.dataset.emoji) {
+            // Match ho gaya!
+            card1.classList.remove('flipped');
+            card2.classList.remove('flipped');
+            card1.classList.add('matched');
+            card2.classList.add('matched');
+            matchedPairs++;
+            
+            playSound(true); // Happy sound
+
+            if (matchedPairs === memoryEmojis.length) {
+                setTimeout(() => {
+                    speakText("Superb! You won the game!");
+                }, 500);
+            }
+        } else {
+            // Match nahi hua, wapas palat do
+            card1.classList.remove('flipped');
+            card2.classList.remove('flipped');
+            playSound(false); // Wrong sound
+        }
+        
+        flippedCards = []; // Array khaali karo agle turn ke liye
+    }
+</script>
     
 
 </div>
