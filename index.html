@@ -632,190 +632,26 @@
         <div style="width: 40px;"></div>
     </div>
     
-    <div style="text-align: center; margin-bottom: 20px; color: gray; font-size: 1.1rem; padding: 0 10px;">
-        Tap Mic to read! Tap any word to hear it. 🎙️
+    <div style="width: 100%; padding: 0 15px; margin-bottom: 15px;">
+        <div style="display: flex; gap: 10px; background: white; padding: 5px; border-radius: 15px; border: 2px solid #00cec9;">
+            <input type="text" id="custom-story-input" placeholder="🔍 Type poem or sentence..." style="flex: 1; border: none; outline: none; padding: 10px; font-size: 1rem; border-radius: 10px;">
+            <button class="btn primary" style="width: auto; margin: 0; padding: 10px 15px; min-height: unset; border-radius: 10px;" onclick="loadCustomStory()">Add ✨</button>
+        </div>
     </div>
 
-    <div id="read-sentence-box" style="background: #fdfdfd; border: 3px dashed #00cec9; border-radius: 20px; padding: 30px 15px; margin-bottom: 30px; font-size: clamp(2.5rem, 8vw, 3.5rem); text-align: center; line-height: 1.6; font-weight: bold; width: 100%; box-shadow: 0 10px 20px rgba(0,0,0,0.05); display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;">
+    <div style="text-align: center; margin-bottom: 10px; color: gray; font-size: 1rem;">
+        Word galat ho toh sirf wahi word dubara bolo! 🎙️
+    </div>
+
+    <div id="read-sentence-box" style="background: #fdfdfd; border: 3px dashed #00cec9; border-radius: 20px; padding: 25px 15px; margin-bottom: 20px; font-size: clamp(2rem, 7vw, 3rem); text-align: center; line-height: 1.6; font-weight: bold; width: 100%; box-shadow: 0 10px 20px rgba(0,0,0,0.05); display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;">
         </div>
 
-    <button id="read-mic-btn" class="btn primary" style="width: 90px; height: 90px; border-radius: 50%; font-size: 3rem; display: flex; align-items: center; justify-content: center; margin: 0 auto; box-shadow: 0 10px 0 rgba(0,0,0,0.2);" onclick="toggleReadMic()">
+    <button id="read-mic-btn" class="btn primary" style="width: 80px; height: 80px; border-radius: 50%; font-size: 2.5rem; display: flex; align-items: center; justify-content: center; margin: 0 auto; box-shadow: 0 10px 0 rgba(0,0,0,0.2);" onclick="toggleReadMic()">
         🎙️
     </button>
-    <div id="read-status" style="text-align: center; margin-top: 20px; font-size: 1.3rem; color: var(--text); font-weight: bold;"></div>
+    <div id="read-status" style="text-align: center; margin-top: 15px; font-size: 1.2rem; color: var(--text); font-weight: bold;"></div>
 </div>
-
-<script>
-    // ==========================================
-    // ⭐ ADVANCED READ ALONG LOGIC ⭐
-    // ==========================================
-    const readingStories = [
-        "I am a good kid",
-        "The sun is yellow",
-        "I love my family",
-        "A cat is sleeping",
-        "Birds fly in the sky",
-        "I like to play games",
-        "The apple is red",
-        "Water is life"
-    ];
     
-    let currentStoryIdx = 0;
-    let readRecog = null;
-    let isReadListening = false;
-    let currentWords = [];
-
-    // Setup Dedicated Recognition for Reading
-    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-        const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
-        readRecog = new SpeechRec();
-        readRecog.continuous = true;
-        readRecog.interimResults = true;
-        readRecog.lang = 'en-US'; 
-
-        readRecog.onstart = function() {
-            isReadListening = true;
-            document.getElementById('read-mic-btn').style.background = 'var(--danger)';
-            document.getElementById('read-mic-btn').style.animation = 'pulse 1s infinite';
-            document.getElementById('read-status').innerText = "Listening... 👀";
-            document.getElementById('read-status').style.color = 'var(--danger)';
-        };
-
-        readRecog.onresult = function(event) {
-            let transcript = '';
-            // Saari aawaz ko ek sath jodna (Live update ke liye)
-            for (let i = event.resultIndex; i < event.results.length; i++) {
-                transcript += event.results[i][0].transcript.toLowerCase() + ' ';
-            }
-            checkAdvancedReadingProgress(transcript);
-        };
-
-        readRecog.onend = function() {
-            isReadListening = false;
-            document.getElementById('read-mic-btn').style.background = 'var(--primary)';
-            document.getElementById('read-mic-btn').style.animation = 'none';
-            if (document.getElementById('read-status').innerText === "Listening... 👀") {
-                document.getElementById('read-status').innerText = "Tap mic to try again!";
-                document.getElementById('read-status').style.color = 'gray';
-            }
-        };
-    }
-
-    function openReadAlong() {
-        currentStoryIdx = 0;
-        loadStorySentence();
-        showScreen('read-along-screen');
-    }
-
-    function closeReadAlong() {
-        if(isReadListening && readRecog) readRecog.stop();
-        goHome();
-    }
-
-    function loadStorySentence() {
-        const box = document.getElementById('read-sentence-box');
-        box.innerHTML = '';
-        currentWords = readingStories[currentStoryIdx].split(' ');
-        
-        currentWords.forEach((word, index) => {
-            const span = document.createElement('span');
-            span.innerText = word;
-            span.id = 'read-word-' + index;
-            span.dataset.status = 'pending';
-            
-            // CSS Styling for Words
-            span.style.color = 'var(--text)';
-            span.style.transition = 'all 0.2s ease-in-out';
-            span.style.cursor = 'pointer';
-            span.style.display = 'inline-block';
-            span.style.padding = '0 5px';
-            span.style.borderRadius = '10px';
-
-            // ⭐ CLICK TO SPEAK FEATURE ⭐
-            span.onclick = () => {
-                span.style.transform = 'scale(1.2)';
-                span.style.background = '#e1f5fe'; // Halka neela background click karne par
-                setTimeout(() => {
-                    span.style.transform = 'scale(1)';
-                    span.style.background = 'transparent';
-                }, 300);
-                speakText(word); // Sifra bolegi
-            };
-            
-            box.appendChild(span);
-        });
-        
-        document.getElementById('read-status').innerText = "Tap Mic and read!";
-        document.getElementById('read-status').style.color = 'gray';
-    }
-
-    function toggleReadMic() {
-        if (!readRecog) {
-            alert("Mic not supported in this browser!");
-            return;
-        }
-        if (isReadListening) {
-            readRecog.stop();
-        } else {
-            readRecog.start();
-        }
-    }
-
-    // ⭐ REAL-TIME RED/GREEN LOGIC ⭐
-    function checkAdvancedReadingProgress(spokenText) {
-        let cleanSpoken = spokenText.toLowerCase().replace(/[.,!?]/g, '').trim().split(/\s+/);
-        let cleanTargets = currentWords.map(w => w.toLowerCase().replace(/[.,!?]/g, ''));
-        
-        // Step 1: Pehle saare pending words ko normal karo (taaki purana red hat jaye)
-        for(let i=0; i<cleanTargets.length; i++) {
-            let span = document.getElementById('read-word-' + i);
-            if (span.dataset.status !== 'matched') {
-                 span.style.color = 'var(--text)';
-            }
-        }
-
-        let expectedIndex = 0; // Hum dhoondh rahe hain ki baccha abhi kahan hai
-        
-        // Step 2: Bole gaye words ko target se match karo
-        for (let sWord of cleanSpoken) {
-            if (expectedIndex < cleanTargets.length) {
-                if (sWord === cleanTargets[expectedIndex]) {
-                    // Sahi Word 🟢
-                    let span = document.getElementById('read-word-' + expectedIndex);
-                    span.style.color = 'var(--success)';
-                    span.dataset.status = 'matched';
-                    expectedIndex++;
-                } else if (sWord !== "") {
-                    // Galat Word 🔴 (Jo word bolna tha use Red kar do)
-                    let span = document.getElementById('read-word-' + expectedIndex);
-                    if (span.dataset.status !== 'matched') {
-                        span.style.color = 'var(--danger)'; 
-                    }
-                }
-            }
-        }
-
-        // Step 3: Kya saare words match ho gaye?
-        if (expectedIndex >= cleanTargets.length) {
-            if(isReadListening && readRecog) readRecog.stop();
-            document.getElementById('read-status').innerText = "Superb! 🎉⭐⭐⭐";
-            document.getElementById('read-status').style.color = 'var(--success)';
-            playSound(true); 
-            speakBilingual('Excellent reading!', 'बहुत बढ़िया!');
-            
-            // 2.5 second baad agla sentence
-            setTimeout(() => {
-                currentStoryIdx++;
-                if (currentStoryIdx >= readingStories.length) {
-                    currentStoryIdx = 0; 
-                    speakText("You have read all sentences. Great job!");
-                }
-                loadStorySentence();
-            }, 2500);
-        }
-    }
-</script>
-
     
 
 </div>
@@ -1354,6 +1190,106 @@
     window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; downloadAppBtn.style.display = 'block'; });
     downloadAppBtn.addEventListener('click', async () => { if (deferredPrompt) { deferredPrompt.prompt(); const { outcome } = await deferredPrompt.userChoice; if (outcome === 'accepted') downloadAppBtn.style.display = 'none'; deferredPrompt = null; } else { document.getElementById('installModal').style.display = 'flex'; } });    
 
+
+    // ==========================================
+    // ⭐ SMART READ ALONG LOGIC ⭐
+    // ==========================================
+    let currentStoryIdx = 0;
+    let isReadListening = false;
+    let currentWords = [];
+    let matchedWordIndices = new Set(); // Track karega kaunse words sahi ho chuke hain
+
+    function openReadAlong() {
+        currentStoryIdx = 0;
+        loadStorySentence();
+        showScreen('read-along-screen');
+    }
+
+    // ⭐ MAGIC BOX: Custom story load karne ke liye
+    function loadCustomStory() {
+        let input = document.getElementById('custom-story-input').value.trim();
+        if(input) {
+            readingStories.unshift(input); // List mein sabse upar daal do
+            currentStoryIdx = 0;
+            loadStorySentence();
+            document.getElementById('custom-story-input').value = '';
+            speakText("New story added! Let's read.");
+        }
+    }
+
+    function loadStorySentence() {
+        const box = document.getElementById('read-sentence-box');
+        box.innerHTML = '';
+        currentWords = readingStories[currentStoryIdx].split(/\s+/);
+        matchedWordIndices.clear(); // Reset matches for new sentence
+        
+        currentWords.forEach((word, index) => {
+            const span = document.createElement('span');
+            span.innerText = word;
+            span.id = 'read-word-' + index;
+            span.style.color = 'var(--text)';
+            span.style.padding = '0 5px';
+            span.style.borderRadius = '8px';
+            span.style.cursor = 'pointer';
+
+            // Click to hear
+            span.onclick = () => {
+                span.style.background = '#FFE66D';
+                setTimeout(() => span.style.background = 'transparent', 300);
+                speakText(word);
+            };
+            
+            box.appendChild(span);
+        });
+        document.getElementById('read-status').innerText = "Tap Mic to start!";
+    }
+
+    function checkAdvancedReadingProgress(spokenText) {
+        let cleanSpoken = spokenText.toLowerCase().replace(/[.,!?]/g, '').split(/\s+/);
+        let cleanTargets = currentWords.map(w => w.toLowerCase().replace(/[.,!?]/g, ''));
+        
+        let newlyMatched = false;
+
+        // Har bole gaye word ko check karo
+        cleanSpoken.forEach(sWord => {
+            cleanTargets.forEach((tWord, idx) => {
+                // Agar word match hota hai aur pehle se green nahi hai
+                if (sWord === tWord && !matchedWordIndices.has(idx)) {
+                    let span = document.getElementById('read-word-' + idx);
+                    span.style.color = 'var(--success)'; // Green ho gaya!
+                    span.style.textShadow = 'none';
+                    matchedWordIndices.add(idx);
+                    newlyMatched = true;
+                }
+            });
+        });
+
+        // ⭐ RED LOGIC: Jo words abhi tak nahi bole gaye unhe Red dikhao (Live feedback)
+        cleanTargets.forEach((tWord, idx) => {
+            if (!matchedWordIndices.has(idx)) {
+                let span = document.getElementById('read-word-' + idx);
+                // Agar baccha kuch bola hai par ye word match nahi hua, toh it's potentially wrong
+                if (cleanSpoken.length > 0 && cleanSpoken[cleanSpoken.length-1] !== "") {
+                    span.style.color = 'var(--danger)'; 
+                }
+            }
+        });
+
+        // Check if finished
+        if (matchedWordIndices.size === cleanTargets.length) {
+            if(isReadListening) toggleReadMic();
+            document.getElementById('read-status').innerText = "Superb! 🎉⭐⭐⭐";
+            playSound(true);
+            
+            setTimeout(() => {
+                currentStoryIdx = (currentStoryIdx + 1) % readingStories.length;
+                loadStorySentence();
+            }, 2500);
+        }
+    }
+    
+
+    
 </script>
 </body>
 </html>
