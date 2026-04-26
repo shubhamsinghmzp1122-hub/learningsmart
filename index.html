@@ -845,17 +845,15 @@
 </script>
 
 
-       <div id="offline-screen" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:#ffffff; z-index:99999; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:20px;">
+            <div id="offline-screen" style="opacity:0; visibility:hidden; pointer-events:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:#ffffff; z-index:99999; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:20px; transition: opacity 0.3s ease;">
         
-        <div style="width: 250px; height: 250px; min-width: 250px; min-height: 250px; margin: 0 auto; flex-shrink: 0; display: flex; justify-content: center; align-items: center;">
-            <dotlottie-wc src="https://lottie.host/9bab4a7f-48e4-474c-9875-6b8947879e41/miZfrcI92b.lottie" autoplay loop style="width:100%; height:100%; display: block;"></dotlottie-wc>
-        </div>
+        <dotlottie-wc src="https://lottie.host/9bab4a7f-48e4-474c-9875-6b8947879e41/miZfrcI92b.lottie" autoplay loop style="width:250px; height:250px; display:block;"></dotlottie-wc>
 
         <h2 style="color:var(--danger); margin-top:20px; font-size: 2rem;">No Internet Connection</h2>
         <p style="color:gray; font-size: 1.2rem; margin-top: 10px;">You are currently offline.<br>Please check your Wi-Fi or mobile data.</p>
         
         <button id="retry-net-btn" class="btn primary" style="width:200px; margin-top:25px;" onclick="checkNetManual()">🔄 Try Again</button>
-       </div>
+            </div>
     
     
 </div>
@@ -1394,15 +1392,21 @@
     window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; downloadAppBtn.style.display = 'block'; });
     downloadAppBtn.addEventListener('click', async () => { if (deferredPrompt) { deferredPrompt.prompt(); const { outcome } = await deferredPrompt.userChoice; if (outcome === 'accepted') downloadAppBtn.style.display = 'none'; deferredPrompt = null; } else { document.getElementById('installModal').style.display = 'flex'; } });    
 
-        // ==========================================
+      // ==========================================
     // ⭐ SMART INTERNET CHECKER ⭐
     // ==========================================
     function updateOnlineStatus() {
         const offlineScreen = document.getElementById('offline-screen');
         if (navigator.onLine) {
-            offlineScreen.style.display = 'none';
+            // Net aate hi transparent aur disable kar do (Shrink nahi hoga)
+            offlineScreen.style.opacity = '0';
+            offlineScreen.style.visibility = 'hidden';
+            offlineScreen.style.pointerEvents = 'none';
         } else {
-            offlineScreen.style.display = 'flex';
+            // Net jate hi dikhao
+            offlineScreen.style.opacity = '1';
+            offlineScreen.style.visibility = 'visible';
+            offlineScreen.style.pointerEvents = 'auto';
             if(typeof speakText === 'function') speakText("Internet connection lost.");
         }
     }
@@ -1426,6 +1430,8 @@
     window.addEventListener('online', updateOnlineStatus);
     window.addEventListener('offline', updateOnlineStatus);
     window.addEventListener('load', updateOnlineStatus);
+    
+
     
 </script>
 </body>
