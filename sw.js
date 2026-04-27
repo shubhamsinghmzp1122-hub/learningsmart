@@ -5,3 +5,6 @@ self.addEventListener('install', (e) => {
 self.addEventListener('fetch', (e) => {
   e.respondWith(fetch(e.request).catch(() => console.log('User is offline')));
 });
+
+
+// test my new update
