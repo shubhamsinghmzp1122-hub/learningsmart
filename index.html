@@ -186,6 +186,7 @@
         <button class="btn" style="background:var(--color-ddg); color:white;" onclick="openSafeSearch()">🔍 Safe Web Search</button>
         <button class="btn primary" onclick="startQuiz()">📝 Start 30 Questions Quiz</button>
         <button class="btn" style="background:#ff9f43;" onclick="startGameMode()">🎮 Play Game Mode</button>
+        <button class="btn" style="background:#2ecc71; color:white; box-shadow: 0 0 10px rgba(46, 204, 113, 0.5);" onclick="openRacingGame()">🏎️ Hill Climb Race</button>
         
         <div style="display:flex; width:100%; gap:10px;">
             <button class="btn accent" style="flex:1;" onclick="openCalculator()">🧮 Calc</button>
@@ -316,6 +317,46 @@
             <button onclick="clearCanvas()" class="btn yellow" style="font-size: 1rem; padding: 10px 20px; flex-grow: 1;">🗑️ Clear Slate</button>
         </div>
     </div>         
+
+
+                     <button onclick="clearCanvas()" class="btn yellow" style="font-size: 1rem; padding: 10px 20px; flex-grow: 1;">🗑️ Clear Slate</button>
+        </div>
+    </div>         
+</div> <div id="racing-game-screen" class="screen" style="padding: 0; background: #87CEEB;">
+    <div class="top-bar" style="position: absolute; top: 0; width: 100%; z-index: 100; background: transparent; box-shadow: none; padding: 10px;">
+        <button class="btn back-btn" onclick="closeRacingGame()" style="box-shadow: 0 4px 6px rgba(0,0,0,0.3);">🔙</button>
+    </div>
+
+    <div id="racing-ui-layer" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; display: flex; flex-direction: column; justify-content: space-between; z-index: 50;">
+        <div style="padding: 10px 20px 20px 60px; color: white; font-size: 18px; font-weight: bold; text-shadow: 2px 2px 0 #000; display: flex; flex-direction: column; gap: 5px;">
+            <div style="display: flex; gap: 20px; align-items: center;">
+                <span id="race-score">Dist: 0m</span>
+                <span id="race-coins" style="color: #ffd700;">Coins: 0</span>
+            </div>
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <span>Fuel:</span>
+                <div style="width: 150px; height: 15px; background: #444; border: 2px solid white; border-radius: 10px; overflow: hidden;">
+                    <div id="race-fuel-fill" style="width: 100%; height: 100%; background: #e74c3c; transition: width 0.1s linear;"></div>
+                </div>
+            </div>
+        </div>
+        <div style="padding: 20px; display: flex; justify-content: space-between; pointer-events: auto; margin-bottom: 20px;">
+            <div class="btn" id="race-btn-brake" style="width: 80px; height: 80px; border-radius: 50%; background: rgba(255, 0, 0, 0.5); border: 3px solid #fff; color: white; font-size: 14px; font-weight: bold; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(5px); user-select: none; touch-action: manipulation;">BRAKE</div>
+            <div class="btn" id="race-btn-gas" style="width: 80px; height: 80px; border-radius: 50%; background: rgba(0, 255, 0, 0.5); border: 3px solid #fff; color: white; font-size: 14px; font-weight: bold; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(5px); user-select: none; touch-action: manipulation;">GAS</div>
+        </div>
+    </div>
+
+    <div id="race-game-over" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.9); color: white; padding: 30px; border-radius: 15px; text-align: center; display: none; pointer-events: auto; min-width: 250px; z-index: 150; border: 3px solid #fff;">
+        <h2 id="race-go-title" style="color: var(--danger); font-size: 2.5rem; margin-bottom: 10px;">GAME OVER</h2>
+        <p id="race-go-reason" style="font-size: 1.2rem; margin-bottom: 10px;">You flipped!</p>
+        <p style="font-size: 1.5rem; color: #ffd700;">Coins: <span id="race-final-coins">0</span></p>
+        <button class="btn primary" onclick="resetRacingGame()" style="margin-top: 20px; width: 100%;">🔄 Try Again</button>
+    </div>
+
+    <canvas id="raceCanvas" style="display: block; width: 100%; height: 100%;"></canvas>
+    </div>
+</div>
+
          
 </div>
 
@@ -1463,6 +1504,263 @@
     window.addEventListener('offline', updateOnlineStatus);
     window.addEventListener('load', updateOnlineStatus);
     
+ 
+    // ==========================================
+    // ⭐ HILL CLIMB RACING GAME LOGIC ⭐
+    // ==========================================
+    const raceCanvas = document.getElementById('raceCanvas');
+    const raceCtx = raceCanvas.getContext('2d');
+    let raceWidth, raceHeight, raceLoopId;
+    let isRacingOpen = false;
+
+    let raceAudioCtx = null, raceEngineOsc = null, raceEngineGain = null;
+    const raceKeys = { gas: false, brake: false };
+
+    function initRaceAudio() {
+        if (raceAudioCtx) return;
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        raceAudioCtx = new AudioContext();
+        raceEngineOsc = raceAudioCtx.createOscillator();
+        raceEngineGain = raceAudioCtx.createGain();
+        raceEngineOsc.type = 'sawtooth';
+        raceEngineOsc.frequency.value = 50; 
+        raceEngineGain.gain.value = 0.1; 
+        raceEngineOsc.connect(raceEngineGain);
+        raceEngineGain.connect(raceAudioCtx.destination);
+        raceEngineOsc.start();
+    }
+
+    function updateRaceSound(speed) {
+        if(!raceAudioCtx || raceGameState !== "playing") {
+             if(raceAudioCtx && raceEngineGain) raceEngineGain.gain.value = 0;
+             return;
+        }
+        const targetFreq = 50 + (Math.abs(speed) * 10);
+        raceEngineOsc.frequency.setTargetAtTime(targetFreq, raceAudioCtx.currentTime, 0.1);
+        if(raceKeys.gas) raceEngineGain.gain.setTargetAtTime(0.2, raceAudioCtx.currentTime, 0.1);
+        else raceEngineGain.gain.setTargetAtTime(0.05, raceAudioCtx.currentTime, 0.1);
+    }
+
+    const addRaceTouch = (elemId, key) => {
+        const elem = document.getElementById(elemId);
+        if (!elem) return; // safety check
+        const handler = (e) => { e.preventDefault(); if(!raceAudioCtx) initRaceAudio(); raceKeys[key] = true; };
+        const endHandler = (e) => { e.preventDefault(); raceKeys[key] = false; };
+        elem.addEventListener('mousedown', handler); elem.addEventListener('mouseup', endHandler);
+        elem.addEventListener('mouseleave', endHandler); elem.addEventListener('touchstart', handler);
+        elem.addEventListener('touchend', endHandler);
+    };
+
+    let raceCameraX = 0, raceGameState = "playing", raceScore = 0, raceFuel = 100, raceCoins = 0;
+    let raceItems = [], raceTerrain = [];
+    const raceSegWidth = 20;
+
+    const raceCar = {
+        x: 300, y: 0, width: 80, height: 40, vx: 0, vy: 0, angle: 0, vAngle: 0,
+        speed: 0.3, maxSpeed: 20, gravity: 0.4, friction: 0.98, bounce: 0.3,
+        rotationSpeed: 0.005, wheelOffset: 35, radius: 18
+    };
+
+    function generateRaceTerrain(startX, count) {
+        let lastY = raceTerrain.length > 0 ? raceTerrain[raceTerrain.length-1].y : raceHeight / 2 + 100;
+        let slope = 0;
+        for(let i=0; i<count; i++) {
+            slope += (Math.random() - 0.5) * 0.5;
+            if(slope > 1.5) slope = 1.5; if(slope < -1.5) slope = -1.5;
+            lastY += slope * 10;
+            if(lastY > raceHeight - 50) { lastY = raceHeight - 50; slope -= 0.5; }
+            if(lastY < raceHeight / 3) { lastY = raceHeight / 3; slope += 0.5; }
+            let px = (raceTerrain.length * raceSegWidth);
+            raceTerrain.push({ x: px, y: lastY });
+            if(i > 20) { 
+                if(Math.random() < 0.01) raceItems.push({ x: px, y: lastY - 40, type: 'fuel', collected: false });
+                else if(Math.random() < 0.08) raceItems.push({ x: px, y: lastY - 40, type: 'coin', collected: false });
+            }
+        }
+    }
+
+    function getRaceTerrainHeight(x) {
+        const index = Math.floor(x / raceSegWidth);
+        if(index < 0 || index >= raceTerrain.length - 1) return raceHeight;
+        const p1 = raceTerrain[index], p2 = raceTerrain[index+1];
+        const ratio = (x - p1.x) / raceSegWidth;
+        return p1.y + (p2.y - p1.y) * ratio;
+    }
+
+    function updateRace() {
+        if(raceGameState !== "playing") return;
+
+        if(raceFuel > 0) {
+            if(raceKeys.gas) { raceCar.vx += raceCar.speed; raceFuel -= 0.08; }
+            if(raceKeys.brake) raceCar.vx -= raceCar.speed;
+        } else if(Math.abs(raceCar.vx) < 0.1) raceGameOver("Out of Fuel!");
+
+        const fFill = document.getElementById('race-fuel-fill');
+        if(fFill) {
+            fFill.style.width = raceFuel + '%';
+            fFill.style.background = raceFuel <= 0 ? '#333' : (raceFuel < 20 ? 'red' : '#e74c3c');
+        }
+
+        raceCar.vx *= raceCar.friction; raceCar.x += raceCar.vx;
+        if(raceCar.vx > raceCar.maxSpeed) raceCar.vx = raceCar.maxSpeed;
+        if(raceCar.vx < -raceCar.maxSpeed) raceCar.vx = -raceCar.maxSpeed;
+
+        raceCar.vy += raceCar.gravity; raceCar.y += raceCar.vy;
+        raceCar.angle += raceCar.vAngle; raceCar.vAngle *= 0.90;
+
+        const cos = Math.cos(raceCar.angle);
+        const fwX = raceCar.x + (cos * raceCar.wheelOffset), bwX = raceCar.x - (cos * raceCar.wheelOffset);
+        const fwGround = getRaceTerrainHeight(fwX), bwGround = getRaceTerrainHeight(bwX);
+        const groundY = (fwGround + bwGround) / 2 - 40; 
+        
+        if(raceCar.y > groundY) {
+            raceCar.vy -= (raceCar.y - groundY) * raceCar.bounce; raceCar.y = groundY; 
+            const angleDiff = Math.atan2(fwGround - bwGround, fwX - bwX) - raceCar.angle;
+            raceCar.vAngle += angleDiff * 0.1; 
+            if(!raceKeys.gas && !raceKeys.brake) raceCar.vx *= 0.95;
+        }
+        
+        if(raceCar.y < groundY - 10) {
+             if(raceKeys.gas) raceCar.vAngle -= raceCar.rotationSpeed;
+             if(raceKeys.brake) raceCar.vAngle += raceCar.rotationSpeed;
+        }
+
+        for(let item of raceItems) {
+            if(item.collected) continue;
+            let dx = raceCar.x - item.x, dy = raceCar.y - item.y;
+            if(Math.sqrt(dx*dx + dy*dy) < 50) {
+                item.collected = true;
+                if(item.type === 'coin') { raceCoins++; document.getElementById('race-coins').innerText = "Coins: " + raceCoins; playSound(true); } 
+                else if(item.type === 'fuel') { raceFuel = 100; playSound(true); }
+            }
+        }
+
+        if(Math.abs(raceCar.angle) > Math.PI / 1.5 && Math.abs(raceCar.vAngle) < 0.05 && raceCar.y >= groundY -5) raceGameOver("Driver Down!");
+        if(raceCar.x > raceTerrain[raceTerrain.length - 100].x) generateRaceTerrain(0, 100);
+
+        raceCameraX = raceCar.x - raceWidth / 3;
+        const currentDist = Math.floor(raceCar.x / 10);
+        if(currentDist > raceScore) raceScore = currentDist;
+        document.getElementById('race-score').innerText = `Dist: ${raceScore}m`;
+        updateRaceSound(raceCar.vx);
+    }
+
+    function raceGameOver(reason) {
+        raceGameState = "gameover";
+        document.getElementById('race-go-title').innerText = reason || "GAME OVER";
+        document.getElementById('race-go-reason').innerText = reason === "Out of Fuel!" ? "Empty Tank" : "You flipped the car.";
+        document.getElementById('race-final-coins').innerText = raceCoins;
+        document.getElementById('race-game-over').style.display = 'block';
+        updateRaceSound(0); 
+        if(typeof speakText === 'function') speakText(reason === "Out of Fuel!" ? "Oh no! Fuel khatam." : "Oops! Car palat gayi.");
+    }
+
+    function resetRacingGame() {
+        raceCar.x = 300; raceCar.y = 0; raceCar.vx = 0; raceCar.vy = 0; raceCar.angle = 0; raceCar.vAngle = 0;
+        raceFuel = 100; raceCoins = 0; raceScore = 0;
+        raceItems = []; raceTerrain = [];
+        document.getElementById('race-coins').innerText = "Coins: 0";
+        generateRaceTerrain(0, 200);
+        raceGameState = "playing";
+        document.getElementById('race-game-over').style.display = 'none';
+        if(raceAudioCtx && raceAudioCtx.state === 'suspended') raceAudioCtx.resume();
+    }
+
+    function drawRace() {
+        if(!isRacingOpen) return;
+        const grad = raceCtx.createLinearGradient(0, 0, 0, raceHeight);
+        grad.addColorStop(0, "#87CEEB"); grad.addColorStop(1, "#E0F7FA");
+        raceCtx.fillStyle = grad; raceCtx.fillRect(0, 0, raceWidth, raceHeight);
+
+        raceCtx.save(); raceCtx.translate(-raceCameraX, 0);
+
+        raceCtx.fillStyle = "#FFD700"; raceCtx.beginPath();
+        raceCtx.arc(raceCameraX + raceWidth - 100, 100, 40, 0, Math.PI*2); raceCtx.fill();
+
+        raceCtx.beginPath();
+        if(raceTerrain.length > 0) raceCtx.moveTo(raceTerrain[0].x, raceTerrain[0].y);
+        for(let i=1; i<raceTerrain.length; i++) {
+            if(raceTerrain[i].x < raceCameraX - 100 || raceTerrain[i].x > raceCameraX + raceWidth + 100) continue;
+            raceCtx.lineTo(raceTerrain[i].x, raceTerrain[i].y);
+        }
+        if(raceTerrain.length > 0) {
+            raceCtx.lineTo(raceTerrain[raceTerrain.length-1].x, raceHeight + 500);
+            raceCtx.lineTo(raceTerrain[0].x, raceHeight + 500);
+        }
+        raceCtx.fillStyle = "#4caf50"; raceCtx.fill(); 
+        raceCtx.lineWidth = 5; raceCtx.strokeStyle = "#388e3c"; raceCtx.stroke();
+
+        for(let item of raceItems) {
+            if(item.collected) continue;
+            if(item.x < raceCameraX - 50 || item.x > raceCameraX + raceWidth + 50) continue;
+            if(item.type === 'coin') {
+                raceCtx.fillStyle = "#ffd700"; raceCtx.strokeStyle = "#d4ac0d"; raceCtx.lineWidth = 2;
+                raceCtx.beginPath(); raceCtx.arc(item.x, item.y, 10, 0, Math.PI*2); raceCtx.fill(); raceCtx.stroke();
+                raceCtx.fillStyle = "rgba(255,255,255,0.5)"; raceCtx.fillText("$", item.x - 4, item.y + 5);
+            } else if(item.type === 'fuel') {
+                raceCtx.fillStyle = "#e74c3c"; raceCtx.fillRect(item.x - 10, item.y - 15, 20, 30);
+                raceCtx.fillStyle = "#c0392b"; raceCtx.fillRect(item.x - 5, item.y - 20, 10, 5);
+                raceCtx.fillStyle = "white"; raceCtx.font = "bold 12px Arial"; raceCtx.fillText("F", item.x - 4, item.y + 5);
+            }
+        }
+
+        raceCtx.translate(raceCar.x, raceCar.y); raceCtx.rotate(raceCar.angle);
+        raceCtx.fillStyle = "#e74c3c"; raceCtx.strokeStyle = "#c0392b"; raceCtx.lineWidth = 2;
+        raceCtx.beginPath(); raceCtx.roundRect(-40, -20, 80, 25, 5); raceCtx.fill(); raceCtx.stroke();
+        raceCtx.fillStyle = "#ecf0f1"; raceCtx.beginPath();
+        raceCtx.moveTo(-10, -20); raceCtx.lineTo(30, -20); raceCtx.lineTo(20, -45); raceCtx.lineTo(-40, -45); raceCtx.lineTo(-40, -20);
+        raceCtx.closePath(); raceCtx.fill(); raceCtx.stroke();
+        raceCtx.beginPath(); raceCtx.moveTo(-40, -20); raceCtx.lineTo(-40, -45); raceCtx.stroke();
+
+        raceCtx.fillStyle = "#2c3e50"; raceCtx.strokeStyle = "#95a5a6"; raceCtx.lineWidth = 3;
+        function drawWheel(x, y) {
+            raceCtx.beginPath(); raceCtx.arc(x, y, raceCar.radius, 0, Math.PI * 2); raceCtx.fill(); raceCtx.stroke();
+            raceCtx.beginPath(); raceCtx.arc(x, y, raceCar.radius/2, 0, Math.PI * 2); raceCtx.strokeStyle = "#bdc3c7"; raceCtx.stroke();
+            raceCtx.beginPath(); raceCtx.moveTo(x, y - raceCar.radius); raceCtx.lineTo(x, y + raceCar.radius);
+            raceCtx.moveTo(x - raceCar.radius, y); raceCtx.lineTo(x + raceCar.radius, y); raceCtx.stroke();
+        }
+        
+        const wheelRot = raceCar.x / raceCar.radius;
+        raceCtx.save(); raceCtx.translate(raceCar.wheelOffset, 15); raceCtx.rotate(wheelRot); drawWheel(0, 0); raceCtx.restore();
+        raceCtx.save(); raceCtx.translate(-raceCar.wheelOffset, 15); raceCtx.rotate(wheelRot); drawWheel(0, 0); raceCtx.restore();
+        raceCtx.fillStyle = "#f1c40f"; raceCtx.beginPath(); raceCtx.arc(-10, -35, 8, 0, Math.PI*2); raceCtx.fill();
+
+        raceCtx.restore(); raceCtx.restore();
+    }
+
+    function raceLoop() {
+        if(raceGameState !== "gameover") { updateRace(); drawRace(); }
+        if(isRacingOpen) raceLoopId = requestAnimationFrame(raceLoop);
+    }
+
+    function openRacingGame() {
+        showScreen('racing-game-screen');
+        isRacingOpen = true;
+        const box = document.getElementById('racing-game-screen');
+        raceWidth = raceCanvas.width = box.clientWidth;
+        raceHeight = raceCanvas.height = box.clientHeight;
+        
+        // Touch events add karte hain jab screen khule (taaki elements tab tak ban chuke hon)
+        addRaceTouch('race-btn-gas', 'gas');
+        addRaceTouch('race-btn-brake', 'brake');
+
+        resetRacingGame();
+        if(typeof speakText === 'function') speakText("Welcome to Hill Climb Race!");
+        raceLoop();
+    }
+
+    function closeRacingGame() {
+        isRacingOpen = false;
+        cancelAnimationFrame(raceLoopId);
+        updateRaceSound(0);
+        if(raceAudioCtx && raceEngineGain) raceEngineGain.gain.value = 0;
+        goHome();
+    }
+    
+</script>
+</body>
+</html>
+
 
     
 </script>
