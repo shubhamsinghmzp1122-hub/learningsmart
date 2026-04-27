@@ -346,17 +346,43 @@
         </div>
     </div>
 
-    <div id="race-game-over" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.9); color: white; padding: 30px; border-radius: 15px; text-align: center; display: none; pointer-events: auto; min-width: 250px; z-index: 150; border: 3px solid #fff;">
-        <h2 id="race-go-title" style="color: var(--danger); font-size: 2.5rem; margin-bottom: 10px;">GAME OVER</h2>
-        <p id="race-go-reason" style="font-size: 1.2rem; margin-bottom: 10px;">You flipped!</p>
-        <p style="font-size: 1.5rem; color: #ffd700;">Coins: <span id="race-final-coins">0</span></p>
-        <button class="btn primary" onclick="resetRacingGame()" style="margin-top: 20px; width: 100%;">🔄 Try Again</button>
+    <div id="racing-game-screen" class="screen" style="padding: 0; background: #87CEEB; position: relative; overflow: hidden;">
+    
+    <div class="top-bar" style="position: absolute; top: 10px; left: 10px; width: auto; z-index: 100; background: transparent; margin: 0; padding: 0;">
+        <button class="btn back-btn" onclick="closeRacingGame()" style="box-shadow: 0 4px 6px rgba(0,0,0,0.3); margin: 0;">🔙</button>
+    </div>
+
+    <div id="racing-ui-layer" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; display: flex; flex-direction: column; justify-content: space-between; z-index: 50;">
+        
+        <div style="padding: 15px 15px 15px 70px; color: white; font-size: clamp(14px, 4vw, 18px); font-weight: bold; text-shadow: 2px 2px 0 #000; display: flex; flex-direction: column; gap: 5px;">
+            <div style="display: flex; gap: 15px; width: 100%;">
+                <span id="race-score">Dist: 0m</span>
+                <span id="race-coins" style="color: #ffd700;">Coins: 0</span>
+            </div>
+            <div style="display: flex; gap: 10px; align-items: center; margin-top: 5px;">
+                <span>Fuel:</span>
+                <div style="flex: 1; max-width: 150px; height: 15px; background: #444; border: 2px solid white; border-radius: 10px; overflow: hidden;">
+                    <div id="race-fuel-fill" style="width: 100%; height: 100%; background: #e74c3c; transition: width 0.1s linear;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div style="padding: 20px; display: flex; justify-content: space-between; pointer-events: auto; margin-bottom: 15px;">
+            <div class="btn" id="race-btn-brake" style="width: clamp(70px, 20vw, 90px); height: clamp(70px, 20vw, 90px); border-radius: 50%; background: rgba(255, 0, 0, 0.5); border: 3px solid #fff; color: white; font-size: 14px; font-weight: bold; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(5px); user-select: none; touch-action: manipulation; margin: 0;">BRAKE</div>
+            <div class="btn" id="race-btn-gas" style="width: clamp(70px, 20vw, 90px); height: clamp(70px, 20vw, 90px); border-radius: 50%; background: rgba(0, 255, 0, 0.5); border: 3px solid #fff; color: white; font-size: 14px; font-weight: bold; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(5px); user-select: none; touch-action: manipulation; margin: 0;">GAS</div>
+        </div>
+    </div>
+
+    <div id="race-game-over" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.9); color: white; padding: 25px; border-radius: 15px; text-align: center; display: none; pointer-events: auto; width: 85%; max-width: 300px; z-index: 150; border: 3px solid #fff;">
+        <h2 id="race-go-title" style="color: var(--danger); font-size: 2rem; margin-bottom: 10px;">GAME OVER</h2>
+        <p id="race-go-reason" style="font-size: 1.1rem; margin-bottom: 10px;">You flipped!</p>
+        <p style="font-size: 1.3rem; color: #ffd700;">Coins: <span id="race-final-coins">0</span></p>
+        <button class="btn primary" onclick="resetRacingGame()" style="margin-top: 15px; width: 100%; margin-bottom:0;">🔄 Try Again</button>
     </div>
 
     <canvas id="raceCanvas" style="display: block; width: 100%; height: 100%;"></canvas>
     </div>
-</div>
-
+    
          
 </div>
 
@@ -1733,22 +1759,26 @@
         if(isRacingOpen) raceLoopId = requestAnimationFrame(raceLoop);
     }
 
-    function openRacingGame() {
+        function openRacingGame() {
         showScreen('racing-game-screen');
         isRacingOpen = true;
-        const box = document.getElementById('racing-game-screen');
-        raceWidth = raceCanvas.width = box.clientWidth;
-        raceHeight = raceCanvas.height = box.clientHeight;
         
-        // Touch events add karte hain jab screen khule (taaki elements tab tak ban chuke hon)
-        addRaceTouch('race-btn-gas', 'gas');
-        addRaceTouch('race-btn-brake', 'brake');
+        // Screen open hone ke thodi der baad size set karenge
+        setTimeout(() => {
+            const box = document.getElementById('racing-game-screen');
+            raceWidth = raceCanvas.width = box.clientWidth;
+            raceHeight = raceCanvas.height = box.clientHeight;
+            
+            addRaceTouch('race-btn-gas', 'gas');
+            addRaceTouch('race-btn-brake', 'brake');
 
-        resetRacingGame();
-        if(typeof speakText === 'function') speakText("Welcome to Hill Climb Race!");
-        raceLoop();
-    }
-
+            resetRacingGame();
+            if(typeof speakText === 'function') speakText("Welcome to Hill Climb Race!");
+            raceLoop();
+        }, 50); // 50ms delay for perfect sizing
+        }
+    
+    
     function closeRacingGame() {
         isRacingOpen = false;
         cancelAnimationFrame(raceLoopId);
