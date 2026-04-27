@@ -37,23 +37,22 @@ self.addEventListener('activate', event => {
     self.clients.claim();
 });
 
-// 3. NETWORK FIRST, FALLBACK TO CACHE
+// 3. NETWORK FIRST, FALLBACK TO CACHE (With Bypass)
 self.addEventListener('fetch', event => {
-    // Chrome extension wale calls ko ignore karo
     if (!(event.request.url.indexOf('http') === 0)) return;
 
     event.respondWith(
-        fetch(event.request)
+        // 👇 Ye { cache: 'no-store' } browser ko fresh code laane par majboor karega
+        fetch(event.request, { cache: 'no-store' }) 
             .then(response => {
-                // Agar internet chalu hai, toh naya data fetch karo aur cache update karo
                 const resClone = response.clone();
                 caches.open(CACHE_NAME).then(cache => {
                     cache.put(event.request, resClone);
                 });
-                return response; // Hamesha fresh code milega!
+                return response; 
             })
             .catch(() => {
-                // Agar internet band hai (Offline), toh purana cache dikhao
+                // Agar internet off hai, tab purana cache dikhao
                 return caches.match(event.request);
             })
     );
