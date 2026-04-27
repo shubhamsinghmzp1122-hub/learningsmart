@@ -25,7 +25,7 @@
         }
 
         * { box-sizing: border-box; font-family: 'Comic Neue', 'Comic Sans MS', cursive, sans-serif; margin: 0; padding: 0; user-select: none; touch-action: manipulation; }
-        body { background-color: var(--bg); color: var(--text); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 0; overflow-x: hidden; }
+        body { background-color: var(--bg); color: var(--text); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 0; overflow-x: hidden; overscroll-behavior-y: none; }
 
         #app { background: white; width: 100%; max-width: 500px; margin: auto; height: 100dvh; overflow: hidden; display: flex; flex-direction: column; padding: 10px; }
         @media (min-width: 501px) { #app { height: 95vh; border-radius: clamp(15px, 4vw, 30px); box-shadow: 0 10px 30px rgba(0,0,0,0.1); border: clamp(4px, 1vw, 8px) solid var(--accent1); } }
