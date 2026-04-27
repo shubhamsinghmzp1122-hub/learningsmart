@@ -1,7 +1,7 @@
-// =====================================
+// ====================================
 // ⭐ SMART AUTO-LIVE SERVICE WORKER ⭐
 // (Network-First Strategy)
-// =====================================
+// ====================================
 
 const CACHE_NAME = 'pari-jiya-cache-smart';
 const urlsToCache = [
